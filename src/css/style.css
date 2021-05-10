@@ -8,3 +8,11 @@ body {
     width: 100vw;
     height: 100vh;
 }
+
+.bg-ws {
+    background-image: url(../images/bg.png);
+    background-repeat: repeat;
+    width: 100vw;
+    height: 100vh;
+    z-index: -9999;
+}
