@@ -20,3 +20,7 @@ body {
 .card {
     border-radius: 5px;
 }
+
+ul {
+    margin-block-start: 0;
+}
