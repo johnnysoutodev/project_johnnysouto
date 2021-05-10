@@ -16,3 +16,7 @@ body {
     height: 100vh;
     z-index: -9999;
 }
+
+.card {
+    border-radius: 5px;
+}
