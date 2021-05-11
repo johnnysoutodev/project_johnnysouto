@@ -3,11 +3,11 @@
  
  ## Framework utilizado
  
-Neste projeto foi utilizado o Materialize para realizar o design do web site
+Neste projeto foi utilizado o Materialize para realizar o design.
 
 ## Automatização de tarefas
 
-Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes plug-ins
+Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes plug-ins:
 
 - grunt-contrib-clean
 - grunt-contrib-concat
