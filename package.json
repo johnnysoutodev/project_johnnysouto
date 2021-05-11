@@ -1,0 +1,19 @@
+{
+  "name": "project_johnnysouto",
+  "version": "1.0.0",
+  "description": "Projeto do Web Site johnnysouto.com.br",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnnysoutodev/project_johnnysouto.git"
+  },
+  "author": "Johnny Souto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnnysoutodev/project_johnnysouto/issues"
+  },
+  "homepage": "https://github.com/johnnysoutodev/project_johnnysouto#readme"
+}
