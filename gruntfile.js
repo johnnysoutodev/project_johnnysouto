@@ -152,7 +152,7 @@ module.exports = function(grunt){
     grunt.registerTask('compactando-images', ['clean:images', 'image:dynamic', 'copy:images']);
 
     // Tarefas para trabalhar no projeto
-    grunt.registerTask('compilar', ['limpar-tudo','compactando-images','estilizando', 'codificando', 'copy:files']);
+    grunt.registerTask('compile', ['limpar-tudo','compactando-images','estilizando', 'codificando', 'copy:files']);
     grunt.registerTask('estilizando', ['concat:css','cssmin', 'copy:css']);
     grunt.registerTask('codificando', ['concat:js','uglify', 'copy:js']);
     grunt.registerTask('publish', ['limpar-tudo','compactando-images','estilizando','codificando','copy:files']);
