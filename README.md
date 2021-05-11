@@ -17,7 +17,12 @@ Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes
 - grunt-contrib-watch
 - grunt-image
 
+## Iniciando a utilização
+
+Antes de iniciar a utilização deste projeto, apos realizar o download deste projeto, rode o comando **`$npm install`** para instalar as dependencias e assim poder utilizar as tasks descritas abaixo.
+
 ## Tarefas para se trabalhar neste projeto
 
 - **`$grunt compilar`** - Com esta task você vai ajustar os arquivos e diretorios iniciais para iniciar o projeto
 - **`$grunt watch`** - Com a task grunt watch, você pode ir trabalhando nos arquivos de html, css e javascript, a tarefa realiza todo o trabalho de minificação otimizando o tamanho do projeto.
+- **`$grunt publish`** - Com a task grunt publish, você prepara o diretorio /public/ para reazlizar o deploy do projeto.
