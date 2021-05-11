@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		// "liveServer.settings.CustomBrowser": "chrome:PrivateMode",
-		"liveServer.settings.root": "/src/",
+		"liveServer.settings.root": "/public/",
 		"liveServer.settings.fullReload": true,
 		"liveServer.settings.port": 80,
 		"liveServer.settings.host": "127.0.0.1",
