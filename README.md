@@ -8,7 +8,7 @@ Maiores informações sobre o Materialize [clique aqui](https://materializecss.c
 
 ## Automatização de tarefas
 
-Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes plug-ins:
+Neste projeto foi utilizado o [Grunt](https://gruntjs.com) como gerenciador de tarefas com os seguintes plug-ins:
 
 - grunt-contrib-clean
 - grunt-contrib-concat
