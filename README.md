@@ -24,5 +24,5 @@ Antes de iniciar a utilização deste projeto, rode o comando **`$npm install`**
 ## Tarefas para se trabalhar neste projeto
 
 - **`$grunt compile`** - Com esta task você vai ajustar os arquivos e diretorios iniciais para iniciar o projeto
-- **`$grunt watch`** - Com a task grunt watch, você pode ir trabalhando nos arquivos de html, css e javascript, a tarefa realiza todo o trabalho de minificação otimizando o tamanho do projeto.
+- **`$grunt watch`** - Com a task grunt watch, você pode ir trabalhando nos arquivos de html, css e javascript, nesta tarefa é realizada todo o trabalho de minificação e otimizando de imagens do projeto.
 - **`$grunt publish`** - Com a task grunt publish, você prepara o diretorio /public/ para reazlizar o deploy do projeto.
