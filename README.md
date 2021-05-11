@@ -19,7 +19,7 @@ Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes
 
 ## Iniciando a utilização
 
-Antes de iniciar a utilização deste projeto, apos realizar o download deste projeto, rode o comando **`$npm install`** para instalar as dependencias e assim poder utilizar as tasks descritas abaixo.
+Antes de iniciar a utilização deste projeto, rode o comando **`$npm install`** para instalar as dependencias e assim poder utilizar as tasks descritas abaixo.
 
 ## Tarefas para se trabalhar neste projeto
 
