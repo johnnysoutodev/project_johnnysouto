@@ -1,7 +1,7 @@
 # project_johnnysouto
- Projeto do Web Site https://www.johnnysouto.com.br
+Projeto do Web Site https://www.johnnysouto.com.br
  
- ## Framework utilizado
+## Framework utilizado
  
 Neste projeto foi utilizado o Materialize para realizar o design.
 Maiores informações sobre o Materialize [clique aqui](https://materializecss.com)
