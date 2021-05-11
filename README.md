@@ -4,6 +4,7 @@
  ## Framework utilizado
  
 Neste projeto foi utilizado o Materialize para realizar o design.
+Maiores informações sobre o Materialize [clique aqui](https://materializecss.com)
 
 ## Automatização de tarefas
 
