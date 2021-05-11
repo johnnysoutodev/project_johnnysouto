@@ -16,3 +16,8 @@ Neste projeto foi utilizado o Grunt como gerenciador de tarefas com os seguintes
 - grunt-contrib-uglify
 - grunt-contrib-watch
 - grunt-image
+
+## Tarefas para se trabalhar neste projeto
+
+- **`$grunt compilar`** - Com esta task você vai ajustar os arquivos e diretorios iniciais para iniciar o projeto
+- **`$grunt watch`** - Com a task grunt watch, você pode ir trabalhando nos arquivos de html, css e javascript, a tarefa realiza todo o trabalho de minificação otimizando o tamanho do projeto.
