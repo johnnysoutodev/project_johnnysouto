@@ -25,6 +25,10 @@ span strong {
     border-radius: 5px;
 }
 
+ul {
+    margin-block-start: 0;
+}
+
 div.contact-content ul li{
     margin-block-start: 0;
     display: inline-block;
