@@ -49,3 +49,9 @@ i.fas, i.fab, i.far {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+@media only screen and (max-width:320px) and (orientation: portrait) {
+    span small {
+        font-size: .5em;
+    }
+}
