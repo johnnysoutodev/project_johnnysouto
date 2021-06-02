@@ -18,3 +18,5 @@ function acceptGA() {
     });
 
 }
+
+acceptGA();
