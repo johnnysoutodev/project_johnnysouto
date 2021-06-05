@@ -1,10 +1,19 @@
 /* style.css */
 
+:root {
+    --clr-background: #f1f1f1;
+    --clr-base: #1C1C1C;
+    /* --clr-primary: #aa00ff; */
+    /* --clr-gray: #263238; */
+    /* --font-size: 16px; */
+    /* --border-radius: 0.2em; */
+}
+
 body {
-    background-color: #f1f1f1;
+    background-color: var(--clr-background);
     /* font-family: 'Roboto', sans-serif; */
     font-size: 16px;
-    color: #1C1C1C;
+    color: var(--clr-base);
     width: 100vw;
     height: 100vh;
 }
@@ -48,6 +57,14 @@ i.fas, i.fab, i.far {
 .scroll {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+/* ark mode colors class */
+.dark-mode {
+  --clr-background: #263238;
+  --clr-base: black;
+  /* --clr-primary: #69f0ae; */
+  /* --clr-gray: #e0f7fa; */
 }
 
 @media only screen and (max-width:320px) and (orientation: portrait) {
