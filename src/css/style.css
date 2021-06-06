@@ -7,6 +7,7 @@
     --color-shadow-state-1: rgba(0,0,0,.14);
     --color-shadow-state-2: rgba(0,0,0,.12);
     --color-shadow-state-3: rgba(0,0,0,.2);
+    --color-links: #039be5;
     /* --clr-primary: #aa00ff; */
     /* --clr-gray: #263238; */
     /* --font-size: 16px; */
@@ -20,6 +21,10 @@ body {
     color: var(--color-base);
     width: 100vw;
     height: 100vh;
+}
+
+a {
+    color: var(--color-links);
 }
 
 span strong {
