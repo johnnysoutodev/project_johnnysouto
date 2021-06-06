@@ -84,7 +84,17 @@ i.fas, i.fab, i.far {
     justify-content: flex-end;
     align-items: center;
     margin-right: 1em;
-    padding-top: 1em;
+    padding-top: 1.5em;
+}
+
+.color-switch {
+    width: 4em;
+    height: 2em;
+    border-radius: 10em;
+    background: var(--color-background);
+    border: 2px solid var(--color-links);
+    position: absolute;
+    cursor: pointer;
 }
 
 @media only screen and (max-width:320px) and (orientation: portrait) {
