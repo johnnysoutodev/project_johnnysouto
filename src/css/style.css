@@ -7,7 +7,7 @@
     --color-shadow-state-1: rgba(0,0,0,.14);
     --color-shadow-state-2: rgba(0,0,0,.12);
     --color-shadow-state-3: rgba(0,0,0,.2);
-    --color-links: #039be5;
+    --color-links: #039be5 !important;
     /* --clr-primary: #aa00ff; */
     /* --clr-gray: #263238; */
     /* --font-size: 16px; */
@@ -78,6 +78,7 @@ i.fas, i.fab, i.far {
     --color-shadow-state-1: rgba(255,255,255,.14);
     --color-shadow-state-2: rgba(255,255,255,.12);
     --color-shadow-state-3: rgba(255,255,255,.2);
+    --color-links: #9bf00b !important;
   /* --clr-primary: #69f0ae; */
   /* --clr-gray: #e0f7fa; */
 }
