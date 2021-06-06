@@ -79,6 +79,12 @@ i.fas, i.fab, i.far {
     /* --color-links: #107c10; */
 }
 
+.wrapper-color-switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 @media only screen and (max-width:320px) and (orientation: portrait) {
     span small {
         font-size: .5em;
