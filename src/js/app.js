@@ -22,11 +22,11 @@ function checkMode(){
 }
 
 function darkModeOn(){
-    console.log('function darkMode On');
+    document.body.classList.add("dark-mode");
 }
 
 function darkModeOff(){
-    console.log('function darkMode Off');
+    document.body.classList.remove("dark-mode");
 }
 
 calcAge(year);
