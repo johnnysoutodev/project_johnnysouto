@@ -4,9 +4,9 @@
     --color-background: #f1f1f1;
     --color-base: #1C1C1C;
     --color-background-card: #fff;
-    --color-shadow-state-1: rgba(0,0,0,.14) !important;
-    --color-shadow-state-2: rgba(0,0,0,.12) !important;
-    --color-shadow-state-3: rgba(0,0,0,.2) !important;
+    --color-shadow-state-1: rgba(0,0,0,.14);
+    --color-shadow-state-2: rgba(0,0,0,.12);
+    --color-shadow-state-3: rgba(0,0,0,.2);
     /* --clr-primary: #aa00ff; */
     /* --clr-gray: #263238; */
     /* --font-size: 16px; */
@@ -67,12 +67,12 @@ i.fas, i.fab, i.far {
 
 /* ark mode colors class */
 .dark-mode {
-    --color-background: #263238;
+    --color-background: #4f4f4f;
     --color-base: #f1f1f1;
     --color-background-card: #1c1c1c;
-    --color-shadow-state-1: rgba(255,255,255,.14) !important;
-    --color-shadow-state-2: rgba(255,255,255,.12) !important;
-    --color-shadow-state-3: rgba(255,255,255,.2) !important;
+    --color-shadow-state-1: rgba(255,255,255,.14);
+    --color-shadow-state-2: rgba(255,255,255,.12);
+    --color-shadow-state-3: rgba(255,255,255,.2);
   /* --clr-primary: #69f0ae; */
   /* --clr-gray: #e0f7fa; */
 }
