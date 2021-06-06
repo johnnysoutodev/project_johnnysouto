@@ -2,15 +2,12 @@
 
 :root {
     --color-background: #f1f1f1;
-    --color-base: #1C1C1C;
+    --color-base: #2C2C2C;
     --color-background-card: #fff;
     --color-shadow-state-1: rgba(0,0,0,.14);
     --color-shadow-state-2: rgba(0,0,0,.12);
     --color-shadow-state-3: rgba(0,0,0,.2);
     --color-links: #039be5 !important;
-    /* --clr-primary: #aa00ff; */
-    /* --clr-gray: #263238; */
-    /* --font-size: 16px; */
     /* --border-radius: 0.2em; */
 }
 
@@ -24,7 +21,7 @@ body {
 }
 
 a {
-    color: var(--color-links);
+    color: var(--color-links) !important;
 }
 
 span strong {
@@ -74,13 +71,12 @@ i.fas, i.fab, i.far {
 .dark-mode {
     --color-background: #4f4f4f;
     --color-base: #f1f1f1;
-    --color-background-card: #1c1c1c;
+    --color-background-card: #2c2c2c;
     --color-shadow-state-1: rgba(255,255,255,.14);
     --color-shadow-state-2: rgba(255,255,255,.12);
     --color-shadow-state-3: rgba(255,255,255,.2);
-    --color-links: #9bf00b !important;
-  /* --clr-primary: #69f0ae; */
-  /* --clr-gray: #e0f7fa; */
+    --color-links: #9bf00b;
+    /* --color-links: #107c10; */
 }
 
 @media only screen and (max-width:320px) and (orientation: portrait) {
