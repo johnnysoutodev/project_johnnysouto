@@ -83,6 +83,8 @@ i.fas, i.fab, i.far {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin-right: 1em;
+    padding-top: 1em;
 }
 
 @media only screen and (max-width:320px) and (orientation: portrait) {
