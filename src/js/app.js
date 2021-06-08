@@ -4,6 +4,8 @@ var year = new Date().getFullYear();
 
 var age = 0;
 
+var lang = navigator.language;
+
 function calcAge(year) {
     return age = year -1982;
 }
@@ -30,3 +32,9 @@ function darkModeOff(){
 }
 
 calcAge(year);
+
+function verifiyLang(){
+    console.log(lang);
+}
+
+verifiyLang();
