@@ -4,7 +4,10 @@ var year = new Date().getFullYear();
 
 var age = 0;
 
-var lang = navigator.language;
+const language = navigator.language;
+const appVersion = navigator.appVersion;
+const browserEngine = navigator.product;
+const browserUserAgent = navigator.userAgent;
 
 function calcAge(year) {
     return age = year -1982;
@@ -34,7 +37,10 @@ function darkModeOff(){
 calcAge(year);
 
 function verifiyLang(){
-    console.log(lang);
+    console.log(language);
+    console.log(appVersion);
+    console.log(browserEngine);
+    console.log(browserUserAgent);
 }
 
 verifiyLang();
