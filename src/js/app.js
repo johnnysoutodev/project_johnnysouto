@@ -37,10 +37,9 @@ function darkModeOff(){
 calcAge(year);
 
 function verifiyLang(){
-    console.log(language);
-    console.log(appVersion);
-    console.log(browserEngine);
-    console.log(browserUserAgent);
+    if(language === 'pt-br'){
+        // location.replace("https://www.johnnysouto.com.br/");
+    }
 }
 
 verifiyLang();
