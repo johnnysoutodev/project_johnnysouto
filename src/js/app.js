@@ -42,10 +42,32 @@ function verifiyLang(){
     }
 }
 
+verifiyLang();
+
+// Verificar como funcionar o AWS IP
+
+/*
 function getIPFromAmazon() {
     fetch("https://checkip.amazonaws.com/").then(res => res.text()).then(data => console.log(data))
 }
 
 getIPFromAmazon();
 
-verifiyLang();
+*/
+
+// Para verificar como usar orequire
+/*
+const http = require('http');
+
+function requestListener(req, res) {
+  let forwarded = req.headers['x-forwarded-for']
+  let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+  res.writeHead(200);
+  res.end(ip);
+}
+
+const server = http.createServer(requestListener);
+server.listen(3000);
+*/
+
+// console.log('Server listening at http://localhost:3000');
