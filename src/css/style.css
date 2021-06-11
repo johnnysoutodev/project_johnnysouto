@@ -144,6 +144,10 @@ i.fas, i.fab, i.far {
 }
 
 @media only screen and (max-width:375px) and (orientation: portrait) {
+    span small {
+        font-size: .65em;
+    }
+
     h3 {
         margin: 3.1rem 0 1.168rem 0 !important;
     }
