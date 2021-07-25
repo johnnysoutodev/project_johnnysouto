@@ -53,10 +53,10 @@ module.exports = function(grunt){
                 dest: 'public/js/init.js'
             },
 
-            br: {
+            pt: {
                 expand: false,
-                src: 'src/br/index.html',
-                dest: 'public/br/index.html'
+                src: 'src/pt/index.html',
+                dest: 'public/pt/index.html'
             },
 
             en: {
@@ -140,9 +140,9 @@ module.exports = function(grunt){
                 }
             },
 
-            br: {
-                files: 'src/br/index.html',
-                tasks: ['copy:br'],
+            pt: {
+                files: 'src/pt/index.html',
+                tasks: ['copy:pt'],
                 options: {
                     event: ['added', 'changed', 'deleted'],
                 }
