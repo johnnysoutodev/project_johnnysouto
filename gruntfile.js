@@ -47,6 +47,24 @@ module.exports = function(grunt){
                 dest: 'public/js/scripts.min.js'
             },
 
+            initjs: {
+                expand: false,
+                src: 'src/js/init.js',
+                dest: 'public/js/init.js'
+            },
+
+            br: {
+                expand: false,
+                src: 'src/br/index.html',
+                dest: 'public/br/index.html'
+            },
+
+            en: {
+                expand: false,
+                src: 'src/en/index.html',
+                dest: 'public/en/index.html'
+            },
+
             images: {
                 expand: true,
                 cwd: '.tmp/images',
@@ -119,6 +137,30 @@ module.exports = function(grunt){
                 tasks: ['copy:files'],
                 options: {
                     event: ['added', 'changed', 'deleted'],
+                }
+            },
+
+            br: {
+                files: 'src/br/index.html',
+                tasks: ['copy:br'],
+                options: {
+                    event: ['added', 'changed', 'deleted'],
+                }
+            },
+
+            en: {
+                files: 'src/en/index.html',
+                tasks: ['copy:en'],
+                options: {
+                    event: ['added', 'changed', 'deleted'],
+                }
+            },
+
+            initjs: {
+                files: 'src/js/init.js',
+                tasks: ['copy:initjs'],
+                options: {
+                    event: ['added', 'changed', 'deleted']
                 }
             },
 
