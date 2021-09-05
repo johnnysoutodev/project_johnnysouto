@@ -8,6 +8,16 @@
         font-size: 12pt;
     }
 
+    h3 {
+        font-size: 2em;
+        margin-block-start: .5em;
+        margin-block-end: .5em;
+    }
+
+    p {
+        font-size: 1.15em;
+    }
+
     ul {
         list-style-type: none;
     }
