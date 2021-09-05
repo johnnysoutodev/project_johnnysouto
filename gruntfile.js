@@ -76,6 +76,12 @@ module.exports = function(grunt){
                 expande: false,
                 src: 'src/printer/index.html',
                 dest: 'public/printer/index.html'
+            },
+
+            printercss: {
+                expand: false,
+                src: 'src/css/printer.css',
+                dest: 'public/css/printer.css'
             }
         },
 
@@ -87,7 +93,7 @@ module.exports = function(grunt){
             },
 
             css: {
-                src: ['src/css/style.css', 'src/css/**/*.css'],
+                src: ['src/css/materialize.css', 'src/css/style.css'],
                 dest: '.tmp/css/styles.min.css'
             }
         },
@@ -181,6 +187,14 @@ module.exports = function(grunt){
             printer: {
                 files: 'src/printer/index.html',
                 tasks: ['copy:printer'],
+                options: {
+                    event: ['added', 'changed', 'deleted']
+                }
+            },
+
+            printercss: {
+                files: 'src/css/printer.css',
+                tasks: ['copy:printercss'],
                 options: {
                     event: ['added', 'changed', 'deleted']
                 }
