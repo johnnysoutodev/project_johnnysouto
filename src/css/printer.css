@@ -1,7 +1,22 @@
 /* printer */
 
-@media only print {
+/* @media only print { */
+@media only screen {
     
     body{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.wrapper-color-switch {
+        display: none;
     }
 }
