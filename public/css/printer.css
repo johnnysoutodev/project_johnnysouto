@@ -1,7 +1,7 @@
 /* printer */
 
-/* @media only print { */
-@media only screen {
+@media only print {
+/* @media only screen { */
     
     body{
         font-family: Arial, Helvetica, sans-serif;
@@ -40,7 +40,7 @@
         display: none;
     }
 
-    span.phone, span.mail {
+    span.phone, span.mail, span.in, span.git {
         display: block;
     }
 
