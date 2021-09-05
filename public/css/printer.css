@@ -27,7 +27,9 @@
     }
 
     p {
-        font-size: 1.15em;
+        font-size: 1em;
+        margin-block-start: .5em;
+        margin-block-end: .5em;
     }
 
     ul {
@@ -50,11 +52,6 @@
 
     div.wrapper-color-switch {
         display: none;
-    }
-
-    div.project-content ul li > p {
-        margin-block-start: .5em;
-        margin-block-end: .5em;
     }
 
     a.readmore {
