@@ -70,6 +70,12 @@ module.exports = function(grunt){
                 cwd: '.tmp/images',
                 src: '*.{png,jpg,gif,svg}',
                 dest: 'public/images/'
+            },
+
+            printer: {
+                expande: false,
+                src: 'src/printer/index.html',
+                dest: 'public/printer/index.html'
             }
         },
 
@@ -167,6 +173,14 @@ module.exports = function(grunt){
             images: {
                 files: 'src/images/*.{png,jpg,gif,svg}',
                 tasks: ['compactando-images'],
+                options: {
+                    event: ['added', 'changed', 'deleted']
+                }
+            },
+
+            printer: {
+                files: 'src/printer/index.html',
+                tasks: ['copy:printer'],
                 options: {
                     event: ['added', 'changed', 'deleted']
                 }
