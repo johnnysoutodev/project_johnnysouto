@@ -1,7 +1,39 @@
 /* printer */
 
-@media only print {
+/* @media only print { */
+@media only screen {
     
     body{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12pt;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    i.fab, i.far {
+        display: none;
+    }
+
+    span.phone, span.mail {
+        /* display: none; */
+        display: block;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    div.wrapper-color-switch {
+        display: none;
+    }
+
+    h4.lembrete::after {
+        content: '';
+    }
+
+    section#foot {
+        display: none;
     }
 }
