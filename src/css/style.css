@@ -133,6 +133,10 @@ i.fas, i.fab, i.far {
     display: none;
 }
 
+h4.lembrete::after {
+    content: '*';
+}
+
 @media only screen and (max-width:320px) and (orientation: portrait) {
     span small {
         font-size: .5em;
