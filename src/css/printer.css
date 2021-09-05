@@ -9,7 +9,19 @@
     }
 
     h3 {
-        font-size: 2em;
+        font-size: 1.95em;
+        margin-block-start: .5em;
+        margin-block-end: .5em;
+    }
+
+    h4 {
+        font-size: 1.29em;
+        margin-block-start: .5em;
+        margin-block-end: .5em;
+    }
+
+    h5 {
+        font-size: 1em;
         margin-block-start: .5em;
         margin-block-end: .5em;
     }
