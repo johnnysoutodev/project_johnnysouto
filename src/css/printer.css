@@ -12,6 +12,15 @@
         list-style-type: none;
     }
 
+    i.fab, i.far {
+        display: none;
+    }
+
+    span.phone, span.mail {
+        /* display: none; */
+        display: block;
+    }
+
     a {
         text-decoration: none;
     }
