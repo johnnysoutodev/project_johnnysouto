@@ -1,4 +1,4 @@
-module.exports = function(grunt){
+module.exports = function (grunt) {
 
     grunt.initConfig({
 
@@ -29,13 +29,20 @@ module.exports = function(grunt){
         copy: {
             files: {
                 expand: true,
-                cwd: 'src',
+                cwd: 'src/**',
                 src: ['*'],
-                dest: 'public',
+                dest: 'public/**',
                 filter: 'isFile'
             },
 
-            css:{
+            all: {
+                expand: true,
+                cwd: 'src',
+                src: '**',
+                dest: 'public/',
+            },
+
+            css: {
                 expand: false,
                 src: '.tmp/css/styles.min.css',
                 dest: 'public/css/styles.min.css'
@@ -116,7 +123,7 @@ module.exports = function(grunt){
         },
 
         image: {
-            
+
             dynamic: {
                 files: [{
                     expand: true,
@@ -145,7 +152,7 @@ module.exports = function(grunt){
             },
 
             files: {
-                files: 'src/*.{html,txt}',
+                files: 'src/**/*.{html,txt}',
                 tasks: ['copy:files'],
                 options: {
                     event: ['added', 'changed', 'deleted'],
@@ -222,9 +229,9 @@ module.exports = function(grunt){
     grunt.registerTask('compactando-images', ['clean:images', 'image:dynamic', 'copy:images']);
 
     // Tarefas para trabalhar no projeto
-    grunt.registerTask('compile', ['limpar-tudo','compactando-images','estilizando', 'codificando', 'copy:files']);
-    grunt.registerTask('estilizando', ['concat:css','cssmin', 'copy:css']);
-    grunt.registerTask('codificando', ['concat:js','uglify', 'copy:js']);
-    grunt.registerTask('publish', ['limpar-tudo','compactando-images','estilizando','codificando','copy:files']);
+    grunt.registerTask('compile', ['limpar-tudo', 'compactando-images', 'estilizando', 'codificando', 'copy:files']);
+    grunt.registerTask('estilizando', ['concat:css', 'cssmin', 'copy:css']);
+    grunt.registerTask('codificando', ['concat:js', 'uglify', 'copy:js']);
+    grunt.registerTask('publish', ['limpar-tudo', 'compactando-images', 'estilizando', 'codificando', 'copy:files']);
     grunt.registerTask('default', ['watch']);
 };
