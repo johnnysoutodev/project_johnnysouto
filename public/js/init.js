@@ -9,7 +9,7 @@ function verifyLang() {
         console.log(language);
     } else {
         // location.replace("https://www.johnnysouto.com.br/en/");
-        location.replace("/en/");
+        // location.replace("/en/");
         console.log(language);
     }
 }
