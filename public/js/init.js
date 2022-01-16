@@ -2,12 +2,14 @@
 
 const language = navigator.language;
 
-function verifiyLang() {
+function verifyLang() {
     if (language == "pt-br") {
         location.replace("/pt/");
+        console.log(language);
     } else {
         location.replace("/en/");
+        console.log(language);
     }
 }
 
-verifiyLang();
+verifyLang();
