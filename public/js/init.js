@@ -6,11 +6,9 @@ function verifyLang() {
     if (language == "pt-BR") {
         // location.replace("https://www.johnnysouto.com.br/br/");
         location.replace("/pt/");
-        console.log(language);
     } else {
         // location.replace("https://www.johnnysouto.com.br/en/");
-        // location.replace("/en/");
-        console.log(language);
+        location.replace("/en/");
     }
 }
 
