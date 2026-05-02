@@ -166,3 +166,6 @@ yarn-error.log*
 
 # Arquivos temporários
 .tmp/
+
+# VS Code Config Local
+.vscode
