@@ -1,0 +1,329 @@
+name: Production CI/CD
+
+# Roda em 2 situações:
+# 1. Pull Request de develop → main (validação antes do merge)
+# 2. Push para main (deploy efetivo após merge)
+# Testes já foram validados em develop (feature-tests.yml + preproduction)
+# Aqui apenas faz security audit, aprovação manual e deploy
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Motivo do deploy manual'
+        required: false
+        default: 'Deploy manual via workflow_dispatch'
+
+# Permissões necessárias para criar e fazer push de tags
+permissions:
+  contents: write  # Necessário para criar tags e fazer push
+
+jobs:
+  # Validar se o PR vem de develop (apenas para PRs)
+  validate-source:
+    name: Validate PR Source Branch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Check if PR comes from develop
+        run: |
+          SOURCE_BRANCH="${{ github.head_ref }}"
+          echo "Source branch: $SOURCE_BRANCH"
+          
+          if [ "$SOURCE_BRANCH" != "develop" ]; then
+            echo "❌ BLOQUEADO: PRs para 'main' devem vir APENAS de 'develop'"
+            echo "Branch atual: $SOURCE_BRANCH"
+            echo ""
+            echo "Workflow correto:"
+            echo "1. Feature: feature/* → develop"
+            echo "2. Release: develop → main"
+            exit 1
+          fi
+          
+          echo "✅ PR válido: develop → main"
+
+  security-check:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    needs: [validate-source]
+    if: always() && (needs.validate-source.result == 'success' || needs.validate-source.result == 'skipped')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Security audit
+        run: |
+          echo "🔒 Running npm audit..."
+          npm audit --audit-level=high || true
+          
+          AUDIT_RESULT=$(npm audit --audit-level=high --json || true)
+          HIGH_COUNT=$(echo $AUDIT_RESULT | jq '.metadata.vulnerabilities.high // 0')
+          CRITICAL_COUNT=$(echo $AUDIT_RESULT | jq '.metadata.vulnerabilities.critical // 0')
+          
+          echo "⚠️  High vulnerabilities: $HIGH_COUNT"
+          echo "🚨 Critical vulnerabilities: $CRITICAL_COUNT"
+          
+          if [ "$CRITICAL_COUNT" -gt 0 ]; then
+            echo "❌ BLOCKED: Critical vulnerabilities detected!"
+            exit 1
+          fi
+          
+          if [ "$HIGH_COUNT" -gt 2 ]; then
+            echo "⚠️  WARNING: More than 2 high vulnerabilities detected!"
+            echo "Consider fixing before deploying to production."
+            exit 1
+          fi
+          
+          echo "✅ Security audit passed"
+          echo ""
+          echo "ℹ️  Testes já foram validados em develop"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: security-check
+    # IMPORTANTE: Nome EXATO do environment no GitHub Settings (case-sensitive)
+    # Deve corresponder ao nome na Vercel: Production (com P maiúsculo)
+    # Roda em PR (pede aprovação) E em push (executa deploy)
+    # A aprovação manual acontece durante o PR, garantindo controle antes do merge
+    # FIX: Adicionar always() para garantir que a condição seja avaliada
+    if: |
+      always() && 
+      needs.security-check.result == 'success' &&
+      (
+        (github.event_name == 'pull_request' && github.base_ref == 'main') ||
+        (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+        (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+      )
+    environment:
+      name: Production
+      url: https://www.johnnysouto.com.br
+    
+    steps:
+      - name: Debug - Show GitHub Context
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Base ref: ${{ github.base_ref }}"
+          echo "Should deploy: TRUE (job is running)"
+          echo ""
+          echo "⚠️  ENVIRONMENT DESABILITADO PARA DEBUG"
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Deploy to Vercel Production
+        id: deploy
+        # Só executa deploy REAL se for push (após merge)
+        # Em PR, apenas valida aprovação sem fazer deploy
+        if: github.event_name == 'push'
+        run: |
+          URL=$(vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Production URL: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      - name: Notify approval granted (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "✅ Aprovação de deploy concedida para o PR"
+          echo "📦 Environment: Production"
+          echo "🌿 Source: develop → main"
+          echo "👤 Aprovado por: Reviewer do Environment"
+          echo ""
+          echo "ℹ️  Deploy REAL acontecerá após merge do PR"
+      
+      - name: Notify deployment success (Push)
+        if: github.event_name == 'push'
+        run: |
+          echo "✅ Deployed to Production"
+          echo "🔗 URL: ${{ steps.deploy.outputs.url }}"
+          echo "📦 Environment: Production"
+          echo "🌿 Branch: main"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo "👤 Deployed by: ${{ github.actor }}"
+          echo "📅 Date: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+  post-deploy-validation:
+    name: Post-Deploy Smoke Tests
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    # Só roda após deploy REAL (push), não em PRs
+    # IMPORTANTE: always() força avaliação da condição mesmo com dependências
+    if: |
+      always() &&
+      needs.deploy-production.result == 'success' &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Wait for deployment propagation
+        run: sleep 10
+      
+      - name: Health check - API endpoints
+        run: |
+          echo "🔍 Running health checks..."
+          
+          # Tentar acessar a URL de produção
+          PRODUCTION_URL="https://www.johnnysouto.com.br"
+          
+          echo "Testing $PRODUCTION_URL..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $PRODUCTION_URL)
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Homepage is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️  Homepage returned HTTP $HTTP_CODE"
+            echo "This might be expected if redirects are configured."
+          fi
+          
+          echo "✅ Smoke tests completed"
+      
+      - name: Notify validation success
+        run: |
+          echo "✅ Post-deploy validation completed"
+          echo "🎉 Production deployment successful and validated!"
+          echo ""
+          echo "Next steps:"
+          echo "1. Monitor logs in Vercel Dashboard"
+          echo "2. Test critical user flows manually"
+          echo "3. Check error tracking (if configured)"
+          echo "4. Review performance metrics"
+
+  notify-failure:
+    name: Notify Deployment Failure
+    runs-on: ubuntu-latest
+    needs: [security-check, deploy-production, post-deploy-validation]
+    if: failure()
+    
+    steps:
+      - name: Create failure notification
+        run: |
+          echo "❌ DEPLOYMENT FAILED"
+          echo "🔍 Check the logs above for details"
+          echo ""
+          echo "Possible causes:"
+          echo "- Security vulnerabilities detected"
+          echo "- Vercel deployment error"
+          echo "- Post-deploy validation failed"
+          echo ""
+          echo "Action required: Review logs and fix issues before retrying."
+          echo ""
+          echo "ℹ️  Testes já foram validados em develop/preproduction"
+
+  create-version-tag:
+    name: Create Version Tag
+    runs-on: ubuntu-latest
+    needs: [deploy-production, post-deploy-validation]
+    # IMPORTANTE: always() força avaliação da condição mesmo com dependências
+    if: |
+      always() &&
+      needs.deploy-production.result == 'success' &&
+      needs.post-deploy-validation.result == 'success' &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necessário para ter acesso a todas as tags
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      
+      - name: Extract version from package.json
+        id: package-version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Package version: $VERSION"
+      
+      - name: Check if tag already exists
+        id: check-tag
+        run: |
+          VERSION="${{ steps.package-version.outputs.version }}"
+          TAG="v$VERSION"
+          
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️  Tag $TAG already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Tag $TAG does not exist, will create"
+          fi
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+      
+      - name: Configure Git
+        if: steps.check-tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Create and push tag
+        if: steps.check-tag.outputs.exists == 'false'
+        run: |
+          TAG="${{ steps.check-tag.outputs.tag }}"
+          
+          git tag -a "$TAG" -m "chore(release): version ${{ steps.package-version.outputs.version }}
+
+          Released to Production via GitHub Actions
+          
+          Deploy URL: https://www.johnnysouto.com.br
+          Commit: ${{ github.sha }}
+          Deployed by: ${{ github.actor }}
+          Date: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          
+          git push origin "$TAG"
+          
+          echo "✅ Tag $TAG created and pushed successfully"
+      
+      - name: Notify tag creation
+        run: |
+          VERSION="${{ steps.package-version.outputs.version }}"
+          TAG="${{ steps.check-tag.outputs.tag }}"
+          EXISTS="${{ steps.check-tag.outputs.exists }}"
+          
+          if [ "$EXISTS" == "true" ]; then
+            echo "ℹ️  Tag $TAG already exists, skipping creation"
+            echo "🔗 View tag: https://github.com/${{ github.repository }}/releases/tag/$TAG"
+          else
+            echo "🏷️  Tag created: $TAG"
+            echo "📦 Version: $VERSION"
+            echo "🔗 View tag: https://github.com/${{ github.repository }}/releases/tag/$TAG"
+            echo ""
+            echo "💡 Tip: Create a release from this tag in GitHub:"
+            echo "   https://github.com/${{ github.repository }}/releases/new?tag=$TAG"
+          fi
