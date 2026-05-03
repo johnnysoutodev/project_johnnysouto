@@ -1,0 +1,47 @@
+name: Develop CI/CD
+
+# Roda APENAS em push direto para develop (após merge de PR aprovado)
+# Testes já foram executados no PR (feature-tests.yml)
+# Aqui apenas faz deploy do código já validado no ambiente Develop
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy-develop:
+    name: Deploy to Develop
+    runs-on: ubuntu-latest
+    environment:
+      name: Develop
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Deploy to Vercel Preview
+        id: deploy
+        run: |
+          URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Preview URL: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      
+      - name: Notify deployment success
+        run: |
+          echo "✅ Deployed to Develop"
+          echo "🔗 URL: ${{ steps.deploy.outputs.url }}"
+          echo "📦 Environment: Develop"
+          echo "🌿 Branch: develop"
+          echo ""
+          echo "ℹ️  Testes já foram validados no PR (feature-tests.yml)"
