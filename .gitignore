@@ -163,3 +163,7 @@ yarn-error.log*
 
 # MCP config with tokens
 .vscode/mcp.json
+
+# Figma generated files (use .agents/scripts/figma/extract-figma-tokens.ps1 to regenerate)
+data/figma/*
+!data/figma/README.md
