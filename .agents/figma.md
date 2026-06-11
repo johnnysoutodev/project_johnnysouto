@@ -10,6 +10,8 @@ applyTo:
   - "componentes"
   - "ui"
   - "angular"
+  - ".agents/scripts/figma/**"
+  - "data/figma/**"
 model: ['Claude Sonnet 4.5 (copilot)']
 ---
 
@@ -182,6 +184,65 @@ Use o Personal Access Token armazenado em arquivo `.env`:
 > 1. Copie `.env.template` para `.env`
 > 2. Preencha `FIGMA_PERSONAL_ACCESS_TOKEN` com seu token
 > 3. Token gerado em: https://www.figma.com/settings → Personal access tokens
+
+### ⚡ Extração Otimizada de Design Tokens
+
+**PROBLEMA:** A API do Figma retorna JSONs muito grandes (100KB+) que não devem ser versionados no GitHub.
+
+**SOLUÇÃO:** Use o script de extração (disponível em PowerShell e Bash) que extrai APENAS dados relevantes.
+
+#### Como Usar
+
+**Windows (PowerShell):**
+```powershell
+# Executar extração de design tokens
+.\.agents\scripts\figma\extract-figma-tokens.ps1
+```
+
+**macOS/Linux (Bash):**
+```bash
+# Dar permissão de execução (primeira vez)
+chmod +x .agents/scripts/figma/extract-figma-tokens.sh
+
+# Executar
+./.agents/scripts/figma/extract-figma-tokens.sh
+```
+
+**Pré-requisitos (macOS/Linux):**
+- `jq` instalado: `brew install jq` (macOS) ou `sudo apt-get install jq` (Ubuntu)
+
+#### O que o script faz
+
+1. ✅ Extrai apenas cores únicas (RGB → HEX)
+2. ✅ Extrai estilos tipográficos (tamanho, família, peso)
+3. ✅ Conta quantas vezes cada cor/estilo é usado
+4. ✅ Gera arquivo compacto `design-tokens.md` (~10KB vs ~100KB)
+5. ✅ Arquivos gerados estão no `.gitignore` (não sobem pro GitHub)
+
+#### Arquivos Gerados (não versionados)
+
+Todos os arquivos são salvos em `data/figma/` (diretório ignorado pelo git):
+
+- `data/figma/design-tokens.md` - Tokens extraídos formatados em Markdown
+- `data/figma/figma-*.json` - JSONs temporários da API (para debug)
+
+#### Próximos Passos Após Extração
+
+1. Revisar `data/figma/design-tokens.md` para identificar cores principais
+2. Converter cores em variáveis SCSS (`src/styles/_variables.scss`)
+3. Converter tipografia em tokens SCSS (`src/styles/_typography.scss`)
+4. Implementar componentes Angular usando os tokens
+
+#### Exemplo de Conversão para SCSS
+
+```scss
+// Extraído do data/figma/design-tokens.md:
+// #111827 - RGB: rgb(17, 24, 39) - Uso: 182 elementos
+
+// Converter para src/styles/_variables.scss:
+$color-text-primary: #111827;
+$color-gray-900: #111827;
+```
 
 ### API Endpoints Disponíveis
 
