@@ -26,3 +26,19 @@ Antes de iniciar a utilização deste projeto, rode o comando **`$npm install`**
 - **`$grunt compile`** - Com esta task você vai ajustar os arquivos e diretorios iniciais para iniciar o projeto
 - **`$grunt watch`** - Com a task grunt watch, você pode ir trabalhando nos arquivos de html, css e javascript, nesta tarefa é realizada todo o trabalho de minificação e otimizando de imagens do projeto.
 - **`$grunt publish`** - Com a task grunt publish, você prepara o diretorio /public/ para reazlizar o deploy do projeto.
+
+## 🔧 Setup do Projeto
+
+### Variáveis de Ambiente
+
+Este projeto usa variáveis de ambiente para tokens sensíveis.
+
+**Configuração inicial:**
+
+1. Copie o arquivo template:
+   ```bash
+   cp .env.template .env
+   ```
+
+2. Adicione seu token do Figma em `.env`
+3. Token: https://www.figma.com/settings → Personal access tokens

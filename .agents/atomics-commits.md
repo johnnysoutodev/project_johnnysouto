@@ -266,7 +266,7 @@ Antes de confirmar commits:
 
 ## Troubleshooting
 
-**Erro: "event not found"**
+**Erro "event not found":**
 
 ```bash
 # ❌ PROBLEMA: usou double quotes
@@ -277,7 +277,7 @@ git commit -m "test: expand 15→33"
 git commit -m 'test: expand 15→33'
 ```
 
-**Erro: "nothing to commit"**
+**Erro "nothing to commit":**
 
 ```bash
 # ❌ PROBLEMA: esqueceu git add
@@ -289,7 +289,7 @@ git add <file>
 git commit -m 'feat: something'
 ```
 
-**Commits muito grandes**
+**Commits muito grandes:**
 
 ```bash
 # ❌ PROBLEMA: 10+ arquivos em 1 commit

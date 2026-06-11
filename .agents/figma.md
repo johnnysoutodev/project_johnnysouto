@@ -165,6 +165,56 @@ Sempre peça a URL direta do arquivo ou frame quando necessário.
 
 ---
 
+## Modo 2 — API REST do Figma (com URL)
+
+Use quando o usuário fornecer um link direto do Figma.
+
+### Autenticação
+
+Use o Personal Access Token armazenado em arquivo `.env`:
+
+- **Variável:** `FIGMA_PERSONAL_ACCESS_TOKEN`
+- **Header:** `X-Figma-Token: process.env.FIGMA_PERSONAL_ACCESS_TOKEN`
+- **Arquivo:** `.env` (não versionado, copie de `.env.template`)
+
+ **Setup inicial:**
+
+> 1. Copie `.env.template` para `.env`
+> 2. Preencha `FIGMA_PERSONAL_ACCESS_TOKEN` com seu token
+> 3. Token gerado em: https://www.figma.com/settings → Personal access tokens
+
+### API Endpoints Disponíveis
+
+**Base URL:** `https://api.figma.com/v1`
+
+| Endpoint | Uso |
+|----------|-----|
+| `GET /files/:file_key` | Obter estrutura completa do arquivo |
+| `GET /files/:file_key/nodes?ids=:node_ids` | Obter nodes específicos |
+| `GET /images/:file_key?ids=:node_ids&format=png` | Screenshots de nodes |
+| `GET /files/:file_key/variables/local` | Variáveis e tokens |
+| `GET /files/:file_key/styles` | Estilos reutilizáveis |
+
+### Fluxo com URL Figma
+
+1. **Extrair dados da URL:**
+   - URL: `https://www.figma.com/design/ABC123/MyDesign?node-id=1-23`
+   - fileKey: `ABC123`
+   - nodeId: `1:23` (converter `1-23` → `1:23`)
+
+2. **Fazer requisição:**
+
+   ```javascript
+   // O agente deve ler o token do arquivo .env
+   const token = process.env.FIGMA_PERSONAL_ACCESS_TOKEN;
+   
+   fetch(`https://api.figma.com/v1/files/${fileKey}/nodes?ids=${nodeId}`, {
+     headers: { 'X-Figma-Token': token }
+   })
+    ```
+
+---
+
 ## Regras Gerais
 
 ### Prefira MCP quando disponível

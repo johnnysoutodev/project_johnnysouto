@@ -160,12 +160,6 @@ yarn-error.log*
 # Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
-# Arquivos temporários
-.tmp/
-
-# VS Code Config Local
-.vscode
+# MCP config with tokens
+.vscode/mcp.json
