@@ -2,7 +2,7 @@
 name: atomics-commits
 applyTo: '**/*'
 description: Agente especializado em criar commits atômicos seguindo Conventional Commits. Analisa git status, agrupa mudanças por contexto (docs/data/code/predictions) e executa commits com mensagens Conventional Commits.
-model: ['GPT5-mini (copilot)', 'Claude Sonnet 4.5 (copilot)', 'GPT-5.4 (copilot)']
+model: ['Claude Sonnet 4.5 (copilot)']
 ---
 
 # atomics-commits

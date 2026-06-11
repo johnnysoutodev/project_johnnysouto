@@ -10,6 +10,7 @@ applyTo:
   - "componentes"
   - "ui"
   - "angular"
+model: ['Claude Sonnet 4.5 (copilot)']
 ---
 
 # Figma Assistant — johnnysouto.com.br
