@@ -26,6 +26,19 @@ Use este agente quando:
 git status --porcelain --branch
 ```
 
+**⚠️ VERIFICAÇÃO PRIORITÁRIA:**
+
+**Antes de qualquer agrupamento, verificar se `.gitignore` está na lista:**
+
+```bash
+git status --short | grep -E '^\s*[MA]\s+\.gitignore'
+```
+
+Se `.gitignore` estiver modificado/adicionado:
+1. ✅ Fazer commit do `.gitignore` IMEDIATAMENTE
+2. ✅ Só depois processar outros arquivos
+3. ✅ Motivo: Proteger repositório remoto de arquivos indesejados
+
 **Interpreta output:**
 
 - `M` = Modified (modificado)
@@ -107,11 +120,37 @@ git commit -m "feat(predictions): adiciona prediction concurso 3674"
 
 **Ordem de commits:**
 
-1. **docs** primeiro (contexto para próximos commits)
-2. **data** segundo (histórico atualizado)
-3. **feat/fix/refactor** terceiro (código)
-4. **test** quarto (validação)
-5. **chore** último (config, .gitignore)
+⚠️ **REGRA PRIORITÁRIA - .gitignore SEMPRE PRIMEIRO:**
+
+**Se `.gitignore` estiver modificado ou adicionado, SEMPRE fazer commit dele ANTES de qualquer outro arquivo.**
+
+Motivo: Evita que arquivos indesejados sejam enviados ao repositório remoto antes do .gitignore estar atualizado.
+
+```bash
+# Exemplo de priorização
+git status --short
+# Output:
+#  M .gitignore
+#  M src/app.js
+#  ?? data/figma/temp.json
+
+# ✅ CORRETO - .gitignore primeiro
+git add .gitignore
+git commit -m 'chore: atualiza gitignore para ignorar dados temporarios'
+
+# Depois os outros arquivos
+git add src/app.js
+git commit -m 'feat: implementa nova funcionalidade'
+```
+
+**Ordem padrão para demais arquivos:**
+
+1. **🛡️ .gitignore** (SEMPRE PRIMEIRO se presente)
+2. **docs** (contexto para próximos commits)
+3. **data** (histórico atualizado)
+4. **feat/fix/refactor** (código)
+5. **test** (validação)
+6. **chore** (outras configs)
 
 ### 5. Validação Pós-Commit
 
@@ -208,14 +247,47 @@ git commit -m 'feat(predictions): adiciona predictions concursos 3674 e 3002
 
 ## Casos Especiais
 
-### .gitignore Updates
+### 🛡️ .gitignore Updates (PRIORITÁRIO)
 
-**Se modificar .gitignore:**
+**⚠️ REGRA CRÍTICA: `.gitignore` SEMPRE PRIMEIRO**
+
+Se `.gitignore` estiver modificado/adicionado, **PARE** e commite-o ANTES de processar outros arquivos.
+
+**Motivo:** Evitar que arquivos sensíveis ou temporários sejam enviados ao repositório remoto antes do `.gitignore` estar atualizado.
+
+**Exemplo de workflow correto:**
 
 ```bash
-# Commit separado, sempre tipo 'chore'
+# Situação: .gitignore modificado + outros arquivos
+git status --short
+#  M .gitignore
+#  M src/app.js
+#  ?? data/figma/design-tokens.md
+#  ?? .env
+
+# ✅ PASSO 1: .gitignore PRIMEIRO
 git add .gitignore
-git commit -m 'chore: atualiza .gitignore para ignorar [contexto]'
+git commit -m 'chore: atualiza gitignore para ignorar data/figma/ e .env'
+
+# ✅ PASSO 2: Verificar se arquivos indesejados sumiram
+git status --short
+#  M src/app.js
+# (data/figma/ e .env não aparecem mais - protegidos!)
+
+# ✅ PASSO 3: Continuar com commits normais
+git add src/app.js
+git commit -m 'feat: implementa nova funcionalidade'
+```
+
+**Mensagem padrão:**
+
+```bash
+git commit -m 'chore: atualiza gitignore para [contexto específico]'
+
+# Exemplos:
+# 'chore: atualiza gitignore para ignorar dados temporarios do figma'
+# 'chore: atualiza gitignore para proteger tokens MCP'
+# 'chore: adiciona node_modules ao gitignore'
 ```
 
 ### Config.yaml Changes
@@ -260,9 +332,82 @@ Antes de confirmar commits:
 - [ ] Mensagens seguem Conventional Commits?
 - [ ] Usou single quotes nas mensagens?
 - [ ] Commits são atômicos (uma mudança lógica cada)?
-- [ ] Ordem de commits é lógica (docs → data → code → config)?
+- [ ] Ordem de commits é lógica (.gitignore → docs → data → code → config)?
 - [ ] Working tree ficou limpo após commits?
 - [ ] `git log` confirma commits criados?
+
+---
+
+## Exemplo Completo: Priorização do .gitignore
+
+**Cenário real:** Integração com Figma gerando arquivos temporários
+
+```bash
+# Situação inicial
+git status --short
+ M .agents/figma.md
+ M .gitignore
+ A  data/figma/README.md
+ A  .agents/scripts/figma/extract-figma-tokens.ps1
+ A  .agents/scripts/figma/extract-figma-tokens.sh
+?? data/figma/design-tokens.md
+?? data/figma/figma-data.json
+```
+
+**⚠️ PROBLEMA DETECTADO:** `.gitignore` modificado + arquivos não rastreados que deveriam ser ignorados!
+
+**✅ SOLUÇÃO - Workflow Correto:**
+
+```bash
+# PASSO 1: .gitignore PRIMEIRO (PRIORITÁRIO)
+git add .gitignore
+git commit -m 'chore(figma): configura gitignore para dados extraidos
+
+- Ignora diretorio data/figma/ (arquivos gerados automaticamente)
+- Permite versionar data/figma/README.md (documentacao)
+- Protege JSONs temporarios e design-tokens.md gerados'
+
+# PASSO 2: Verificar proteção
+git status --short
+#  M .agents/figma.md
+#  A  data/figma/README.md
+#  A  .agents/scripts/figma/extract-figma-tokens.ps1
+#  A  .agents/scripts/figma/extract-figma-tokens.sh
+# ✅ data/figma/design-tokens.md e figma-data.json NÃO aparecem mais!
+
+# PASSO 3: Continuar com commits normais
+git add .agents/scripts/
+git commit -m 'feat(figma): adiciona scripts cross-platform de extracao de tokens
+
+- Script PowerShell para Windows
+- Script Bash para macOS/Linux
+- Documentacao tecnica completa'
+
+git add data/figma/README.md
+git commit -m 'docs(figma): adiciona README para diretorio de dados
+
+Explica estrutura e como regenerar tokens'
+
+git add .agents/figma.md
+git commit -m 'docs(figma): atualiza documentacao do agente
+
+- Documenta scripts cross-platform
+- Adiciona secao de extracao otimizada'
+
+# RESULTADO: 4 commits atômicos, nenhum arquivo indesejado no repo!
+```
+
+**❌ ERRO COMUM - Não fazer isso:**
+
+```bash
+# ERRADO: Commitar scripts antes do .gitignore
+git add .agents/scripts/
+git commit -m 'feat: scripts'
+
+# ❌ Se der push agora, data/figma/*.json pode vazar antes do .gitignore!
+```
+
+---
 
 ## Troubleshooting
 
