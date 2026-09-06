@@ -60,6 +60,7 @@ project_johnnysouto/
 ├── docs/
 │   ├── ANALISE-PROJETO.md
 │   ├── PLANO-MIGRACAO-ANGULAR.md   # este documento
+│   ├── design-system.md           # specs extraídas do Figma via MCP
 │   └── ...
 ```
 
@@ -69,7 +70,7 @@ project_johnnysouto/
 
 ### Fase 0 — Preparação
 - [x] Johnny compartilha o arquivo/link do Figma com o design: <https://www.figma.com/design/9z2dzCKhlXWqVynN5SEeEM/template_portfolio_website?node-id=0-1&m=dev&t=p400RgMm8j8SjqJM-1>
-- [ ] Extrair specs do Figma via MCP (cores, tipografia, espaçamentos, componentes, breakpoints). *Nota: o servidor MCP do Figma está configurado em `.vscode/mcp.json` para uso no VS Code/Copilot; não está conectado nesta sessão do Claude Code CLI — a extração precisa ser feita numa sessão/ferramenta com esse MCP ativo.*
+- [x] Extrair specs do Figma via MCP (cores, tipografia, espaçamentos, componentes, breakpoints). Specs de nível página/tema salvas em `docs/design-system.md`; specs de componentes individuais ficam para a Fase 2, extraídas sob demanda.
 - [ ] Confirmar nome final do diretório do novo projeto (`web/` é só uma proposta).
 - [ ] Confirmar versão do Angular a usar e compatibilidade com Node 20 (`.nvmrc` atual).
 - [ ] Decidir se a Vercel vai ter um **projeto separado** para o preview do novo site ou um **environment/branch** dentro do mesmo projeto.
@@ -150,3 +151,4 @@ project_johnnysouto/
 | Data | Mudança |
 |---|---|
 | 06/09/2026 | Criação do plano, com decisões arquiteturais iniciais definidas (SSG, i18n nativo, rollout em paralelo, design via Figma/MCP). |
+| 06/09/2026 | Conectado ao MCP do Figma e extraídas specs de página/tema (cores, tipografia, sombras, seções, breakpoints) em `docs/design-system.md`. Design contempla dark mode e menu mobile dedicado, ainda não previstos neste plano — decisão pendente. |
