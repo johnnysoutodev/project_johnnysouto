@@ -32,6 +32,16 @@ O plano de migração para Angular (`docs/PLANO-MIGRACAO-ANGULAR.md`) já está 
 
 Procedimentos reutilizáveis e mais específicos (não regras gerais) vivem em `docs/agent-rules/`, com pontes por ferramenta em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code). Lista completa e como adicionar novos agentes: `docs/agent-rules/README.md`.
 
+## Uso eficiente de tokens
+
+Minimize o consumo de tokens em todas as interações, sem sacrificar corretude:
+
+- Respostas curtas e diretas — sem repetir informação que já foi dada na conversa, sem seções/resumos redundantes.
+- Ao ler arquivos, prefira ler só o trecho relevante (offset/limit, busca direcionada) em vez do arquivo inteiro, quando o arquivo for grande e a dúvida for pontual.
+- Ao consultar ferramentas com saída potencialmente grande (ex.: `get_metadata` do Figma, logs extensos), salve em arquivo e consulte com `grep`/`jq` em vez de carregar tudo no contexto de uma vez — mesmo princípio já usado em `docs/agent-rules/designer.md`.
+- Não cole de volta pro usuário trechos grandes de arquivo/diff que ele já pode ver — referencie por caminho e número de linha.
+- Não gere documentação, comentários de código ou explicações não pedidas explicitamente.
+
 ## Convenções gerais
 
 - Conteúdo do site é em português (com versões em `src/pt/` e `src/en/`) — mantenha esse idioma ao editar textos visíveis no site.
