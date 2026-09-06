@@ -1,0 +1,133 @@
+// Work — design-system.md secao 8.5 (card de projeto). Unica secao sem o inset extra de
+// 32px do Container (secao 2) - aqui o container tem `padding-x: 64px` proprio (1280px -
+// 2*64px = 1152px, a largura real do card), entao NAO usa o mixin `layout.content-container`
+// (que aplicaria os 32px padrao das outras 6 secoes de conteudo).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.work {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.work__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+  max-width: 1280px;
+  margin-inline: auto;
+
+  @include breakpoints.desktop-up {
+    padding-inline: 64px;
+  }
+}
+
+.work__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.work__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.work__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  width: 100%;
+}
+
+.work__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+
+  @include breakpoints.desktop-up {
+    flex-direction: row;
+    height: 480px;
+  }
+}
+
+// Lado da imagem: bloco neutro (design-system.md secao 10 - sem thumbnail real
+// disponivel), mantendo cor de fundo/borda/radius/sombra da spec 8.5.
+.work__image {
+  flex-shrink: 0;
+  min-height: 200px;
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50);
+  box-shadow: var(--shadow-lg);
+
+  @include breakpoints.desktop-up {
+    flex: 1 1 0%;
+    min-height: 0;
+    height: 384px;
+    align-self: center;
+  }
+}
+
+.work__content {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--space-card-padding);
+}
+
+// Titulo + periodo: `gap: 8px` intencionalmente MENOR que o `gap: 24px` entre os 4
+// blocos principais (titulo -> descricao -> tags -> acao, spec 8.5) - o periodo nao faz
+// parte da spec original do card (que so previa titulo/descricao/tags/acao); conteudo
+// real do curriculo (secao "Projetos" de `src/pt/index.html`) sempre inclui o periodo,
+// entao foi agrupado bem junto ao titulo (mesmo par tipografico da Experience:
+// `subtitle-semibold` + `body2-normal`/`--color-gray-700`) em vez de virar um 5o bloco
+// solto com o mesmo espacamento dos outros - decisao de conteudo/UI, nao extraida do Figma.
+.work__heading-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.work__title {
+  @include typography.subtitle-semibold;
+  margin: 0;
+  color: var(--color-gray-900);
+}
+
+.work__period {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-700);
+}
+
+.work__description {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.work__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.work__actions {
+  display: flex;
+}

@@ -1,0 +1,35 @@
+<section class="experience">
+  <div class="experience__container">
+    <div class="experience__heading">
+      <app-tag>Experience</app-tag>
+      <p class="experience__subtitle">
+        Um resumo rápido das minhas experiências profissionais mais recentes:
+      </p>
+    </div>
+
+    <ol class="experience__list">
+      @for (item of items; track item.company + item.role + item.period) {
+        <li>
+          <article class="experience__item">
+            <!--
+              Empresa vira texto (design-system.md secao 10: sem logo real disponivel/
+              apropriado) no lugar do logo de 102x28 previsto na spec 8.6.
+            -->
+            <span class="experience__company">{{ item.company }}</span>
+
+            <div class="experience__content">
+              <h3 class="experience__role">{{ item.role }}</h3>
+              <ul class="experience__bullets">
+                @for (bullet of item.bullets; track bullet) {
+                  <li>{{ bullet }}</li>
+                }
+              </ul>
+            </div>
+
+            <span class="experience__period">{{ item.period }}</span>
+          </article>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

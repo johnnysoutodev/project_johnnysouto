@@ -1,0 +1,121 @@
+// Experience — design-system.md secoes 8.6 (item de timeline) e 8.11 (raiz da secao).
+// Heading (Tag + Subtitle/Normal) e itens compartilham o mesmo `gap: 48px` do Container
+// (8.11); os itens sao cards empilhados sem conector visual (confirmado ausente em 8.6).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.experience {
+  @include layout.section-padding;
+  background-color: var(--color-gray-50);
+}
+
+.experience__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+}
+
+.experience__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.experience__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.experience__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // O `<li>` so existe pela semantica de lista ordenada (ordem cronologica importa);
+  // o card visual em si e o `.experience__item` (`<article>`) dentro dele.
+  > li {
+    display: contents;
+  }
+}
+
+.experience__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  width: 100%;
+  max-width: 896px;
+  margin-inline: auto;
+  padding: var(--space-timeline-item-padding);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-md);
+
+  @include breakpoints.tablet-up {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-48);
+  }
+}
+
+// Slot da empresa (design-system.md secao 10: texto no lugar do logo 102x28 da spec 8.6).
+// Largura minima fixa e decisao de implementacao (nao um valor do Figma, que media um
+// slot de imagem, nao de texto) - evita que nomes longos ("Telefônica Educação Digital")
+// empurrem a coluna de conteudo de forma inconsistente entre os itens.
+.experience__company {
+  @include typography.body2-medium;
+  flex-shrink: 0;
+  color: var(--color-gray-900);
+
+  @include breakpoints.tablet-up {
+    width: 160px;
+  }
+}
+
+.experience__content {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--space-16);
+  min-width: 0;
+}
+
+.experience__role {
+  @include typography.subtitle-semibold;
+  margin: 0;
+  color: var(--color-gray-900);
+}
+
+.experience__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin: 0;
+  padding-left: var(--space-24);
+  list-style: disc;
+
+  li {
+    @include typography.body2-normal;
+    color: var(--color-gray-600);
+  }
+}
+
+.experience__period {
+  @include typography.body2-normal;
+  flex-shrink: 0;
+  color: var(--color-gray-700);
+}
