@@ -105,15 +105,44 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 
 > Ícones, imagens, logos e fontes baixados do Figma (`download_assets`) em lotes manuais por seção/frame, seguindo o critério e a convenção de `docs/agent-rules/designer.md` (seção "3.1 Extrair assets"). Salvos em `src/assets/<categoria>/` (ex.: `src/assets/icons/`, `src/assets/images/`, `src/assets/fonts/`).
 
-_Nenhum lote extraído ainda — pendência aberta na seção 7._
-
 | Lote/Seção | Asset | Categoria | Node ID (Figma) | Caminho no repo |
 | --- | --- | --- | --- | --- |
-| _(vazio)_ | | | | |
+| Skills | icon-javascript | icons | `316:267` | `src/assets/icons/icon-javascript.svg` |
+| Skills | icon-typescript | icons | `316:272` | `src/assets/icons/icon-typescript.svg` |
+| Skills | icon-react | icons | `316:277` | `src/assets/icons/icon-react.svg` |
+| Skills | icon-nextjs | icons | `316:285` | `src/assets/icons/icon-nextjs.svg` |
+| Skills | icon-nodejs | icons | `316:295` | `src/assets/icons/icon-nodejs.svg` |
+| Skills | icon-express | icons | `316:300` | `src/assets/icons/icon-express.svg` |
+| Skills | icon-nest | icons | `316:304` | `src/assets/icons/icon-nest.svg` |
+| Skills | icon-socket | icons | `316:308` | `src/assets/icons/icon-socket.svg` |
+| Skills | icon-postgresql | icons | `316:313` | `src/assets/icons/icon-postgresql.svg` |
+| Skills | icon-mongodb | icons | `316:316` | `src/assets/icons/icon-mongodb.svg` |
+| Skills | icon-sass | icons | `316:320` | `src/assets/icons/icon-sass.svg` |
+| Skills | icon-tailwindcss | icons | `316:324` | `src/assets/icons/icon-tailwindcss.svg` |
+| Skills | icon-figma | icons | `316:332` | `src/assets/icons/icon-figma.svg` |
+| Skills | icon-cypress | icons | `316:340` | `src/assets/icons/icon-cypress.svg` |
+| Skills | icon-storybook | icons | `316:349` | `src/assets/icons/icon-storybook.svg` |
+| Skills | icon-git | icons | `316:354` | `src/assets/icons/icon-git.svg` |
+| Hero | icon-pin (localização) | icons | `317:709` | `src/assets/icons/icon-pin.svg` |
+| Hero / Contact me | icon-social-github | icons | `317:734` | `src/assets/icons/icon-social-github.svg` |
+| Hero / Contact me | icon-social-twitter | icons | `317:738` | `src/assets/icons/icon-social-twitter.svg` |
+| Hero / Contact me | icon-social-figma | icons | `317:742` | `src/assets/icons/icon-social-figma.svg` |
+| Contact me | icon-mail | icons | `327:352` | `src/assets/icons/icon-mail.svg` |
+| Contact me | icon-phone | icons | `327:366` | `src/assets/icons/icon-phone.svg` |
+| Contact me | icon-copy (botão "copiar", reusado 2x) | icons | `327:373` | `src/assets/icons/icon-copy.svg` |
+| Footer | icon-footer (junto ao copyright) | icons | `327:412` | `src/assets/icons/icon-footer.svg` |
+
+> Os 3 `Icon Button` de redes sociais no Hero e no Contact me referenciam a mesma instância genérica de componente (`Icon`) — o ícone real (GitHub/Twitter/Figma) só aparece resolvido no *screenshot*, não no `get_metadata`. Confirmado visualmente via `get_screenshot`; exportado uma única vez por rede (o par idêntico no Hero/Contact não foi duplicado).
+>
+> **Pendente:** o ícone do `Icon Button` de tema/menu no Header (node `I316:588;316:604`) não foi exportado — o ID é de um *override* de instância e não é aceito pelas tools de export (`nodeId` precisa do formato `123:456`); precisa resolver o node ID "achatado" correspondente antes de exportar.
 
 ## 7. Pendências para a Fase 2 (não cobertas neste extract)
 
 - [ ] Especificações de componentes individuais (Header, Icon Button, Tag, cards de projeto, timeline) — extrair via `get_design_context` nó a nó quando a implementação dos componentes começar.
-- [ ] Ícones/assets (logos de tecnologias, ícones sociais) — exportar em lotes manuais por seção via `download_assets`, seguindo o processo descrito em `docs/agent-rules/designer.md`, e registrar na tabela da seção 6 acima.
+- [x] Ícones de tecnologia (Skills), sociais (Hero/Contact me) e estruturais (pin, mail, phone, copy, footer) — extraídos em 06/09/2026, ver tabela da seção 6. Falta só o ícone de tema/menu do Header (bloqueado por ID de instância).
 - [ ] Decidir com o Johnny se **dark mode** e o **menu mobile dedicado** entram no escopo desta migração (o design já os contempla, mas `PLANO-MIGRACAO-ANGULAR.md` não menciona).
 - [ ] Confirmar breakpoints intermediários (tablet) — o Figma só tem Desktop (1440) e Mobile (iPhone 8 / 375) como referência.
+
+## Log de evolução
+
+- **06/09/2026** — Extração de assets (ícones): 24 ícones exportados do Figma via `download_assets` em lotes manuais (Skills, depois Hero/Contact me/Footer), salvos em `src/assets/icons/`. Ver seção 6 para a lista completa e a seção 7 para a pendência restante (ícone do Header).
