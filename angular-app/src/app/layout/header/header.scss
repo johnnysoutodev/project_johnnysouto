@@ -76,6 +76,7 @@
 
 .header__cta {
   @include typography.body2-medium;
+  display: none;
   padding: var(--space-6) var(--space-16);
   border: none;
   border-radius: var(--radius-md);
@@ -86,6 +87,10 @@
 
   &:hover {
     opacity: 0.88;
+  }
+
+  @include breakpoints.desktop-up {
+    display: inline-flex;
   }
 }
 
@@ -122,5 +127,16 @@
 
   @include breakpoints.desktop-up {
     display: none;
+  }
+}
+
+.header__right {
+  display: flex;
+  align-items: stretch;
+  margin-left: auto;
+  gap: var(--space-16);
+
+  @include breakpoints.desktop-up {
+    gap: var(--space-24);
   }
 }

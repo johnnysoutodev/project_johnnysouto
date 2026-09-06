@@ -1,117 +1,119 @@
 <header class="header">
   <div class="header__container">
     <a class="header__logo" href="#top" aria-label="Início">
-      <!-- Placeholder do template Figma (design-system.md secao 8.1: "<SS />") -
-           substituir pelo nome/logo real do Johnny numa fase posterior. -->
       JS
     </a>
 
-    <nav class="header__nav" aria-label="Navegação principal">
-      @for (link of navLinks; track link.href) {
-        <a class="header__nav-link" [href]="link.href">{{ link.label }}</a>
-      }
-    </nav>
-
-    <span class="header__divider" aria-hidden="true"></span>
-
-    <div class="header__actions">
-      <!--
-        Icone de tema: PENDENTE de exportacao isolada do Figma (design-system.md secoes
-        6 e 8.3 - node de override "I316:588;316:604;309:256" nao aceito por
-        `download_assets`). O SVG abaixo e um placeholder generico (nao e a spec real do
-        Figma) so para o botao nao ficar vazio; substituir assim que o asset for
-        exportado pelo agente `designer`. Logica de alternancia ja ligada (ThemeService,
-        core/theme/theme.ts) - so o icone em si segue placeholder.
-      -->
-      <app-icon-button
-        [ariaLabel]="themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
-        [pressed]="themeService.theme() === 'dark'"
-        (click)="themeService.toggle()"
-      >
-        @if (themeService.theme() === 'dark') {
-          <!-- Sol: ação disponível é ativar o tema claro -->
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="4" />
-            <path
-              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-            />
-          </svg>
-        } @else {
-          <!-- Lua: ação disponível é ativar o tema escuro -->
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
+    <div class="header__right">
+      <nav class="header__nav" aria-label="Navegação principal">
+        @for (link of navLinks; track link.href) {
+          <a class="header__nav-link" [href]="link.href">
+            {{ link.label }}
+          </a>
         }
-      </app-icon-button>
+      </nav>
 
-      <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
-      <button type="button" class="header__cta">Download CV</button>
+      <span class="header__divider" aria-hidden="true"></span>
 
-      <!--
-        Botao de hamburguer: distinto do Icon Button de tema acima, visivel so abaixo do
-        desktop (header.scss — oposto de `.header__nav`). Icone alterna hamburguer/"X"
-        conforme `isMobileMenuOpen()`. Sem asset exportado do Figma pra esse icone (mesma
-        pendencia das secoes 6/8.3) — SVG generico inline, mesma convencao ja usada no
-        icone de tema acima.
-      -->
-      <button
-        type="button"
-        class="header__menu-toggle"
-        [attr.aria-expanded]="isMobileMenuOpen()"
-        aria-controls="mobile-menu"
-        [attr.aria-label]="isMobileMenuOpen() ? 'Fechar menu' : 'Abrir menu'"
-        (click)="toggleMobileMenu()"
-      >
-        @if (isMobileMenuOpen()) {
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        } @else {
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        }
-      </button>
+      <div class="header__actions">
+        <!--
+          Icone de tema: PENDENTE de exportacao isolada do Figma (design-system.md secoes
+          6 e 8.3 - node de override "I316:588;316:604;309:256" nao aceito por
+          `download_assets`). O SVG abaixo e um placeholder generico (nao e a spec real do
+          Figma) so para o botao nao ficar vazio; substituir assim que o asset for
+          exportado pelo agente `designer`. Logica de alternancia ja ligada (ThemeService,
+          core/theme/theme.ts) - so o icone em si segue placeholder.
+        -->
+        <app-icon-button
+          [ariaLabel]="themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
+          [pressed]="themeService.theme() === 'dark'"
+          (click)="themeService.toggle()"
+        >
+          @if (themeService.theme() === 'dark') {
+            <!-- Sol: ação disponível é ativar o tema claro -->
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+          } @else {
+            <!-- Lua: ação disponível é ativar o tema escuro -->
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          }
+        </app-icon-button>
+
+        <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
+        <button type="button" class="header__cta">Download CV</button>
+
+        <!--
+          Botao de hamburguer: distinto do Icon Button de tema acima, visivel so abaixo do
+          desktop (header.scss — oposto de `.header__nav`). Icone alterna hamburguer/"X"
+          conforme `isMobileMenuOpen()`. Sem asset exportado do Figma pra esse icone (mesma
+          pendencia das secoes 6/8.3) — SVG generico inline, mesma convencao ja usada no
+          icone de tema acima.
+        -->
+        <button
+          type="button"
+          class="header__menu-toggle"
+          [attr.aria-expanded]="isMobileMenuOpen()"
+          aria-controls="mobile-menu"
+          [attr.aria-label]="isMobileMenuOpen() ? 'Fechar menu' : 'Abrir menu'"
+          (click)="toggleMobileMenu()"
+        >
+          @if (isMobileMenuOpen()) {
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          } @else {
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          }
+        </button>
+      </div>
     </div>
   </div>
 </header>
