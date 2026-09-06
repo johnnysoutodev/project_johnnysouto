@@ -1,0 +1,8 @@
+{
+    "chat.agentFilesLocations": {
+        ".agents/": true
+    },
+    "chat.instructionsFilesLocations": {
+        ".agents/": true
+    }
+}
