@@ -133,7 +133,12 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 | Contact me | icon-phone | icons | `327:366` | `src/assets/icons/icon-phone.svg` |
 | Contact me | icon-copy (botão "copiar", reusado 2x) | icons | `327:373` | `src/assets/icons/icon-copy.svg` |
 | Footer | icon-footer (junto ao copyright) | icons | `327:412` | `src/assets/icons/icon-footer.svg` |
+| Hero | image-hero-avatar (foto de perfil, placeholder "Sagar") | images | `316:228` | `src/assets/images/image-hero-avatar.png` |
+| About | image-about-photo (foto de perfil da seção "Sobre mim") | images | `316:239` | `src/assets/images/image-about-photo.png` |
+| Work | image-project-thumbnail (thumbnail de projeto, reusado nos 3 cards) | images | `316:425` | `src/assets/images/image-project-thumbnail.png` |
 
+> As 3 imagens acima são conteúdo de placeholder do template ("Sagar", projeto fictício) — exportadas só como referência estrutural de proporção (280×320, 400×480, 496×402), não para uso final no site. O thumbnail de projeto (`316:425`) é o mesmo arquivo reaproveitado também nos cards `327:279` e `327:312` — baixado uma única vez. Testimonials não tem foto raster: os avatares dos depoimentos são círculos de cor sólida com um ícone SVG genérico dentro (categoria `icons`, não `images`), não incluídos aqui.
+>
 > Os 3 `Icon Button` de redes sociais no Hero e no Contact me referenciam a mesma instância genérica de componente (`Icon`) — o ícone real (GitHub/Twitter/Figma) só aparece resolvido no *screenshot*, não no `get_metadata`. Confirmado visualmente via `get_screenshot`; exportado uma única vez por rede (o par idêntico no Hero/Contact não foi duplicado).
 >
 > **Pendente:** o ícone do `Icon Button` de tema/menu no Header (node `I316:588;316:604`) não foi exportado — o ID é de um *override* de instância e não é aceito pelas tools de export (`nodeId` precisa do formato `123:456`); precisa resolver o node ID "achatado" correspondente antes de exportar.
@@ -142,6 +147,7 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 
 - [ ] Especificações de componentes individuais (Header, Icon Button, Tag, cards de projeto, timeline) — extrair via `get_design_context` nó a nó quando a implementação dos componentes começar.
 - [x] Ícones de tecnologia (Skills), sociais (Hero/Contact me) e estruturais (pin, mail, phone, copy, footer) — extraídos em 06/09/2026, ver tabela da seção 6. Falta só o ícone de tema/menu do Header (bloqueado por ID de instância).
+- [x] Imagens raster estruturais (avatar do Hero, foto do About, thumbnail de projeto do Work) — extraídas em 06/09/2026, ver tabela da seção 6. São placeholders do template, só pra referência de proporção.
 - [ ] Decidir com o Johnny se **dark mode** e o **menu mobile dedicado** entram no escopo desta migração (o design já os contempla, mas `PLANO-MIGRACAO-ANGULAR.md` não menciona).
 - [ ] Confirmar breakpoints intermediários (tablet) — o Figma só tem Desktop (1440) e Mobile (iPhone 8 / 375) como referência.
 
@@ -149,3 +155,4 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 
 - **06/09/2026** — Extração de assets (ícones): 24 ícones exportados do Figma via `download_assets` em lotes manuais (Skills, depois Hero/Contact me/Footer), salvos em `src/assets/icons/`. Ver seção 6 para a lista completa e a seção 7 para a pendência restante (ícone do Header).
 - **06/09/2026** — Verificação de tipografia: conferido via `get_design_context` em Hero (`316:194`), About (`316:229`) e Experience (`316:357`) que a tipografia usa exclusivamente a família **Inter** (Google Font padrão), sem fonte customizada embutida. Nenhum arquivo de fonte precisa ser exportado — ver nota na seção 4.
+- **06/09/2026** — Extração de assets (imagens): 3 imagens raster mapeadas em lotes por seção (Hero, About, Work, Testimonials) e baixadas via `download_assets` — avatar do Hero, foto do About e thumbnail de projeto do Work (reusado nos 3 cards). Salvas em `src/assets/images/`. Testimonials não tinha foto raster (avatar ali é ícone SVG genérico). Ver seção 6.
