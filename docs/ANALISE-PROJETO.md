@@ -27,7 +27,6 @@ project_johnnysouto/
 │   └── agent-rules/          # Conteúdo real e agnóstico dos agentes (fonte única de verdade)
 ├── public/                  # Saída de build (gerada pelo Grunt) — o que é de fato deployado
 ├── src/                     # Código-fonte do site (HTML/CSS/JS/imagens)
-├── app/                     # Diretório NÃO rastreado pelo git — ver seção 8 (pendências)
 ├── gruntfile.js             # Definição das tasks de build (Grunt)
 ├── package.json / package-lock.json
 ├── vercel.json              # Config de deploy na Vercel
@@ -35,7 +34,6 @@ project_johnnysouto/
 ├── .gitattributes           # Normalização de line endings (LF)
 ├── .gitignore
 ├── project_johnnysouto.code-workspace  # Workspace do VS Code (config do Live Server)
-├── temp.log                 # Arquivo vazio (residual)
 └── README.md
 ```
 
@@ -69,7 +67,7 @@ Espelha a estrutura de `src/`, mas com JS/CSS concatenados e minificados (`scrip
   - `grunt-contrib-clean`, `grunt-contrib-concat`, `grunt-contrib-copy`, `grunt-contrib-cssmin`, `grunt-contrib-uglify`, `grunt-contrib-watch`, `grunt-image`.
 - **Dependências de desenvolvimento adicionais** (`devDependencies`, aparentemente não usadas diretamente pelo `gruntfile.js` atual): `clean-css`, `fs-extra`, `html-minifier-terser`, `rimraf`, `sharp`, `terser`.
 - **Node:** versão fixada em `20` via `.nvmrc`.
-- **Overrides de segurança** no `package.json`: `lodash >=4.17.24` e `minimatch ^9.0.5`, aplicados para resolver vulnerabilidades transitivas (documentado em `.agents/resolved-vulnerability.md`).
+- **Overrides de segurança** no `package.json`: `lodash >=4.17.24` e `minimatch ^9.0.5`, aplicados para resolver vulnerabilidades transitivas (documentado em `docs/agent-rules/resolved-vulnerability.md`).
 - **Deploy:** Vercel (projeto `project-johnnysouto`, `cleanUrls: true`).
 - **Analytics:** Google Analytics via `gtag.js`.
 
@@ -134,9 +132,7 @@ Agentes existentes:
 
 ## 9. Pendências e pontos de atenção
 
-- **`app/` (não rastreado pelo git)**: existe um diretório `app/` na raiz contendo `.angular/`, `node_modules/` e `dist/app/` (build de uma aplicação **Angular com SSR**, incluindo `server/` e `browser/`). Não há `package.json` nem `angular.json` nem código-fonte do Angular versionado — apenas artefatos de build e cache. Está fora do `.gitignore` atual (por isso aparece como `??` no `git status`). **Precisa de decisão**: é um experimento a ser descartado, um projeto novo em andamento (ex.: futura reescrita do site em Angular) a ser versionado corretamente, ou lixo de build que deveria estar ignorado?
 - **`docs/` estava vazio** até este documento — não havia nenhuma documentação além do `README.md`.
-- **`temp.log`**: arquivo vazio, versionado, aparentemente residual (o `.gitignore` já ignora `*.log`).
 - **Sem scripts de teste, lint ou build no `package.json`**: o único script é um placeholder (`"test": "echo ... && exit 1"`). O pipeline de CI depende apenas de `npm audit`; não há verificação automatizada de que o site builda ou funciona corretamente antes do deploy.
 - **Pipeline de CI não gera o `public/` a partir do `src/`**: o Grunt não é executado nos workflows — presume-se que `public/` é atualizado manualmente/localmente antes do commit, o que é uma fonte comum de divergência entre `src/` e `public/`.
 - **Tasks `compile` e `publish` do Grunt são idênticas** — redundância a simplificar.
@@ -149,6 +145,7 @@ Agentes existentes:
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 06/09/2026 | Criação do documento a partir de leitura completa do repositório.                                                                                                                     |
 | 06/09/2026 | Padronizada a organização das regras de agentes: conteúdo agnóstico movido para `docs/agent-rules/`, com arquivos-ponte em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code); removida a pasta redundante `.agents/`. |
+| 06/09/2026 | Removidos `app/` (build Angular solto, não rastreado) e `temp.log` (arquivo residual vazio). |
 
 ---
 
@@ -156,10 +153,8 @@ Agentes existentes:
 
 Lista aberta — cada item deve ser discutido e priorizado antes de ser implementado. Marcar como concluído e mover para o log acima quando resolvido.
 
-- [ ] Decidir o destino do diretório `app/` (remover, ignorar ou formalizar como sub-projeto).
 - [ ] Avaliar se `.vercel/` deveria estar no `.gitignore`.
 - [ ] Adicionar scripts reais (`build`, `lint`, `test`) ao `package.json`.
 - [ ] Fazer o CI rodar o build (Grunt) e validar que `public/` está sincronizado com `src/`, em vez de depender de build manual local.
 - [ ] Remover redundância entre as tasks `compile` e `publish` do Grunt.
 - [ ] Revisar/remover `devDependencies` não utilizadas ou formalizar seu uso.
-- [ ] Remover `temp.log` do controle de versão.
