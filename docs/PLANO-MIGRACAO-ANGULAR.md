@@ -28,6 +28,7 @@ Estas decisões foram discutidas e definidas antes de detalhar as fases — qual
 | Origem do design | **Figma fornecido pelo Johnny** | O Claude/Copilot extrai especificações (cores, espaçamentos, tipografia, componentes) via o servidor MCP do Figma já configurado em `.vscode/mcp.json`, em vez de desenhar o design do zero. |
 | Dark mode | **Entra no escopo** | O Figma já contempla variantes Light/Dark completas (mesmas seções, tokens de cor próprios) — ver `docs/design-system.md`. Implementar como parte natural do design system, com alternância manual e respeito a `prefers-color-scheme` como padrão inicial. |
 | Menu mobile | **Entra no escopo** | O Figma já contempla um menu mobile dedicado (overlay), tanto em Light quanto em Dark — ver `docs/design-system.md`. Não é uma funcionalidade nova a inventar, só a implementar a partir do que já está desenhado. |
+| Breakpoint tablet | **Entra no escopo, sem referência no Figma** | O Figma só tem Desktop (1440) e Mobile/iPhone 8 (375) — nenhum frame de tablet (confirmado em `docs/design-system.md`, seção 7). Johnny decidiu que o site precisa se comportar bem em tablet mesmo assim. Convenção proposta (não extraída do Figma): tablet ~768–1023px, desktop a partir de 1024px — padrão comum de mercado (ex.: breakpoints `md`/`lg` do Tailwind CSS). O layout intermediário em si (como cada seção se comporta nessa faixa) é decisão de implementação da Fase 2, interpolando entre os paddings/gaps mobile e desktop já documentados, não uma cópia de spec do Figma. |
 
 ## 3. Escopo de conteúdo (paridade com o site atual)
 
@@ -45,6 +46,7 @@ Baseado no inventário de `docs/ANALISE-PROJETO.md`, tudo isto precisa ter equiv
 - [ ] `cleanUrls` / comportamento de URLs equivalente ao `vercel.json` atual.
 - [ ] **Dark mode — novo**, não existe hoje. Alternância manual (toggle) com persistência da escolha do usuário, respeitando `prefers-color-scheme` como padrão inicial.
 - [ ] **Menu mobile dedicado — novo**, não existe hoje (site atual não tem navegação mobile própria). Overlay conforme design do Figma, funcionando em ambos os temas.
+- [ ] **Suporte a tablet — novo**, sem referência de layout no Figma (só Desktop/Mobile). Breakpoint proposto ~768–1023px (ver Decisões arquiteturais); layout intermediário a definir na Fase 2.
 
 ## 4. Estrutura de pastas proposta
 
@@ -98,6 +100,7 @@ project_johnnysouto/
 - [ ] Menu mobile dedicado (overlay), conforme design do Figma, nos dois temas.
 - [ ] Toggle de dark mode (componente + lógica de alternância/persistência).
 - [ ] Aplicar o design às páginas, sem ainda ligar i18n (conteúdo fixo em pt-BR nesta fase).
+- [ ] Definir e implementar o layout do breakpoint tablet (~768–1023px) para cada seção — sem referência no Figma, interpolando entre os paddings/gaps mobile e desktop já documentados em `docs/design-system.md`.
 
 ### Fase 3 — Internacionalização
 - [ ] Configurar i18n nativo do Angular com os três locales: `pt-BR` (padrão), `es-ES`, `en-US`.
@@ -131,6 +134,7 @@ project_johnnysouto/
 - [ ] Revisão de conteúdo com o Johnny (principalmente as traduções em `es-ES`).
 - [ ] Validar dark mode em todas as páginas/idiomas (contraste, persistência da escolha, `prefers-color-scheme` inicial).
 - [ ] Validar menu mobile dedicado em diferentes tamanhos de tela e nos dois temas.
+- [ ] Validar layout em tablet (~768–1023px) em todas as seções e nos dois temas — sem referência do Figma, então a comparação aqui é contra o critério de "bom senso responsivo", não contra um design de origem.
 - [ ] Validar que o download do CV entrega o arquivo no idioma correspondente em cada rota/idioma do site.
 
 ### Fase 8 — Corte de produção
@@ -161,6 +165,7 @@ project_johnnysouto/
 - Três idiomas funcionando (`pt-BR`, `es-ES`, `en-US`), com troca de idioma acessível ao usuário.
 - Dark mode funcionando em produção, com alternância manual e persistência da escolha.
 - Menu mobile dedicado funcionando em produção, nos dois temas.
+- Layout funcionando bem em tablet (~768–1023px), mesmo sem referência de origem no Figma.
 - Google Analytics confirmado funcionando em produção após o corte.
 - SEO (meta tags, Open Graph, `hreflang`, robots/sitemap) validado antes do corte.
 - Nenhum período de indisponibilidade do site atual durante o desenvolvimento.
@@ -177,3 +182,4 @@ project_johnnysouto/
 | 06/09/2026 | Criado o agente `angular-scaffold` (`docs/agent-rules/angular-scaffold.md`) para executar o scaffold da Fase 1 dentro deste repositório já existente — garante `--skip-git` (sem repositório Git aninhado), SCSS, versão de Node/Angular compatível, e aplica a configuração de IA do Angular CLI para Claude/Copilot. |
 | 06/09/2026 | Versão de impressão (`src/printer/index.html`) removida do escopo, substituída por um CV para download nos três idiomas — o idioma do arquivo baixado acompanha o idioma atual do site. Forma de geração/padronização do download ainda não decidida (Fase 4). Atualizado escopo de conteúdo, Fase 2, Fase 4 e Fase 7. |
 | 06/09/2026 | Criado o agente `angular-components` (`docs/agent-rules/angular-components.md`) para gerar os componentes Angular da Fase 2 a partir do que já está documentado em `docs/design-system.md` (estrutura/layout do Figma, tokens, assets) — não se conecta ao Figma (isso é do `designer`) nem cria o projeto (isso é do `angular-scaffold`), só consome o que os dois já produziram. |
+| 06/09/2026 | Suporte a tablet adicionado ao escopo (Johnny confirmou), mesmo sem nenhum frame de tablet no Figma (só Desktop 1440/Mobile 375). Breakpoint proposto ~768–1023px (convenção comum, não extraída do Figma) — layout intermediário fica para decisão de implementação na Fase 2. Atualizado decisões arquiteturais, escopo de conteúdo, Fase 2, Fase 7 e critérios de sucesso. |
