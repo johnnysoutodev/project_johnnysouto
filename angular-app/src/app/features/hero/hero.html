@@ -1,0 +1,61 @@
+<section class="hero">
+  <div class="hero__container">
+    <div class="hero__left">
+      <div class="hero__content">
+        <h1 class="hero__title">Olá, eu sou o Johnny Souto 👋</h1>
+        <p class="hero__bio">
+          <!--
+            RASCUNHO a revisar (design-system.md secao 10) - bio redigida a partir do
+            cargo real (Analista Desenvolvedor de Sistemas) e do tempo de experiencia
+            calculado a partir da primeira experiencia real documentada (Nielsen do
+            Brasil, Jan/2006). Nao e texto literal do curriculo nem do Figma (que so
+            tinha uma bio placeholder de pessoa fictícia) - precisa de revisao do Johnny
+            antes de ir pra producao.
+          -->
+          Analista Desenvolvedor de Sistemas com mais de {{ experienceYears }} anos de
+          experiência no desenvolvimento de sistemas corporativos e aplicações web.
+        </p>
+      </div>
+
+      <div class="hero__actions">
+        <div class="hero__links">
+          <app-icon-button
+            [href]="githubUrl"
+            ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
+          >
+            <img ngSrc="/assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+          </app-icon-button>
+
+          <!--
+            LinkedIn nao tem icone no Figma (ver comentario em hero.ts) - link de texto
+            simples em vez de Icon Button, para nao inventar um SVG fora do que o design
+            ja definiu.
+          -->
+          <a
+            class="hero__linkedin-link"
+            [href]="linkedinUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__right">
+      <!--
+        Composicao em camadas no lugar da foto (design-system.md secao 8.8): retangulo
+        de fundo deslocado atras + bloco frontal com borda branca. Sem foto real
+        disponivel (secao 10) - bloco neutro com iniciais "JS" no lugar do `<img>` de
+        placeholder do template.
+      -->
+      <div class="hero__pic-container">
+        <div class="hero__pic-background" aria-hidden="true"></div>
+        <div class="hero__pic">
+          <span class="hero__pic-initials" aria-hidden="true">JS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

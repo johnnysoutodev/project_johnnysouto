@@ -16,14 +16,18 @@
 
     <div class="header__actions">
       <!--
-        Icone de tema/menu do Header: PENDENTE de exportacao isolada do Figma
-        (design-system.md secoes 6 e 8.3 - node de override "I316:588;316:604;309:256"
-        nao aceito por `download_assets`). O SVG abaixo e um placeholder generico (nao e
-        a spec real do Figma) so para o botao nao ficar vazio; substituir assim que o
-        asset for exportado pelo agente `designer`. Toggle de dark mode ainda nao ligado
-        nesta fatia (PLANO-MIGRACAO-ANGULAR.md, Fase 2).
+        Icone de tema: PENDENTE de exportacao isolada do Figma (design-system.md secoes
+        6 e 8.3 - node de override "I316:588;316:604;309:256" nao aceito por
+        `download_assets`). O SVG abaixo e um placeholder generico (nao e a spec real do
+        Figma) so para o botao nao ficar vazio; substituir assim que o asset for
+        exportado pelo agente `designer`. Logica de alternancia ja ligada (ThemeService,
+        core/theme/theme.ts) - so o icone em si segue placeholder.
       -->
-      <app-icon-button ariaLabel="Alternar tema">
+      <app-icon-button
+        [ariaLabel]="themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
+        [pressed]="themeService.theme() === 'dark'"
+        (click)="themeService.toggle()"
+      >
         <svg
           width="24"
           height="24"

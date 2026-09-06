@@ -26,6 +26,25 @@
   }
 }
 
+/// Padding padrao de uma secao de CONTEUDO (Hero, About, Skills, Experience, Work,
+/// Testimonials, Contact me — design-system.md secao 2, diferente das barras compactas
+/// acima): 80px/96px no desktop, 16px/64px no mobile (ambos medidos). Decisao de
+/// implementacao (nao extraida do Figma, que nao tem frame de tablet — secao 7): reduz
+/// so o padding horizontal no tablet (48px, mesmo meio-termo ja usado em
+/// `bar-section-padding`), mantendo o vertical mobile ate o desktop assumir o valor
+/// medido de 96px.
+@mixin section-padding {
+  padding: var(--space-section-padding-y-mobile) var(--space-section-padding-x-mobile);
+
+  @include breakpoints.tablet-up {
+    padding-inline: 48px;
+  }
+
+  @include breakpoints.desktop-up {
+    padding: var(--space-section-padding-y) var(--space-section-padding-x);
+  }
+}
+
 /// Container interno de conteudo (design-system.md secao 2): max-width 1280px
 /// centralizado, com padding horizontal adicional de 32px no desktop (medido em
 /// Header, Footer, Hero, About, Skills, Experience, Testimonials, Contact me — Work e

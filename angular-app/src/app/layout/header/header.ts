@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
+import { ThemeService } from '../../core/theme/theme';
 
 interface HeaderNavLink {
   readonly label: string;
@@ -18,6 +19,8 @@ interface HeaderNavLink {
   styleUrl: './header.scss',
 })
 export class Header {
+  protected readonly themeService = inject(ThemeService);
+
   /**
    * 4 links de navegacao (design-system.md secao 8.1). Rotas/secoes reais (About, Work,
    * Testimonials, Contact me) ainda nao existem no projeto — apontam para anchors que

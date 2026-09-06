@@ -13,6 +13,31 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!--
+      Anti-FOUC do dark mode: aplica `data-theme` no <html> ANTES do primeiro paint,
+      lendo a escolha salva (localStorage) ou, na ausencia, `prefers-color-scheme`.
+      Sem isso, o site prerenderizado (SSG) sempre pintaria em light e só corrigiria
+      pro tema real depois da hidratacao do Angular (ThemeService, core/theme/theme.ts),
+      causando um flash visivel pra quem usa dark. Risco ja registrado em
+      docs/PLANO-MIGRACAO-ANGULAR.md (secao 6, "Riscos e mitigacao").
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          // localStorage/matchMedia indisponivel (ex.: modo privado restrito) - fica no
+          // light padrao definido em :root (src/styles/_tokens.scss), sem quebrar o load.
+        }
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

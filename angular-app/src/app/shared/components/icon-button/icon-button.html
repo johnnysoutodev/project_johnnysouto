@@ -1,8 +1,32 @@
-<button
-  type="button"
-  class="icon-button"
-  [class.icon-button--large]="size() === 'large'"
-  [attr.aria-label]="ariaLabel()"
->
-  <ng-content />
-</button>
+<!--
+  `ng-content` fica isolado num `<ng-template>` e reprojetado via `ngTemplateOutlet` em
+  cada branch do `@if`/`@else` abaixo - colocar `<ng-content>` diretamente duplicado nos
+  dois branches (`<a>`/`<button>`) faz a projeção de conteúdo falhar silenciosamente
+  (Angular 22.1.5, confirmado num teste isolado ao gerar este componente: o elemento
+  raiz renderiza vazio, sem erro no console). `ngTemplateOutlet` contorna isso mantendo
+  só uma referência real ao `<ng-content>`.
+-->
+<ng-template #projectedIcon><ng-content /></ng-template>
+
+@if (href(); as link) {
+  <a
+    class="icon-button"
+    [class.icon-button--large]="size() === 'large'"
+    [attr.aria-label]="ariaLabel()"
+    [href]="link"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <ng-container *ngTemplateOutlet="projectedIcon" />
+  </a>
+} @else {
+  <button
+    type="button"
+    class="icon-button"
+    [class.icon-button--large]="size() === 'large'"
+    [attr.aria-label]="ariaLabel()"
+    [attr.aria-pressed]="pressed() === undefined ? null : pressed()"
+  >
+    <ng-container *ngTemplateOutlet="projectedIcon" />
+  </button>
+}

@@ -1,0 +1,109 @@
+// Skills — design-system.md secao 8.10. Conteudo real agrupado por categoria (secao 10:
+// Back-End, Banco de Dados, Front-End, Versionamento, Pessoais), diferente do grid flat
+// "2 linhas x 8 itens" do Figma - ver comentario detalhado em `skills.ts`.
+//
+// Achado da secao 8.10: o item `Tech` do Figma nao tem variante texto-only, e o
+// `justify-center` do item desalinha o label quando o icone e omitido (a maioria dos
+// skills reais e texto-only - so 3 dos 20 itens tem icone). A propria secao 8.10
+// documenta 2 saidas possiveis, a decidir na implementacao:
+//   (a) reservar um slot vazio do tamanho do icone (64px) mesmo sem icone, mantendo
+//       `justify-center`/`gap: 8px`;
+//   (b) trocar o alinhamento do item para linhas fixas (uma linha pro "slot" do icone,
+//       vazia quando nao houver, outra pro label).
+//
+// Escolhida a opcao (a): `.skills__item-icon` sempre reserva `min-height:
+// var(--space-skills-icon-slot)` (64px) e fica centralizado, com ou sem `<img>` dentro -
+// os labels da mesma linha ficam alinhados entre si porque a altura do slot e igual em
+// todos os itens (com ou sem icone), sem depender de nenhuma altura de linha externa.
+// Justificativa: e a mudanca mais simples sobre o item ja documentado na secao 8.10 (um
+// unico elemento sempre renderizado, sem duplicar o item em variantes "com/sem icone"),
+// enquanto a opcao (b) exigiria coordenar 2 alturas fixas por contexto de uso (grid flat
+// de 8 x linha por categoria, aqui) para continuar alinhando entre si.
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.skills {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.skills__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+.skills__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.skills__subtitle {
+  @include typography.subtitle-normal;
+  margin: 0;
+  max-width: 576px;
+  color: var(--color-gray-600);
+}
+
+.skills__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+.skills__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+// Titulo de categoria: NAO existe no Figma (secao 8.10 e um grid flat, sem categorias) -
+// decisao de UI por convencao, necessaria pra nao perder a categorizacao real do
+// curriculo legado (secao 10). Estilo escolhido (Body2/Medium, gray-900) por analogia ao
+// "gap 16px entre titulo e subtitulo de secao" ja documentado na secao 2, aplicado aqui
+// num nivel menor (titulo de subgrupo, nao de secao inteira).
+.skills__group-title {
+  @include typography.body2-medium;
+  margin: 0;
+  color: var(--color-gray-900);
+}
+
+.skills__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  // Gap macro (48px, secao 2) entre itens na horizontal, mesmo valor reaproveitado em
+  // quase todas as secoes; 24px na vertical pro wrap em telas estreitas (nao medido no
+  // Figma pra este uso especifico - decisao de implementacao).
+  column-gap: var(--space-48);
+  row-gap: var(--space-24);
+}
+
+.skills__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.skills__item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--space-skills-icon-slot);
+}
+
+.skills__item-label {
+  @include typography.body1-normal;
+  color: var(--color-gray-600);
+  white-space: nowrap;
+}

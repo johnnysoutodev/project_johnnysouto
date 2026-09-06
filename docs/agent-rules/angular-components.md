@@ -60,7 +60,10 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 
 ### 5. Validar
 
-- Rode um build/lint mínimo do projeto Angular para confirmar que o componente gerado compila sem erros.
+- Escreva testes unitários (`.spec.ts`, Vitest — já é o runner configurado no scaffold, `npm run test`) para qualquer lógica nova não-trivial (serviços com estado, computeds/effects, qualquer branch condicional) — não só o `should create` gerado por padrão. Rode os testes e confirme que passam antes de reportar a tarefa como concluída.
+- Rode `npm run lint`, `npm run test` **e** `ng build` (com prerender/SSR ligado, não só o dev server) do projeto Angular — os três, não só lint. **`ng build` com prerender é obrigatório mesmo que o componente "pareça" simples**: é o único jeito de pegar erro de SSR (ver "SSR-safety" abaixo), que não aparece no dev server nem em testes que não simulam o ambiente de servidor.
+- **SSR-safety para qualquer código que toque `document`/`window`/`localStorage`/`matchMedia`/etc. (signals, `effect()`, construtores de serviço):** este projeto builda com `@angular/ssr` + prerender (`docs/PLANO-MIGRACAO-ANGULAR.md`, decisão "Renderização"). Um `effect()` roda pelo menos uma vez já na criação — se essa primeira execução acontecer no servidor (prerender) e tocar `document`/`localStorage` sem guarda, o build quebra com `ReferenceError` (ocorreu de verdade na criação do `ThemeService`, `angular-app/src/app/core/theme/theme.ts` — ver log de evolução de `docs/PLANO-MIGRACAO-ANGULAR.md`, entrada do dark mode). Regra: **todo acesso a API de browser dentro de `effect()`/construtor de serviço precisa estar atrás de um guard `isPlatformBrowser(inject(PLATFORM_ID))`**, nunca assumido disponível só porque "só roda no browser na prática".
+- **Ordem de inicialização de signal + `effect()` que lê/escreve o mesmo estado persistido (localStorage etc.):** se o signal nascer com um valor default e só for corrigido para o valor real *depois* de declarar o `effect()` (ex.: dentro de `afterNextRender`), a primeira execução automática do `effect()` roda com o valor default errado e pode **sobrescrever o estado persistido antes de conseguir lê-lo** (bug real: um tema `dark` salvo virava `light` a cada reload, porque o `effect()` gravava o default antes do valor real ser lido). Regra: leia o valor inicial real de forma síncrona **antes** de declarar o `effect()` (não precisa de `afterNextRender` pra ler `document`/`localStorage` — eles já existem no browser antes do Angular inicializar), nunca deixe o `effect()` gravar um valor default transitório por cima de um valor persistido.
 
 ### 6. Atualizar a documentação
 
@@ -97,7 +100,9 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 - [ ] Spec do componente pedido conferida como suficiente (ou lacuna reportada e delegada ao `designer`)
 - [ ] Componente(s) gerado(s) como standalone, com SCSS, tokens do design system, preparado(s) para os dois temas
 - [ ] Assets referenciados apontam para caminhos que já existem em `src/assets/`
-- [ ] Build/lint mínimo do projeto Angular validado
+- [ ] Testes unitários escritos para lógica não-trivial (serviços com estado, effects, condicionais) e passando (`npm run test`)
+- [ ] Qualquer acesso a `document`/`window`/`localStorage`/`matchMedia` dentro de `effect()`/construtor está atrás de `isPlatformBrowser`
+- [ ] `npm run lint`, `npm run test` e `ng build` (com prerender) validados — os três, não só lint
 - [ ] `docs/design-system.md`/`docs/PLANO-MIGRACAO-ANGULAR.md` atualizados via merge incremental (checklist + log de evolução)
 - [ ] Nenhum `git commit`/`push` feito pelo agente
 
@@ -119,5 +124,5 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 ---
 
 **Última atualização:** 06/09/2026
-**Versão:** 1.0
+**Versão:** 1.1 — adicionada exigência de testes unitários e checklist de SSR-safety (`isPlatformBrowser`, ordem de leitura de estado persistido antes do `effect()`) na seção "Validar", depois de dois bugs reais na criação do `ThemeService` (build de SSR quebrando com `document is not defined`; `effect()` sobrescrevendo tema persistido no reload).
 **Mantido por:** @JohnnySouto
