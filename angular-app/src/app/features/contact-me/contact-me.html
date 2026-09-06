@@ -1,0 +1,126 @@
+<section class="contact-me">
+  <div class="contact-me__container">
+    <div class="contact-me__heading">
+      <app-tag>Get in touch</app-tag>
+      <p class="contact-me__subtitle">Prefira o canal que for mais conveniente para você:</p>
+    </div>
+
+    <!-- Coluna central (design-system.md secao 8.12): email + telefone empilhados, nao lado a lado. -->
+    <div class="contact-me__central">
+      <div class="contact-me__row contact-me__row--email">
+        <img
+          class="contact-me__row-icon"
+          ngSrc="/assets/icons/icon-mail.svg"
+          width="32"
+          height="32"
+          alt=""
+        />
+        <a class="contact-me__row-value" [href]="'mailto:' + email">{{ email }}</a>
+        <app-icon-button
+          size="large"
+          [ariaLabel]="copiedField() === 'email' ? 'Email copiado!' : 'Copiar email'"
+          (click)="copy('email', email)"
+        >
+          @if (copiedField() === 'email') {
+            <!-- Feedback temporario de "copiado" - icone generico inline (nao ha
+                 checkmark exportado do Figma pra esse estado, spec 8.12/8.3 so cobre o
+                 estado default do Icon Button). -->
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          } @else {
+            <img ngSrc="/assets/icons/icon-copy.svg" width="32" height="32" alt="" />
+          }
+        </app-icon-button>
+      </div>
+
+      <div class="contact-me__row contact-me__row--phone">
+        <img
+          class="contact-me__row-icon"
+          ngSrc="/assets/icons/icon-phone.svg"
+          width="32"
+          height="32"
+          alt=""
+        />
+        <a
+          class="contact-me__row-value"
+          [href]="phoneHref"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ phoneDisplay }}
+        </a>
+        <app-icon-button
+          size="large"
+          [ariaLabel]="copiedField() === 'phone' ? 'Telefone copiado!' : 'Copiar telefone'"
+          (click)="copy('phone', phoneDisplay)"
+        >
+          @if (copiedField() === 'phone') {
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          } @else {
+            <img ngSrc="/assets/icons/icon-copy.svg" width="32" height="32" alt="" />
+          }
+        </app-icon-button>
+      </div>
+    </div>
+
+    <div class="contact-me__social">
+      <p class="contact-me__social-text">Você também pode me encontrar por aqui:</p>
+
+      <!--
+        Os dois links abaixo usam o mesmo padrao (icone + texto num unico <a>, nao o
+        Icon Button) - a versao anterior tinha o GitHub como Icon Button so-icone colado
+        no texto do LinkedIn, sem nada separando os dois: dava a entender visualmente que
+        o icone pertencia ao link do LinkedIn (ficava ao lado do texto dele), quando na
+        verdade levava pro GitHub. Corrigido dando um rotulo visivel pro GitHub tambem
+        (mesmo texto do aria-label anterior) e gap maior entre os dois links.
+      -->
+      <div class="contact-me__links">
+        <a
+          class="contact-me__social-link"
+          [href]="githubUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img ngSrc="/assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+          github.com/johnnysoutodev
+        </a>
+
+        <!--
+          LinkedIn sem icone (design-system.md secoes 8.12/10: nenhum icone de LinkedIn
+          existe no arquivo Figma, confirmado via search_design_system/get_metadata).
+        -->
+        <a
+          class="contact-me__social-link"
+          [href]="linkedinUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          linkedin.com/in/johnnysouto
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

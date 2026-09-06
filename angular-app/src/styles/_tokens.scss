@@ -142,6 +142,17 @@
   // ---------------------------------------------------------------------
   --radius-sm: 8px; // Icon Button (secao 8.3)
   --radius-md: 12px; // Tag (8.4), card de projeto (8.5), item de timeline (8.6), card de depoimento (8.7)
+
+  // ---------------------------------------------------------------------
+  // Valores soltos observados, sem token formal por tras (mesmo criterio das notas
+  // 4/5 acima) — cadastrados aqui em vez de hardcoded no componente, para rastreabilidade.
+  // ---------------------------------------------------------------------
+  // Fundo do avatar generico do card de depoimento (design-system.md secao 8.7):
+  // "#9ca3af — cor de preenchimento direta, nao corresponde a nenhum token cinza da
+  // secao 3, provavel placeholder do template". IGUAL nos dois temas (nao e um token
+  // de cor que inverte no dark mode, ao contrario de --color-gray-*) — mantido fixo
+  // de proposito, ja que e um valor "solto" do Figma, nao um token catalogado.
+  --color-testimonial-avatar-bg: #9ca3af;
 }
 
 // ---------------------------------------------------------------------

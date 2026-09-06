@@ -1,0 +1,115 @@
+// Contact me — design-system.md secao 8.12. Tudo empilhado numa unica coluna central,
+// alinhamento centralizado em todos os niveis - sem colunas lado a lado.
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.contact-me {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.contact-me__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+}
+
+.contact-me__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.contact-me__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.contact-me__central {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+}
+
+.contact-me__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-20);
+  max-width: 100%;
+}
+
+.contact-me__row-icon {
+  flex-shrink: 0;
+}
+
+// Heading/H2/Semi Bold (secao 8.12/4) - texto grande o suficiente pra quebrar em telas
+// estreitas (`word-break`), ja que email/telefone sao valores de comprimento variavel
+// que o Figma nao previu quebrando linha.
+.contact-me__row-value {
+  @include typography.heading-h2-semibold;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  color: var(--color-gray-900);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+}
+
+.contact-me__social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.contact-me__social-text {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.contact-me__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  // Gap maior que o espacamento interno de um unico chip (--space-8, abaixo) - precisa
+  // ficar visualmente claro que GitHub e LinkedIn sao 2 links diferentes, nao um so.
+  gap: var(--space-24);
+}
+
+// Icone (quando existe) + texto num unico <a> - mesmo tratamento pros dois links (o
+// GitHub tem icone ja limpo/corrigido, seção 6 do design-system.md; o LinkedIn nao tem
+// icone no Figma, secoes 8.12/10, entao fica so o texto).
+.contact-me__social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  @include typography.body2-medium;
+  color: var(--color-gray-600);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-gray-900);
+    text-decoration: underline;
+  }
+}

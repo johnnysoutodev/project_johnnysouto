@@ -4,20 +4,20 @@ import { About } from '../../features/about/about';
 import { Skills } from '../../features/skills/skills';
 import { Experience } from '../../features/experience/experience';
 import { Work } from '../../features/work/work';
+import { Testimonials } from '../../features/testimonials/testimonials';
+import { ContactMe } from '../../features/contact-me/contact-me';
 
 /**
  * Pagina Home - compoe as 7 secoes de conteudo da landing page (Hero, About, Skills,
  * Experience, Work, Testimonials, Contact me), na mesma ordem do Figma (design-system.md
  * secao 1). Cada secao vive em `features/<secao>/`, um standalone component por secao;
- * Hero (T6), About e Skills (T7/T8), Experience e Work (T9/T10, mesma tarefa) ja saíram
- * do esqueleto - as demais (Testimonials, Contact me) seguem como comentario em
- * `home.html` ate suas proprias tarefas.
+ * todas as 7 secoes ja saíram do esqueleto (T6-T12 do plano de implementacao).
  * Registrada na rota '' (app.routes.ts) - site single-page, navegacao por ancora
  * (#about #work #testimonials #contact, ja referenciadas pelo Header).
  */
 @Component({
   selector: 'app-home',
-  imports: [Hero, About, Skills, Experience, Work],
+  imports: [Hero, About, Skills, Experience, Work, Testimonials, ContactMe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

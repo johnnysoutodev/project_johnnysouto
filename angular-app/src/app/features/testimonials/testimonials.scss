@@ -1,0 +1,104 @@
+// Testimonials — design-system.md secao 8.7 (card de depoimento). Heading (Tag +
+// Subtitle/Normal) e o fundo cinza da raiz da secao sao inferencia de padrao (ver
+// comentario em testimonials.ts), nao extracao formal do node `316:510`.
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.testimonials {
+  @include layout.section-padding;
+  background-color: var(--color-gray-50);
+}
+
+.testimonials__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+}
+
+.testimonials__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.testimonials__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+// Cards lado a lado (secao 8.7: "3 cards ... dispostos lado a lado, nao empilhados"),
+// com wrap no mobile/tablet - o Figma so tem o layout desktop de 3 colunas.
+.testimonials__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-48);
+  width: 100%;
+}
+
+.testimonials__card {
+  display: flex;
+  flex: 1 1 300px;
+  max-width: 373px;
+  flex-direction: column;
+  gap: var(--space-24);
+  padding: var(--space-card-padding);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-md);
+}
+
+// Medidas do icone reportadas na extracao (avatar 64x64, icone "40x40", padding 20px)
+// sao incompatíveis entre si num circulo de 64px (40 + 2*20 = 80 != 64) - ambiguidade
+// da propria extracao (design-system.md secao 8.7), nao resolvida sem nova consulta ao
+// Figma. Aqui: circulo 64x64 fixo (dado mais confiavel, citado tambem na secao 6) com um
+// icone de 32x32 centralizado por flexbox - proporcao razoavel dentro do circulo,
+// decisao de implementacao registrada para rastreabilidade.
+.testimonials__avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-testimonial-avatar-bg);
+  // Icone branco fixo (nao um token de cor que inverte no dark mode) - o fundo do
+  // avatar tambem e um valor solto fixo (--color-testimonial-avatar-bg, ver
+  // _tokens.scss), entao o icone acompanha esse mesmo fundo sem variar por tema, pelo
+  // contraste ficar ok nos dois temas.
+  color: #ffffff;
+}
+
+.testimonials__quote {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.testimonials__customer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.testimonials__name {
+  @include typography.subtitle-semibold;
+  color: var(--color-gray-900);
+}
+
+.testimonials__role {
+  @include typography.body3-normal;
+  color: var(--color-gray-600);
+}
