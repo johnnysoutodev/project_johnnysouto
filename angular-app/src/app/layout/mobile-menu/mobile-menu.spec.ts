@@ -202,16 +202,18 @@ describe('MobileMenu', () => {
     expect(document.activeElement).toBe(middle);
   });
 
-  it('troca o icone de tema entre sol (light) e lua (dark) conforme o ThemeService', async () => {
+  it('mostra lua no tema claro e sol no tema escuro conforme a acao disponivel', async () => {
     await open();
 
     const themeToggle = fixture.debugElement.query(By.css('.mobile-menu__theme-toggle'));
-    expect(themeToggle.query(By.css('circle'))).toBeTruthy();
+    expect(themeToggle.query(By.css('circle'))).toBeNull();
+    expect(themeToggle.attributes['aria-pressed']).toBe('false');
 
     themeToggle.nativeElement.click();
     fixture.detectChanges();
 
-    expect(themeToggle.query(By.css('circle'))).toBeNull();
+    expect(themeToggle.query(By.css('circle'))).toBeTruthy();
+    expect(themeToggle.attributes['aria-pressed']).toBe('true');
   });
 });
 
