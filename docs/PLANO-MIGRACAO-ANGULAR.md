@@ -11,7 +11,7 @@
 
 Migrar o site pessoal/currículo de Johnny Souto (hoje HTML/CSS/JS estático + Materialize + Grunt) para uma aplicação **Angular**, com:
 
-1. Design vindo de um arquivo **Figma**.
+1. Design vindo de um arquivo **Figma**, incluindo **dark mode** e **menu mobile dedicado** (ambos já contemplados no design, ver `docs/design-system.md`).
 2. Internacionalização completa: **pt-BR** (idioma padrão/inicial), **es-ES** e **en-US**.
 3. **Zero quebra** do site em produção (`https://www.johnnysouto.com.br`) durante o processo.
 4. **Google Analytics** continuando a rastrear normalmente após a migração.
@@ -26,6 +26,8 @@ Estas decisões foram discutidas e definidas antes de detalhar as fases — qual
 | Internacionalização | **i18n nativo do Angular** (compile-time, um build por idioma) | Melhor performance e SEO por idioma (cada idioma vira HTML totalmente traduzido e prerenderizado), mesmo trade-off que hoje já existe manualmente (`src/pt/`, `src/en/`). Custo: trocar um texto exige rebuild — aceitável para um site de currículo, que muda com pouca frequência. |
 | Estratégia de rollout | **Construir em paralelo, trocar no final** | O novo site Angular é desenvolvido isolado (branch e/ou projeto de preview próprio na Vercel), sem tocar no pipeline Grunt/`public/` atual. A produção só passa a apontar para o novo build depois de validado e aprovado. |
 | Origem do design | **Figma fornecido pelo Johnny** | O Claude/Copilot extrai especificações (cores, espaçamentos, tipografia, componentes) via o servidor MCP do Figma já configurado em `.vscode/mcp.json`, em vez de desenhar o design do zero. |
+| Dark mode | **Entra no escopo** | O Figma já contempla variantes Light/Dark completas (mesmas seções, tokens de cor próprios) — ver `docs/design-system.md`. Implementar como parte natural do design system, com alternância manual e respeito a `prefers-color-scheme` como padrão inicial. |
+| Menu mobile | **Entra no escopo** | O Figma já contempla um menu mobile dedicado (overlay), tanto em Light quanto em Dark — ver `docs/design-system.md`. Não é uma funcionalidade nova a inventar, só a implementar a partir do que já está desenhado. |
 
 ## 3. Escopo de conteúdo (paridade com o site atual)
 
@@ -41,6 +43,8 @@ Baseado no inventário de `docs/ANALISE-PROJETO.md`, tudo isto precisa ter equiv
 - [ ] Favicon e imagens (`bg.png`, `perfil_jjns.jpeg`).
 - [ ] **Google Analytics** (`gtag.js`, ID atual `UG-YYR4SND80L`) — funcionando em todas as rotas/idiomas.
 - [ ] `cleanUrls` / comportamento de URLs equivalente ao `vercel.json` atual.
+- [ ] **Dark mode — novo**, não existe hoje. Alternância manual (toggle) com persistência da escolha do usuário, respeitando `prefers-color-scheme` como padrão inicial.
+- [ ] **Menu mobile dedicado — novo**, não existe hoje (site atual não tem navegação mobile própria). Overlay conforme design do Figma, funcionando em ambos os temas.
 
 ## 4. Estrutura de pastas proposta
 
@@ -81,8 +85,10 @@ project_johnnysouto/
 - [ ] Pipeline de CI mínimo (build) para o novo projeto, sem afetar os workflows atuais (`Develop.yaml`, `Production.yaml`).
 
 ### Fase 2 — Design system a partir do Figma
-- [ ] Tokens de design (cores, tipografia, espaçamento) extraídos do Figma.
-- [ ] Componentes reutilizáveis (header, seções do CV, footer, versão de impressão).
+- [ ] Tokens de design (cores, tipografia, espaçamento) extraídos do Figma — light e dark (ver `docs/design-system.md`).
+- [ ] Componentes reutilizáveis (header, seções do CV, footer, versão de impressão), já preparados para os dois temas (ex.: via CSS variables/tokens, não cores fixas).
+- [ ] Menu mobile dedicado (overlay), conforme design do Figma, nos dois temas.
+- [ ] Toggle de dark mode (componente + lógica de alternância/persistência).
 - [ ] Aplicar o design às páginas, sem ainda ligar i18n (conteúdo fixo em pt-BR nesta fase).
 
 ### Fase 3 — Internacionalização
@@ -115,6 +121,8 @@ project_johnnysouto/
 - [ ] Checklist de SEO (meta tags, `hreflang`, sitemap, robots).
 - [ ] Confirmação de que o Google Analytics está recebendo dados do preview (idealmente numa property/stream de teste, para não misturar com dados reais de produção).
 - [ ] Revisão de conteúdo com o Johnny (principalmente as traduções em `es-ES`).
+- [ ] Validar dark mode em todas as páginas/idiomas (contraste, persistência da escolha, `prefers-color-scheme` inicial).
+- [ ] Validar menu mobile dedicado em diferentes tamanhos de tela e nos dois temas.
 
 ### Fase 8 — Corte de produção
 - [ ] Definir plano de rollback (como voltar ao site atual rapidamente se algo der errado).
@@ -135,12 +143,15 @@ project_johnnysouto/
 | Google Analytics parar de registrar durante/depois da troca | Testar em property/stream de teste antes; validar pageviews via Router events; monitorar de perto nas primeiras 48h (Fase 8). |
 | Traduções de `es-ES` com baixa qualidade | Revisão humana (Johnny ou revisor nativo) antes do corte — não depender só de tradução automática. |
 | Regressão visual/funcional no site atual durante o desenvolvimento | Novo projeto isolado em `web/`, sem tocar em `src/`/`public/`/workflows atuais até a Fase 8. |
-| Escopo crescer demais (ex.: querer CMS, blog, etc. no meio do caminho) | Este plano cobre só migração de framework + i18n + design; qualquer funcionalidade nova entra como item futuro, não nesta migração. |
+| Escopo crescer demais (ex.: querer CMS, blog, etc. no meio do caminho) | Este plano cobre só migração de framework + i18n + design (incluindo dark mode e menu mobile, já previstos no Figma); qualquer funcionalidade nova além disso entra como item futuro, não nesta migração. |
+| Dark mode gerar flash de tema errado (FOUC) no site prerenderizado (SSG) | Aplicar o tema antes do primeiro paint (inline script mínimo lendo preferência salva/`prefers-color-scheme`), validado na Fase 7. |
 
 ## 7. Critérios de sucesso (Definition of Done)
 
 - Site novo em Angular, publicado em produção, com paridade total de conteúdo com o site atual.
 - Três idiomas funcionando (`pt-BR`, `es-ES`, `en-US`), com troca de idioma acessível ao usuário.
+- Dark mode funcionando em produção, com alternância manual e persistência da escolha.
+- Menu mobile dedicado funcionando em produção, nos dois temas.
 - Google Analytics confirmado funcionando em produção após o corte.
 - SEO (meta tags, Open Graph, `hreflang`, robots/sitemap) validado antes do corte.
 - Nenhum período de indisponibilidade do site atual durante o desenvolvimento.
@@ -152,3 +163,4 @@ project_johnnysouto/
 |---|---|
 | 06/09/2026 | Criação do plano, com decisões arquiteturais iniciais definidas (SSG, i18n nativo, rollout em paralelo, design via Figma/MCP). |
 | 06/09/2026 | Conectado ao MCP do Figma e extraídas specs de página/tema (cores, tipografia, sombras, seções, breakpoints) em `docs/design-system.md`. Design contempla dark mode e menu mobile dedicado, ainda não previstos neste plano — decisão pendente. |
+| 06/09/2026 | Dark mode e menu mobile dedicado adicionados ao escopo da migração (Johnny confirmou), já que ambos estão presentes no design do Figma. Atualizado objetivo, decisões arquiteturais, escopo de conteúdo, Fase 2, Fase 7, riscos e critérios de sucesso. |
