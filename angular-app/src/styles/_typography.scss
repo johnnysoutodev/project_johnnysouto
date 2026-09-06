@@ -81,3 +81,13 @@
   line-height: var(--font-body3-normal-line-height);
   letter-spacing: var(--font-body3-normal-letter-spacing);
 }
+
+// Heading/H3/Bold - Tablet & Mobile (design-system.md secao 8.13) — token novo, fora da
+// tabela da secao 4 (ver comentario junto da variavel em `_tokens.scss`).
+@mixin heading-h3-bold-mobile {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-heading-h3-bold-mobile-weight);
+  font-size: var(--font-heading-h3-bold-mobile-size);
+  line-height: var(--font-heading-h3-bold-mobile-line-height);
+  letter-spacing: var(--font-heading-h3-bold-mobile-letter-spacing);
+}

@@ -1,0 +1,114 @@
+<div id="mobile-menu" class="mobile-menu" [class.mobile-menu--open]="open()">
+  <!-- Scrim: blur + cor a 10% (design-system.md 8.13) — clicavel, fecha o menu. -->
+  <div class="mobile-menu__scrim" (click)="close()" aria-hidden="true"></div>
+
+  <div
+    [id]="panelId"
+    class="mobile-menu__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu de navegação"
+    [attr.inert]="open() ? null : ''"
+    (keydown)="onPanelKeydown($event)"
+  >
+    <!-- Bloco 1: Logo + botao fechar (design-system.md 8.13, bloco "Logo") -->
+    <div class="mobile-menu__logo-row">
+      <span class="mobile-menu__logo">SS</span>
+
+      <!--
+        Botao "X": mesmo criterio de placeholder ja usado no icone de tema do Header
+        (ícone real de fechar segue pendente de exportacao isolada, design-system.md
+        secoes 6/8.3) — SVG generico inline.
+      -->
+      <button
+        type="button"
+        class="mobile-menu__close"
+        aria-label="Fechar menu"
+        (click)="close()"
+      >
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bloco 2: Links de navegacao (design-system.md 8.13, mesmos 4 links do Header) -->
+    <nav class="mobile-menu__links" aria-label="Navegação principal">
+      @for (link of navLinks; track link.href) {
+        <a class="mobile-menu__link" [href]="link.href" (click)="close()">{{ link.label }}</a>
+      }
+    </nav>
+
+    <!-- Bloco 3: Switch Theme + Download CV (design-system.md 8.13, bloco "Actions") -->
+    <div class="mobile-menu__actions">
+      <div class="mobile-menu__theme-row">
+        <span class="mobile-menu__theme-label">Switch Theme</span>
+
+        <!--
+          Icone sol/lua trocando conforme o tema atual — confirmado na spec (8.13: "o
+          icone muda conforme o tema atual", 2 variantes vistas via screenshot). SVGs
+          genericos inline (mesma convencao de placeholder ja usada no Header) - o
+          asset real segue pendente de exportacao (secoes 6/8.3). Nota: o botao de tema
+          do Header (header.html) ainda NAO troca de icone (so aria-label/pressed) - a
+          spec 8.13 e a unica que confirma visualmente a troca sol/lua, entao ela e
+          implementada aqui; revisar o Header numa fase futura pra ficar consistente.
+        -->
+        <button
+          type="button"
+          class="mobile-menu__theme-toggle"
+          [attr.aria-pressed]="themeService.theme() === 'dark'"
+          [attr.aria-label]="
+            themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
+          "
+          (click)="themeService.toggle()"
+        >
+          @if (themeService.theme() === 'dark') {
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          } @else {
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </svg>
+          }
+        </button>
+      </div>
+
+      <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
+      <button type="button" class="mobile-menu__cta">Download CV</button>
+    </div>
+  </div>
+</div>

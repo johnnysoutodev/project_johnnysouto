@@ -98,6 +98,16 @@
   --font-body3-normal-line-height: 20px;
   --font-body3-normal-letter-spacing: 0;
 
+  // Heading/H3/Bold - Tablet & Mobile — 24/32/-2% (design-system.md secao 8.13, bloco
+  // "Logo" do menu mobile) — NAO esta na tabela da secao 4 (que so cobria os estilos
+  // vistos no desktop); token novo, mesmo peso Bold do H3 desktop, tamanho/line-height
+  // ajustados pro mobile, mesma conversao de letter-spacing (-2% do tamanho da fonte,
+  // ver nota da secao 4) ja usada nos demais headings.
+  --font-heading-h3-bold-mobile-weight: 700;
+  --font-heading-h3-bold-mobile-size: 24px;
+  --font-heading-h3-bold-mobile-line-height: 32px;
+  --font-heading-h3-bold-mobile-letter-spacing: -0.02em;
+
   // ---------------------------------------------------------------------
   // Sombras (design-system.md secao 5)
   // ---------------------------------------------------------------------
@@ -153,6 +163,14 @@
   // de cor que inverte no dark mode, ao contrario de --color-gray-*) — mantido fixo
   // de proposito, ja que e um valor "solto" do Figma, nao um token catalogado.
   --color-testimonial-avatar-bg: #9ca3af;
+
+  // Scrim do menu mobile (design-system.md secao 8.13): "--color-gray-900 a 10% de
+  // opacidade" — nao e um token formal da secao 3 (que so documenta as cores solidas),
+  // e uma aplicacao ad-hoc de opacidade sobre o token 900 ja existente em cada tema;
+  // cadastrado aqui (em vez de hardcoded no componente) pela mesma razao dos outros
+  // valores soltos desta secao. Precisa de UMA variavel por tema (troca abaixo, em
+  // `[data-theme='dark']`), diferente de `--color-testimonial-avatar-bg` acima.
+  --color-mobile-menu-scrim: rgba(17, 24, 39, 0.1); // Gray/900 (#111827) a 10%
 }
 
 // ---------------------------------------------------------------------
@@ -167,4 +185,8 @@
   --color-gray-600: #d1d5db; // Gray/Dark/600
   --color-gray-700: #e5e7eb; // Gray/Dark/700
   --color-gray-900: #f9fafb; // Gray/Dark/900
+
+  // Scrim do menu mobile (design-system.md secao 8.13, Dark): "--color-gray-dark-900 a
+  // 10% de opacidade" — ver nota completa junto da variavel light em `:root` acima.
+  --color-mobile-menu-scrim: rgba(249, 250, 251, 0.1); // Gray/Dark/900 (#f9fafb) a 10%
 }

@@ -88,3 +88,39 @@
     opacity: 0.88;
   }
 }
+
+// Botao de hamburguer (abre o menu mobile, layout/mobile-menu/) — visivel por padrao
+// (mobile-first) e escondido a partir do desktop, ou seja, equivalente a combinar
+// `breakpoints.mobile-only` + `breakpoints.tablet-only` (o oposto exato de onde
+// `.header__nav` aparece, acima) sem precisar de 2 media queries separadas.
+.header__menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gray-900);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:active {
+    opacity: 0.56;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  @include breakpoints.desktop-up {
+    display: none;
+  }
+}
