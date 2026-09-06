@@ -20,6 +20,10 @@ Siga Conventional Commits, com commits atômicos (uma mudança lógica por commi
 
 Vulnerabilidades reportadas por `npm audit` devem ser resolvidas preferencialmente via `overrides` no `package.json`, sem quebrar o projeto. Procedimento completo em `docs/agent-rules/resolved-vulnerability.md`.
 
+## Design e Figma
+
+Specs de design (cores, tipografia, espaçamento, sombras, estrutura de seções) vêm de um arquivo Figma fornecido pelo Johnny e são documentadas em `docs/design-system.md`, atualizado por merge incremental (nunca regerado do zero, para não perder notas e pendências já registradas). Procedimento completo de extração via MCP do Figma em `docs/agent-rules/designer.md`.
+
 ## Agentes personalizados
 
 Procedimentos reutilizáveis e mais específicos (não regras gerais) vivem em `docs/agent-rules/`, com pontes por ferramenta em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code). Lista completa e como adicionar novos agentes: `docs/agent-rules/README.md`.
