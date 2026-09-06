@@ -33,6 +33,24 @@
   white-space: nowrap;
 }
 
+.header__logo-short {
+  display: inline;
+}
+
+.header__logo-full {
+  display: none;
+}
+
+@include breakpoints.desktop-up {
+  .header__logo-short {
+    display: none;
+  }
+
+  .header__logo-full {
+    display: inline;
+  }
+}
+
 // Navegacao e divider: escondidos abaixo do desktop nesta fatia, ja que o Figma prve um
 // menu mobile dedicado (overlay) em vez da nav horizontal — implementar esse overlay e
 // escopo de outra fatia da Fase 2, entao por ora so o layout desktop da nav e mostrado.
