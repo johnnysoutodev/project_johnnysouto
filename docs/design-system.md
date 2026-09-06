@@ -96,6 +96,10 @@ Valores de `gap`/`padding` do Auto Layout encontrados nas 9 seções (amostra or
 
 > Nota: os valores 6px e 10px quebram a hipótese anterior de "múltiplos de 8px" — a escala real é mais próxima da escala padrão do Tailwind (4, 6, 8, 10, 16, 20, 24, 32, 48...) do que de uma progressão estrita em base 8. A extração anterior (amostragem pontual) tinha generalizado isso incorretamente; esta tabela substitui aquela observação. Com a cobertura das 9 seções (06/09/2026), nenhum valor de pixel novo apareceu além dos já listados na amostra original — a escala se confirmou estável; a única novidade é o **padding vertical reduzido e distinto** de Header (16px) e Footer (24px), que já era esperado por serem barras de altura fixa (68px) em vez de seções de conteúdo.
 
+### Artefato de tokens CSS
+
+Os valores de cor (seção 3), tipografia (seção 4), sombra (seção 5) e a escala de espaçamento observada (acima) foram traduzidos mecanicamente para CSS custom properties em **[`docs/design-tokens.css`](./design-tokens.css)** — artefato agnóstico de framework, sem valor novo (só formato). Fica em `docs/` (fora de `src/`/`public/`) porque o projeto Angular ainda não existe; quando `angular-scaffold`/`angular-components` rodarem, esse conteúdo migra para dentro do projeto Angular. Convenções adotadas (tema via `[data-theme="dark"]`, espaçamento nomeado pelo próprio valor em px) estão documentadas no cabeçalho do próprio arquivo.
+
 ## 3. Cores (variáveis do Figma)
 
 ### Light mode
@@ -144,6 +148,8 @@ Família única: **Inter**.
 Todos os valores acima são idênticos entre Light e Dark (só a cor de texto muda, via tokens de cinza da seção 3).
 
 > **Verificação (06/09/2026):** confirmado via `get_design_context` em nós de texto de 3 seções distintas (Hero `316:194`, About `316:229`, Experience `316:357`) que a família de fonte é **exclusivamente "Inter"** (variantes Regular/Medium/Semi Bold/Bold), sem mistura com nenhuma outra fonte. Por ser uma Google Font padrão, conforme critério de `docs/agent-rules/designer.md` (seção "3.1 Extrair assets"), **não é necessário exportar arquivo físico de fonte** — o nome da família documentado acima já é suficiente.
+
+> **Correção de unidade do letter-spacing (06/09/2026):** a coluna "Letter-spacing" acima ("-2"/"0") está em **porcentagem do tamanho da fonte**, não em pixels — confirmado via `get_design_context` no nó do headline do Hero (`316:203`), cujo estilo nomeado é literalmente "Heading/H1/Bold - Desktop" com `letterSpacing: -2` na metadata do Figma, e que renderiza como `-1.2px` num texto de `60px` (1.2 ÷ 60 = 2%). Ou seja, `-2` = `-2%` do `font-size` de cada linha da tabela (H1 60px → -1.2px; H2 36px → -0.72px; H3 30px → -0.6px — este último também observado num segundo nó, o logo do Header, com peso Bold no mesmo tamanho). Os valores "0" (Subtitle/Body) não são afetados pela unidade. Ver `docs/design-tokens.css` para a tradução em `em` (`-2% = -0.02em`).
 
 ## 5. Elevação / sombras
 
@@ -195,11 +201,99 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 
 ## 7. Pendências para a Fase 2 (não cobertas neste extract)
 
-- [ ] Especificações de componentes individuais (Header, Icon Button, Tag, cards de projeto, timeline) — extrair via `get_design_context` nó a nó quando a implementação dos componentes começar.
+- [x] Especificações de componentes individuais (Header, Icon Button, Tag, cards de projeto, timeline) — extraídas em 06/09/2026 via `get_design_context`, ver seção 8. Cobertura: Header, Footer, Icon Button (variantes 36×36 e 44×44), Tag, card de projeto (Work, 3 cards), item de timeline (Experience, 3 itens) e card de depoimento (Testimonials). **Ressalva não bloqueante:** o Icon Button expõe uma prop `state` no componente (valor visto: `Default`), mas não foi possível confirmar variantes `Hover`/`Active` como frames estáticos no arquivo — ver seção 8 para detalhe. Isso não impede a implementação (a variante visível/`Default` está totalmente documentada); só significa que hover/active precisarão ser definidos por convenção do projeto, não copiados do Figma.
 - [x] Ícones de tecnologia (Skills), sociais (Hero/Contact me) e estruturais (pin, mail, phone, copy, footer) — extraídos em 06/09/2026, ver tabela da seção 6. Falta só o ícone de tema/menu do Header (bloqueado por ID de instância).
 - [x] Imagens raster estruturais (avatar do Hero, foto do About, thumbnail de projeto do Work) — extraídas em 06/09/2026, ver tabela da seção 6. São placeholders do template, só pra referência de proporção.
 - [ ] Decidir com o Johnny se **dark mode** e o **menu mobile dedicado** entram no escopo desta migração (o design já os contempla, mas `PLANO-MIGRACAO-ANGULAR.md` não menciona).
 - [ ] Confirmar breakpoints intermediários (tablet) — o Figma só tem Desktop (1440) e Mobile (iPhone 8 / 375) como referência.
+
+## 8. Especificações de componentes
+
+> Extraído via `get_design_context` (Desktop/Light) em 06/09/2026. Cores, tipografia e espaçamento abaixo referenciam os tokens já documentados nas seções 3/4/2 — não há valor solto novo introduzido aqui. Screenshots de conferência gerados via `get_screenshot` durante a extração (URLs de curta duração, não reproduzidas aqui).
+
+### 8.1 Header (`316:588`)
+
+- **Dimensões:** 1440×68 (largura total, altura fixa). Nomeado/assumido como sticky na seção 1 (altura fixa de barra), mas **não foi possível confirmar comportamento sticky/scroll**: o container tem uma borda inferior (`border-bottom`) na cor `rgba(255,255,255,0)` (transparente) — compatível com um padrão comum de "borda que aparece ao rolar a página", mas o arquivo não tem um frame/estado separado de "Header rolado" nem uma interação de prototype inspecionável pelas tools disponíveis. Tratar como suposição de implementação, não como spec confirmada.
+- **Cor de fundo:** `--color-gray-default` (branco).
+- **Padding:** 80px horizontal / 16px vertical (seção 2), mais 32px horizontal do `Container` interno.
+- **Estrutura (esquerda → direita):**
+  - Logo/nome `<SS />`: texto Bold 30px/36px, cor `--color-gray-900`, tracking -0.6px (ver nota de unidade na seção 4) — **não corresponde a nenhum token nomeado da tabela da seção 4** (mistura peso Bold com tamanho de H3); tratar como estilo ad-hoc do template, a substituir pelo nome/logo real do Johnny.
+  - Navegação (`gap: 24px`): 4 links de texto (About, Work, Testimonials, Contact) — estilo **Body2/Medium**, cor `--color-gray-600`.
+  - Divider vertical entre navegação e ações (linha simples, sem token de cor específico além do stroke padrão).
+  - Bloco "Actions" (`gap: 16px`): Icon Button (tema/menu, ver 8.3) + Botão "Download CV" (fundo `--color-gray-900`, texto `--color-gray-50`, estilo Body2/Medium, `padding: 6px 16px`, `border-radius: 12px`).
+- **Estados:** nenhum estado de hover/active foi encontrado como frame estático para os links de navegação ou para o botão "Download CV" — não confirmável via Figma; convenção de hover deve ser decidida na implementação.
+
+### 8.2 Footer (`316:579`)
+
+- **Dimensões:** 1440×68 (largura total, altura fixa).
+- **Cor de fundo:** `--color-gray-50` (diferente do Header, que é `--color-gray-default`).
+- **Padding:** 80px horizontal / 24px vertical (seção 2), mais 32px horizontal do `Container` interno.
+- **Estrutura:** um único bloco centralizado "Footer Note" com `gap: 8px` — ícone de copyright (16×16, asset `icon-footer`, já exportado na seção 6) + texto de copyright em **Body3/Normal** (14px/20px), cor `--color-gray-600`, com dois trechos em link sublinhado ("Designed" e "coded", placeholders do template a substituir pelos créditos reais).
+- **Estados:** não aplicável (sem elementos interativos além dos 2 links de texto, sem hover confirmável).
+
+### 8.3 Icon Button
+
+Componente reusado no Header (tema/menu), Hero e Contact me (redes sociais), e Work/Contact me (ações). Duas variantes de tamanho observadas — **não há uma prop `size` com nomes tipo "sm/md/lg" confirmada por múltiplos valores; o único valor de `size` visto explicitamente foi `"md"`** (no Header), mas o mesmo componente aparece com dimensão total diferente em Contact me:
+
+| Variante | Dimensão total | Padding | Ícone interno | Onde aparece | Node de referência |
+| --- | --- | --- | --- | --- | --- |
+| Padrão (36×36) | 36×36 | 6px (`--space-icon-button-padding`) | 24×24 | Header (tema/menu), Hero (social ×3), Work (ação do card), Contact me (social ×3) | `I316:588;316:604` (Header), `317:734` (Hero) |
+| Grande (44×44) | 44×44 | 6px | 32×32 | Contact me (botão "copiar" ao lado de e-mail/telefone) | `327:373`, `327:377` |
+
+- **Border-radius:** 8px em ambas as variantes.
+- **Cor de fundo:** transparente (sem `background` aplicado) em todas as instâncias inspecionadas — o botão é só o ícone com padding, sem fundo/borda visível no estado default.
+- **Ícone:** SVG interno, cor herdada do ícone exportado (ver seção 6 para os ícones sociais/estruturais já baixados); o ícone de tema/menu do Header (formato de "sol", conforme screenshot) **segue pendente de exportação como asset isolado** (mesmo bloqueio já registrado na seção 6 — node de override `I316:588;316:604;309:256` não aceito por `download_assets`), mas sua estrutura de layout (padding/tamanho) **foi** confirmada aqui via `get_design_context`, que não tem essa mesma restrição de formato de node ID.
+- **Variantes/props do componente:** a instância do Header expõe explicitamente as props `size="md"`, `state="Default"`, `themeMode="Light"` na assinatura gerada pelo `get_design_context` — ou seja, o componente principal tem variantes de `state` e `themeMode` no Figma, mas **não foi possível enumerar quais outros valores essas props aceitam** (ex.: `state="Hover"`/`"Active"`) porque o arquivo não expõe Code Connect nem uma página de biblioteca de componentes separada (`list_file_components_for_code_connect` retornou erro de permissão — recurso exige seat Dev/Full em plano Organization/Enterprise) e nenhum outro frame estático com `state` diferente de `Default` foi localizado. **Não adivinhado:** hover/active do Icon Button não são especificados aqui — devem ser definidos por convenção do projeto na implementação.
+
+### 8.4 Tag
+
+Badge usado em About, Skills, Work, Experience, Testimonials e Contact me (título de seção) — mesmo componente em todos os usos, sem variante de cor observada.
+
+- **Dimensão:** auto (largura ajustada ao texto), altura efetiva 28px (`padding-y` 4px × 2 + linha de 20px do texto).
+- **Padding:** `20px` horizontal / `4px` vertical (`--space-tag-padding-x` / `--space-tag-padding-y`).
+- **Cor de fundo:** `--color-gray-200`.
+- **Cor de texto:** `--color-gray-600`.
+- **Tipografia:** `Body3/Medium` (14px/20px, peso 500).
+- **Border-radius:** 12px.
+- **Estados:** não há Tag interativo no arquivo (é só rótulo/badge) — sem hover/active a documentar.
+
+### 8.5 Card de projeto (Work, `316:415`)
+
+3 cards confirmados (Row `316:423`, `327:277`, `327:310`), todos com a mesma estrutura, alternando o lado da imagem (card 1: imagem à esquerda / texto à direita; card 2: texto à esquerda / imagem à direita; card 3: imagem à esquerda / texto à direita de novo — não é uma alternância estrita a cada card, é o padrão observado nos 3 existentes).
+
+- **Dimensão:** 1152px de largura (dentro do container de 1280px com `padding-x: 64px` — nota: esse é um inset diferente do "32px" padrão de outras seções, específico do Work, já registrado na seção 2 como a exceção sem o padding extra de Container), altura 480px por card.
+- **Border-radius:** 12px (card inteiro e a imagem interna).
+- **Sombra:** `--shadow-md` no card inteiro; a imagem interna (`Picture`) tem sua própria sombra, mais pronunciada — `--shadow-lg`.
+- **Cor de fundo:** lado da imagem usa `--color-gray-50` com borda `--color-gray-100`; lado do texto usa `--color-gray-default` (branco).
+- **Padding interno:** 48px em ambas as colunas (`--space-card-padding`), confirmando o valor já registrado na seção 2.
+- **Estrutura (lado de texto):** título do projeto (`Body1`/Subtitle Semi Bold 20px/28px, cor `--color-gray-900`) → descrição (`Body2/Normal`, 16px/24px, `--color-gray-600`) → grid de Tags de tecnologia (`gap: 8px`, wrap) → bloco "Actions" com 1 Icon Button (variante 36×36, link externo do projeto) — `gap: 24px` entre esses 4 blocos.
+- **Estados:** sem hover/active confirmável nos cards nem no Icon Button de ação (mesma ressalva da seção 8.3).
+
+### 8.6 Item de timeline (Experience, `316:357`)
+
+3 itens confirmados (Row `316:365`, `316:378`, `316:405`), mesma estrutura, alturas diferentes por causa da quantidade de linhas de descrição (bullet list).
+
+- **Dimensão:** largura 896px (dentro do container de 1280px, mais estreito que as outras seções — inset de `192px` de cada lado, não os 32px padrão do Container), altura auto (varia com o conteúdo: 288px, 264px, 180px nos 3 itens observados).
+- **Border-radius:** 12px.
+- **Sombra:** `--shadow-md` (mesma sombra do card do Work).
+- **Cor de fundo:** `--color-gray-default` (branco).
+- **Padding interno:** 32px nas 4 bordas (`--space-timeline-item-padding`), confirmando o valor já registrado na seção 2.
+- **Estrutura interna (`gap: 48px` entre colunas):** logo da empresa (imagem/SVG, ex. "logo-upwork" 102×28) → coluna de conteúdo (cargo em `Subtitle/Semi Bold` 20px/28px cor `--color-gray-900`, lista de bullets em `Body2/Normal` 16px/24px cor `--color-gray-600`, `gap: 16px` entre cargo e lista) → período (`Body2/Normal` 16px/24px, cor `--color-gray-700` — mais escuro que a descrição, mesmo estilo de tamanho).
+- **Conector visual da timeline:** **não encontrado.** Inspecionado via `get_screenshot` na seção inteira (`316:357`) — os 3 itens são simplesmente cards empilhados com `gap: 48px` entre si (mesmo valor "gap macro" já documentado na seção 2), sem linha vertical, marcador/dot ou qualquer elemento gráfico de timeline conectando os cards. Se uma timeline visual (linha + marcadores) for desejada na implementação Angular, é uma decisão de UI nova, não uma reprodução do Figma.
+- **Estados:** não aplicável (itens não são interativos no Figma).
+
+### 8.7 Card de depoimento (Testimonials, `316:510`)
+
+3 cards confirmados (Column `316:519`, `316:525`, `316:531`), mesma estrutura, dispostos lado a lado (não empilhados).
+
+- **Dimensão:** ~373px de largura cada (3 colunas dividindo 1216px com `gap` implícito da distribuição), altura auto (varia com o tamanho do depoimento: 428px nos dois primeiros, mais alto no terceiro por ter texto mais longo).
+- **Border-radius:** 12px.
+- **Sombra:** `--shadow-md`.
+- **Cor de fundo:** `--color-gray-default` (branco).
+- **Padding interno:** 48px nas 4 bordas (`--space-card-padding`), confirmando o valor já registrado na seção 2.
+- **Estrutura (`gap: 24px` entre blocos):** avatar circular 64×64 (fundo sólido cinza `#9ca3af` — cor de preenchimento direta, **não corresponde a nenhum token cinza da seção 3**, provável placeholder do template — com um ícone de usuário genérico 40×40 dentro, `padding: 20px`) → texto do depoimento em `Body2/Normal` (16px/24px, `--color-gray-600`) → bloco "Customer Details" (`gap: 4px`): nome em `Subtitle/Semi Bold` (20px/28px, `--color-gray-900`) + cargo/empresa em `Body3/Normal` (14px/20px, `--color-gray-600`).
+- **Nota:** confirma o que já constava na seção 6 — Testimonials não usa foto raster, o avatar é um círculo de cor sólida com ícone SVG genérico dentro.
+- **Estados:** não aplicável (cards não são interativos no Figma).
 
 ## Log de evolução
 
@@ -208,3 +302,5 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 - **06/09/2026** — Verificação de tipografia: conferido via `get_design_context` em Hero (`316:194`), About (`316:229`) e Experience (`316:357`) que a tipografia usa exclusivamente a família **Inter** (Google Font padrão), sem fonte customizada embutida. Nenhum arquivo de fonte precisa ser exportado — ver nota na seção 4.
 - **06/09/2026** — Extração de assets (imagens): 3 imagens raster mapeadas em lotes por seção (Hero, About, Work, Testimonials) e baixadas via `download_assets` — avatar do Hero, foto do About e thumbnail de projeto do Work (reusado nos 3 cards). Salvas em `src/assets/images/`. Testimonials não tinha foto raster (avatar ali é ícone SVG genérico). Ver seção 6.
 - **06/09/2026** — Espaçamento (seção 2), cobertura completa das 9 seções: extraído via `get_design_context` o padding/gap real das 5 seções que faltavam (Header `316:588`, Experience `316:357`, Testimonials `316:510`, Contact me `316:537`, Footer `316:579`), completando a amostra anterior (Hero, About, Skills, Work). Confirmado que o padrão **80px horizontal / 96px vertical** se mantém em Experience, Testimonials e Contact me (7 das 9 seções agora no mesmo padrão). Header e Footer confirmam a exceção esperada por terem altura fixa de 68px: padding vertical medido em **16px (Header)** e **24px (Footer)** — valores distintos entre si, ambos mantendo os 80px horizontais. Confirmado também, via `get_metadata` no frame `316:177`, que a margem entre as 9 seções é **0** (posições `y` batem exatamente, sem gap). Nenhum valor de pixel novo apareceu além dos já catalogados na amostra original — só novos usos dos mesmos valores (ver tabela "Espaçamento observado"). Seção 2 agora cobre as 9 seções do template; nenhuma pendência de padding de seção restante.
+- **06/09/2026** — Artefato de tokens CSS: gerado `docs/design-tokens.css` (novo arquivo) traduzindo mecanicamente cor (seção 3, light/dark via `[data-theme="dark"]`), tipografia (seção 4, um grupo de variáveis `--font-<token>-*` por estilo) e sombra (seção 5) para CSS custom properties, mais uma escala de espaçamento derivada (`--space-4` … `--space-96`, nomeada pelo próprio valor em px) a partir da tabela "Espaçamento observado" da seção 2 — nenhum token formal de espaçamento existe no Figma, então essa escala é uma convenção documentada no cabeçalho do próprio arquivo, não um dado extraído. Durante a montagem dos tokens de tipografia, verificado via `get_design_context` (Hero `316:203`, estilo nomeado "Heading/H1/Bold - Desktop") que a unidade do letter-spacing da seção 4 é **porcentagem do tamanho da fonte**, não pixels (`-2` = `-2%`) — nota adicionada na seção 4 e valores convertidos para `em` no CSS. Referência ao artefato adicionada como nova subseção "Artefato de tokens CSS" logo após a seção 2.
+- **06/09/2026** — Especificações de componentes individuais (nova seção 8): extraído via `get_design_context` (e `get_metadata` prévio para localizar node IDs) o Header (`316:588`), Footer (`316:579`), Icon Button (2 variantes de tamanho — 36×36 e 44×44 —, instâncias no Header/Hero/Work/Contact me), Tag (`325:214`, mesmo componente em 6 seções), os 3 cards de projeto do Work (`316:423`, `327:277`, `327:310`), os 3 itens de timeline da Experience (`316:365`, `316:378`, `316:405`) e os 3 cards de depoimento da Testimonials (`316:519`, `316:525`, `316:531`). Cada um documentado com dimensão, border-radius, cor (referenciando seção 3), tipografia (referenciando seção 4) e padding (referenciando seção 2). Duas limitações registradas explicitamente (não adivinhadas): (1) o comportamento sticky/scroll do Header não pôde ser confirmado — só uma borda transparente sugestiva, sem frame de estado "rolado"; (2) as variantes `Hover`/`Active` do componente Icon Button não puderam ser enumeradas (Code Connect indisponível no plano do arquivo; nenhum frame estático com esse `state` foi encontrado) — só a variante `Default` está documentada. Confirmado também que a timeline da Experience **não tem** conector visual (linha/marcador) — são cards empilhados com gap de 48px, verificado via `get_screenshot`. Pendência da seção 7 sobre especificações de componentes marcada como concluída, com a ressalva do Icon Button registrada no próprio item.
