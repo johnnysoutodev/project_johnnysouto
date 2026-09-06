@@ -93,6 +93,8 @@ Família única: **Inter**.
 
 Todos os valores acima são idênticos entre Light e Dark (só a cor de texto muda, via tokens de cinza da seção 3).
 
+> **Verificação (06/09/2026):** confirmado via `get_design_context` em nós de texto de 3 seções distintas (Hero `316:194`, About `316:229`, Experience `316:357`) que a família de fonte é **exclusivamente "Inter"** (variantes Regular/Medium/Semi Bold/Bold), sem mistura com nenhuma outra fonte. Por ser uma Google Font padrão, conforme critério de `docs/agent-rules/designer.md` (seção "3.1 Extrair assets"), **não é necessário exportar arquivo físico de fonte** — o nome da família documentado acima já é suficiente.
+
 ## 5. Elevação / sombras
 
 | Token | Definição |
@@ -146,3 +148,4 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 ## Log de evolução
 
 - **06/09/2026** — Extração de assets (ícones): 24 ícones exportados do Figma via `download_assets` em lotes manuais (Skills, depois Hero/Contact me/Footer), salvos em `src/assets/icons/`. Ver seção 6 para a lista completa e a seção 7 para a pendência restante (ícone do Header).
+- **06/09/2026** — Verificação de tipografia: conferido via `get_design_context` em Hero (`316:194`), About (`316:229`) e Experience (`316:357`) que a tipografia usa exclusivamente a família **Inter** (Google Font padrão), sem fonte customizada embutida. Nenhum arquivo de fonte precisa ser exportado — ver nota na seção 4.
