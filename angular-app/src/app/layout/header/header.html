@@ -30,6 +30,7 @@
           core/theme/theme.ts) - so o icone em si segue placeholder.
         -->
         <app-icon-button
+          class="header__theme-toggle"
           [ariaLabel]="themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
           [pressed]="themeService.theme() === 'dark'"
           (click)="themeService.toggle()"

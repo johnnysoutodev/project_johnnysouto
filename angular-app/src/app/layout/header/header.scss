@@ -158,3 +158,11 @@
     gap: var(--space-24);
   }
 }
+
+.header__theme-toggle {
+  display: none;
+
+  @include breakpoints.desktop-up {
+    display: contents;
+  }
+}
