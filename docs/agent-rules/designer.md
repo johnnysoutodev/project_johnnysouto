@@ -15,6 +15,7 @@ O Figma continua sendo a fonte de verdade visual. Este agente e o `design-system
 - Cria ou atualiza `docs/design-system.md` com o resultado, fazendo **merge incremental** (ver seção "Merge incremental" abaixo) — nunca regenera o arquivo do zero.
 - Quando explicitamente pedido, gera artefatos mecânicos de tokens de design agnósticos de framework a partir do que já foi extraído (ex.: variáveis CSS `:root { --color-gray-900: ... }`, ou um JSON de tokens) — sempre como um passo derivado do `design-system.md`, nunca direto do Figma sem antes documentar.
 - Extrai specs de componentes individuais (`get_design_context`) sob demanda, quando a Fase 2 do plano de migração chegar na implementação de um componente específico.
+- Extrai ícones, imagens, logos e demais assets visuais do Figma (`download_assets`) **em lotes manuais por seção/frame** (nunca a página inteira de uma vez), salvando em `src/assets/<categoria>/` e registrando o resultado em `docs/design-system.md` (ver "Assets do Figma" no processo, abaixo).
 
 **Não faz:**
 
@@ -46,12 +47,29 @@ Se as tools `mcp__figma__*` ainda não estiverem carregadas/autenticadas nesta s
 - Use `get_design_context` apenas quando o pedido for sobre um componente específico a implementar (carrega guidance de design-to-code antes, conforme a própria tool exige).
 - Resultados de `get_metadata` costumam ser grandes — salve em arquivo e consulte com `jq`/`grep` em vez de carregar tudo no contexto de uma vez.
 
+### 3.1 Extrair assets (ícones, imagens, logos, fontes)
+
+**Sempre em lotes manuais por seção/frame** (ex.: um lote para os ícones de tecnologia da seção "Skills", outro para os ícones sociais do "Header"/"Contact"). Nunca tente varrer e baixar os assets da página inteira numa única leitura de `get_metadata` — isso estoura o contexto da sessão antes de terminar, que foi a causa de extrações incompletas em sessões anteriores.
+
+**Critério do que exportar:**
+
+- Nós tipo `VECTOR`/`COMPONENT`/`INSTANCE` cujo nome indique ícone ou logo reutilizável (prefixos como `icon/`, `logo/`, `social/`).
+- Fills tipo `IMAGE` que sejam estruturais para o layout (ex.: avatar/foto do Hero, ainda que seja placeholder — mantém a proporção correta pro componente).
+- Arquivos de fonte **apenas** se não forem uma família padrão de terceiros (Google Fonts etc.) — famílias padrão (ex.: Inter) só precisam do nome documentado na seção 4 de tipografia, não do arquivo em si.
+
+**Critério do que NÃO exportar:**
+
+- Conteúdo de placeholder do template que será substituído pelo conteúdo real do Johnny (fotos de "Sagar", logos fictícios como "Fixkit", textos de projetos de exemplo) — a menos que sirvam só de referência de proporção/posição, e mesmo assim não usar no site final.
+
+**Onde salvar:** `src/assets/<categoria>/`, com `<categoria>` conforme o tipo (`icons`, `images`, `logos`, `fonts`, ou outra subcategoria que fizer sentido para o lote). Nome do arquivo deve preservar o nome do nó no Figma, sanitizado (minúsculo, espaços viram hífen). Essa é a convenção nova para assets extraídos do design system — não confundir com `src/images/`, que é a pasta do site legado atual.
+
 ### 4. Merge incremental no `design-system.md`
 
 - Atualize **apenas** as seções cujo conteúdo mudou de fato no Figma (ex.: se só a paleta de cores mudou, não reescreva a seção de tipografia).
 - **Preserve integralmente** qualquer seção de notas manuais, decisões e a seção de "Pendências" — essas refletem decisões humanas e trabalho ainda não feito, não dados extraíveis do Figma.
 - Registre a atualização como uma entrada nova (não substitua entradas antigas) numa seção de log/changelog do documento, incluindo data e o que mudou — mesmo padrão usado em `docs/PLANO-MIGRACAO-ANGULAR.md` (seção "Log de evolução").
-- Se uma pendência da seção 6 foi resolvida por esta extração (ex.: "especificações de um componente"), marque o item como concluído em vez de removê-lo.
+- Se uma pendência da seção "Pendências" foi resolvida por esta extração (ex.: "especificações de um componente"), marque o item como concluído em vez de removê-lo.
+- Se assets foram extraídos nesta rodada (passo 3.1), adicione/atualize a seção "Assets exportados" do `design-system.md` (logo antes de "Pendências"), listando por lote: nome do asset, categoria, node ID de origem no Figma e caminho salvo no repo (`src/assets/<categoria>/arquivo`).
 
 ### 5. Validar
 
@@ -86,7 +104,8 @@ Outro exemplo, mais focado (Fase 2 em andamento):
 - [ ] `docs/design-system.md` lido antes de extrair qualquer coisa nova
 - [ ] Node correto identificado (frame/instância concreta, não a página)
 - [ ] Specs extraídas via a(s) tool(s) certa(s) para o que foi pedido
-- [ ] Merge incremental aplicado — seções não afetadas e "Pendências" preservadas
+- [ ] Se aplicável, assets extraídos em lotes por seção/frame (nunca a página inteira de uma vez) e salvos em `src/assets/<categoria>/`
+- [ ] Merge incremental aplicado — seções não afetadas e "Pendências" preservadas, seção "Assets exportados" atualizada se houve extração de assets
 - [ ] Entrada de log/changelog adicionada com data e resumo da mudança
 - [ ] Releitura final confirma que nada foi perdido
 
@@ -96,16 +115,16 @@ Outro exemplo, mais focado (Fase 2 em andamento):
 
 - Tools `mcp__figma__*` (extração e, quando aplicável, autenticação no MCP do Figma)
 - `Read` (ler `docs/design-system.md` e outros arquivos do projeto antes de editar)
-- `Write`/`Edit` (criar ou atualizar `docs/design-system.md` e, sob pedido explícito, artefatos de tokens de design)
+- `Write`/`Edit` (criar ou atualizar `docs/design-system.md` e, sob pedido explícito, artefatos de tokens de design; inclui salvar os arquivos baixados via `download_assets` em `src/assets/<categoria>/`)
 
 **Não executa:**
 
-- Comandos de shell/Bash (não roda `ng generate`, build, testes, nem `git commit`/`push`)
+- Comandos de shell/Bash (não roda `ng generate`, build, testes, nem `git commit`/`push`) — a extração de assets é feita manualmente em lotes via `download_assets`, sem script auxiliar
 - Geração de componentes Angular ou qualquer código de aplicação
 - Decisões de escopo de produto (dark mode, menu mobile, etc.) — só documenta o que o Johnny decidir
 
 ---
 
 **Última atualização:** 06/09/2026
-**Versão:** 1.0
+**Versão:** 1.1
 **Mantido por:** @JohnnySouto

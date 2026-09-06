@@ -101,9 +101,19 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 | Drop Shadow/lg | `0 10px 8px #0000000A` + `0 4px 3px #0000001A` |
 | Drop Shadow/2xl (dark) | `0 25px 25px #00000026` |
 
-## 6. Pendências para a Fase 2 (não cobertas neste extract)
+## 6. Assets exportados
+
+> Ícones, imagens, logos e fontes baixados do Figma (`download_assets`) em lotes manuais por seção/frame, seguindo o critério e a convenção de `docs/agent-rules/designer.md` (seção "3.1 Extrair assets"). Salvos em `src/assets/<categoria>/` (ex.: `src/assets/icons/`, `src/assets/images/`, `src/assets/fonts/`).
+
+_Nenhum lote extraído ainda — pendência aberta na seção 7._
+
+| Lote/Seção | Asset | Categoria | Node ID (Figma) | Caminho no repo |
+| --- | --- | --- | --- | --- |
+| _(vazio)_ | | | | |
+
+## 7. Pendências para a Fase 2 (não cobertas neste extract)
 
 - [ ] Especificações de componentes individuais (Header, Icon Button, Tag, cards de projeto, timeline) — extrair via `get_design_context` nó a nó quando a implementação dos componentes começar.
-- [ ] Ícones/assets (logos de tecnologias, ícones sociais) — exportar via `download_assets`/`upload_assets` quando formos montar os componentes.
+- [ ] Ícones/assets (logos de tecnologias, ícones sociais) — exportar em lotes manuais por seção via `download_assets`, seguindo o processo descrito em `docs/agent-rules/designer.md`, e registrar na tabela da seção 6 acima.
 - [ ] Decidir com o Johnny se **dark mode** e o **menu mobile dedicado** entram no escopo desta migração (o design já os contempla, mas `PLANO-MIGRACAO-ANGULAR.md` não menciona).
 - [ ] Confirmar breakpoints intermediários (tablet) — o Figma só tem Desktop (1440) e Mobile (iPhone 8 / 375) como referência.
