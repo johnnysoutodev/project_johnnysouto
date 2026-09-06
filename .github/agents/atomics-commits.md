@@ -1,8 +1,7 @@
 ---
 name: "atomics-commits"
-applyTo: '**/*'
 description: "Agente especializado em criar commits atômicos seguindo Conventional Commits. Analisa git status, agrupa mudanças por contexto (docs/site/build/ci/chore) e executa commits com mensagens Conventional Commits."
-model: ['GPT5-mini (copilot)', 'Claude Sonnet 4.5 (copilot)', 'GPT-5.4 (copilot)']
+model: ['Claude Sonnet 5 (copilot)', 'GPT-5.3-Codex (copilot)', 'Claude Sonnet 5']
 ---
 
 # atomics-commits
