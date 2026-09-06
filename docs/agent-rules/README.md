@@ -37,3 +37,4 @@ Edite **apenas** o arquivo em `docs/agent-rules/`. Os arquivos-ponte não devem 
 | `atomics-commits` | [`atomics-commits.md`](./atomics-commits.md) | `.github/agents/atomics-commits.md` | `.claude/agents/atomics-commits.md` |
 | `designer` | [`designer.md`](./designer.md) | `.github/agents/designer.md` | `.claude/agents/designer.md` |
 | `angular-scaffold` | [`angular-scaffold.md`](./angular-scaffold.md) | `.github/agents/angular-scaffold.md` | `.claude/agents/angular-scaffold.md` |
+| `angular-components` | [`angular-components.md`](./angular-components.md) | `.github/agents/angular-components.md` | `.claude/agents/angular-components.md` |

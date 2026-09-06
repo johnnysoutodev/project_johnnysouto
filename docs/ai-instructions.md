@@ -26,7 +26,7 @@ Specs de design (cores, tipografia, espaçamento, sombras, estrutura de seções
 
 ## Migração Angular
 
-O plano de migração para Angular (`docs/PLANO-MIGRACAO-ANGULAR.md`) já está em andamento — decisões de arquitetura, versão e nome de diretório ficam registradas lá, não devem ser repetidas de memória. O scaffold inicial do projeto Angular **dentro deste repositório já existente** (Fase 1 do plano) é feito pelo procedimento em `docs/agent-rules/angular-scaffold.md`, não por um `ng new` avulso — ele garante versão de Node/Angular compatível, isolamento do site legado (sem repositório Git aninhado) e SCSS desde o início.
+O plano de migração para Angular (`docs/PLANO-MIGRACAO-ANGULAR.md`) já está em andamento — decisões de arquitetura, versão e nome de diretório ficam registradas lá, não devem ser repetidas de memória. O scaffold inicial do projeto Angular **dentro deste repositório já existente** (Fase 1 do plano) é feito pelo procedimento em `docs/agent-rules/angular-scaffold.md`, não por um `ng new` avulso — ele garante versão de Node/Angular compatível, isolamento do site legado (sem repositório Git aninhado) e SCSS desde o início. A geração dos componentes Angular de cada seção do site (Fase 2), a partir do que já está documentado em `docs/design-system.md`, é feita pelo procedimento em `docs/agent-rules/angular-components.md` — ele só consome o design já extraído (pelo `designer`) e o projeto já criado (pelo `angular-scaffold`), não faz nenhum dos dois.
 
 ## Agentes personalizados
 

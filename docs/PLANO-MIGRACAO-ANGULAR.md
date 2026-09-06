@@ -90,6 +90,9 @@ project_johnnysouto/
 - [ ] Pipeline de CI mínimo (build) para o novo projeto, sem afetar os workflows atuais (`Develop.yaml`, `Production.yaml`).
 
 ### Fase 2 — Design system a partir do Figma
+
+> Geração dos componentes executada pelo agente `angular-components` (`docs/agent-rules/angular-components.md`), que consome o que já está em `docs/design-system.md` — não se conecta ao Figma nem cria o projeto Angular por conta própria.
+
 - [ ] Tokens de design (cores, tipografia, espaçamento) extraídos do Figma — light e dark (ver `docs/design-system.md`).
 - [ ] Componentes reutilizáveis (header, seções do CV, footer), já preparados para os dois temas (ex.: via CSS variables/tokens, não cores fixas).
 - [ ] Menu mobile dedicado (overlay), conforme design do Figma, nos dois temas.
@@ -173,3 +176,4 @@ project_johnnysouto/
 | 06/09/2026 | Wrapper do novo projeto renomeado de `web/` para `angular-app/` (nome final ainda a confirmar), mantendo o isolamento do site legado. Versão do Angular definida como Angular 21/22, exigindo Node ~24.16.x — pin de versão próprio do novo projeto, sem alterar o `.nvmrc` (Node 20) da raiz, que o site legado ainda usa. |
 | 06/09/2026 | Criado o agente `angular-scaffold` (`docs/agent-rules/angular-scaffold.md`) para executar o scaffold da Fase 1 dentro deste repositório já existente — garante `--skip-git` (sem repositório Git aninhado), SCSS, versão de Node/Angular compatível, e aplica a configuração de IA do Angular CLI para Claude/Copilot. |
 | 06/09/2026 | Versão de impressão (`src/printer/index.html`) removida do escopo, substituída por um CV para download nos três idiomas — o idioma do arquivo baixado acompanha o idioma atual do site. Forma de geração/padronização do download ainda não decidida (Fase 4). Atualizado escopo de conteúdo, Fase 2, Fase 4 e Fase 7. |
+| 06/09/2026 | Criado o agente `angular-components` (`docs/agent-rules/angular-components.md`) para gerar os componentes Angular da Fase 2 a partir do que já está documentado em `docs/design-system.md` (estrutura/layout do Figma, tokens, assets) — não se conecta ao Figma (isso é do `designer`) nem cria o projeto (isso é do `angular-scaffold`), só consome o que os dois já produziram. |
