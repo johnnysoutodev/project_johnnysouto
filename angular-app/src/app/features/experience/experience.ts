@@ -28,6 +28,7 @@ interface ExperienceItem {
 @Component({
   selector: 'app-experience',
   imports: [Tag],
+  host: { id: 'experience' },
   templateUrl: './experience.html',
   styleUrl: './experience.scss',
 })
