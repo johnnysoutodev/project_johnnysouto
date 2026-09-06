@@ -54,7 +54,7 @@ Para não colidir com o que existe (e não repetir o problema do antigo diretór
 project_johnnysouto/
 ├── src/            # site atual (legado) — intocado durante a migração
 ├── public/         # build atual (legado) — intocado durante a migração
-├── web/            # NOVO projeto Angular (nome a confirmar com o Johnny)
+├── angular-app/    # NOVO projeto Angular (nome a confirmar com o Johnny)
 │   ├── src/
 │   │   ├── app/
 │   │   ├── locale/         # arquivos de tradução (pt-BR, es-ES, en-US)
@@ -68,19 +68,24 @@ project_johnnysouto/
 │   └── ...
 ```
 
-> Depois do corte de produção (Fase 8), `src/` e `public/` (legado) e o `gruntfile.js` são removidos, e o conteúdo de `web/` pode subir para a raiz, se fizer sentido na época.
+> Depois do corte de produção (Fase 8), `src/` e `public/` (legado) e o `gruntfile.js` são removidos, e o conteúdo de `angular-app/` pode subir para a raiz, se fizer sentido na época.
 
 ## 5. Fases
 
 ### Fase 0 — Preparação
 - [x] Johnny compartilha o arquivo/link do Figma com o design: <https://www.figma.com/design/9z2dzCKhlXWqVynN5SEeEM/template_portfolio_website?node-id=0-1&m=dev&t=p400RgMm8j8SjqJM-1>
 - [x] Extrair specs do Figma via MCP (cores, tipografia, espaçamentos, componentes, breakpoints). Specs de nível página/tema salvas em `docs/design-system.md`; specs de componentes individuais ficam para a Fase 2, extraídas sob demanda.
-- [ ] Confirmar nome final do diretório do novo projeto (`web/` é só uma proposta).
-- [ ] Confirmar versão do Angular a usar e compatibilidade com Node 20 (`.nvmrc` atual).
+- [ ] Confirmar nome final do diretório do novo projeto (`angular-app/` é só uma proposta).
+- [x] Versão do Angular definida: a mais recente estável no momento da Fase 1 (Angular 21/22), que exige **Node ~24.16.x** — diferente do Node 20 do `.nvmrc` atual (legado, usado pelo Grunt). O novo projeto Angular precisa de um pin de versão de Node próprio (ex.: `.nvmrc`/Volta dentro do diretório do projeto), sem alterar o `.nvmrc` da raiz enquanto o site legado ainda depender de Node 20.
 - [ ] Decidir se a Vercel vai ter um **projeto separado** para o preview do novo site ou um **environment/branch** dentro do mesmo projeto.
 
 ### Fase 1 — Scaffold do projeto Angular
-- [ ] `ng new` do novo projeto dentro de `web/` (ou nome definido), com roteamento e SSR/prerender habilitados desde o início.
+
+> Executado pelo agente `angular-scaffold` (`docs/agent-rules/angular-scaffold.md`), não por um `ng new` avulso — ele cuida de rodar o scaffold isolado do repositório existente, sem Git aninhado, com a versão de Node/Angular certa.
+
+- [ ] `ng new` do novo projeto dentro de `angular-app/` (ou nome definido), com roteamento, SSR/prerender e **SCSS** habilitados desde o início, e `--skip-git` (não pode criar um repositório Git aninhado dentro deste repositório).
+- [ ] Pinar **Node ~24.16.x** só para o novo projeto (ex.: `.nvmrc`/Volta dentro de `angular-app/`), sem alterar o `.nvmrc` da raiz (Node 20, ainda usado pelo Grunt legado).
+- [ ] Configurar a integração de IA do próprio Angular CLI para **Claude e GitHub Copilot** no novo subprojeto.
 - [ ] Configurar lint/format consistente com o resto do repositório.
 - [ ] Pipeline de CI mínimo (build) para o novo projeto, sem afetar os workflows atuais (`Develop.yaml`, `Production.yaml`).
 
@@ -142,7 +147,7 @@ project_johnnysouto/
 | Perder posicionamento de SEO na troca | Prerender estático + `hreflang` + validação de meta tags antes do corte (Fase 7); manter mesma estrutura de URLs quando possível. |
 | Google Analytics parar de registrar durante/depois da troca | Testar em property/stream de teste antes; validar pageviews via Router events; monitorar de perto nas primeiras 48h (Fase 8). |
 | Traduções de `es-ES` com baixa qualidade | Revisão humana (Johnny ou revisor nativo) antes do corte — não depender só de tradução automática. |
-| Regressão visual/funcional no site atual durante o desenvolvimento | Novo projeto isolado em `web/`, sem tocar em `src/`/`public/`/workflows atuais até a Fase 8. |
+| Regressão visual/funcional no site atual durante o desenvolvimento | Novo projeto isolado em `angular-app/`, sem tocar em `src/`/`public/`/workflows atuais até a Fase 8. |
 | Escopo crescer demais (ex.: querer CMS, blog, etc. no meio do caminho) | Este plano cobre só migração de framework + i18n + design (incluindo dark mode e menu mobile, já previstos no Figma); qualquer funcionalidade nova além disso entra como item futuro, não nesta migração. |
 | Dark mode gerar flash de tema errado (FOUC) no site prerenderizado (SSG) | Aplicar o tema antes do primeiro paint (inline script mínimo lendo preferência salva/`prefers-color-scheme`), validado na Fase 7. |
 
@@ -164,3 +169,5 @@ project_johnnysouto/
 | 06/09/2026 | Criação do plano, com decisões arquiteturais iniciais definidas (SSG, i18n nativo, rollout em paralelo, design via Figma/MCP). |
 | 06/09/2026 | Conectado ao MCP do Figma e extraídas specs de página/tema (cores, tipografia, sombras, seções, breakpoints) em `docs/design-system.md`. Design contempla dark mode e menu mobile dedicado, ainda não previstos neste plano — decisão pendente. |
 | 06/09/2026 | Dark mode e menu mobile dedicado adicionados ao escopo da migração (Johnny confirmou), já que ambos estão presentes no design do Figma. Atualizado objetivo, decisões arquiteturais, escopo de conteúdo, Fase 2, Fase 7, riscos e critérios de sucesso. |
+| 06/09/2026 | Wrapper do novo projeto renomeado de `web/` para `angular-app/` (nome final ainda a confirmar), mantendo o isolamento do site legado. Versão do Angular definida como Angular 21/22, exigindo Node ~24.16.x — pin de versão próprio do novo projeto, sem alterar o `.nvmrc` (Node 20) da raiz, que o site legado ainda usa. |
+| 06/09/2026 | Criado o agente `angular-scaffold` (`docs/agent-rules/angular-scaffold.md`) para executar o scaffold da Fase 1 dentro deste repositório já existente — garante `--skip-git` (sem repositório Git aninhado), SCSS, versão de Node/Angular compatível, e aplica a configuração de IA do Angular CLI para Claude/Copilot. |
