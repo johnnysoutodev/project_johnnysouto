@@ -35,3 +35,4 @@ Edite **apenas** o arquivo em `docs/agent-rules/`. Os arquivos-ponte não devem 
 |---|---|---|---|
 | `resolved-vulnerability` | [`resolved-vulnerability.md`](./resolved-vulnerability.md) | `.github/agents/resolved-vulnerability.md` | `.claude/agents/resolved-vulnerability.md` |
 | `atomics-commits` | [`atomics-commits.md`](./atomics-commits.md) | `.github/agents/atomics-commits.md` | `.claude/agents/atomics-commits.md` |
+| `designer` | [`designer.md`](./designer.md) | `.github/agents/designer.md` | `.claude/agents/designer.md` |
