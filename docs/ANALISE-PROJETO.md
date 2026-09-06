@@ -24,7 +24,8 @@ project_johnnysouto/
 │   └── mcp.json              # Config de servidor MCP (Figma) para uso no editor
 ├── .vercel/                  # Metadados do projeto Vercel (IDs de projeto/org)
 ├── docs/                     # Documentação do projeto
-│   └── agent-rules/          # Conteúdo real e agnóstico dos agentes (fonte única de verdade)
+│   ├── ai-instructions.md    # Regras gerais para IAs (fonte única de verdade)
+│   └── agent-rules/          # Conteúdo real e agnóstico dos agentes específicos (fonte única de verdade)
 ├── public/                  # Saída de build (gerada pelo Grunt) — o que é de fato deployado
 ├── src/                     # Código-fonte do site (HTML/CSS/JS/imagens)
 ├── gruntfile.js             # Definição das tasks de build (Grunt)
@@ -34,6 +35,7 @@ project_johnnysouto/
 ├── .gitattributes           # Normalização de line endings (LF)
 ├── .gitignore
 ├── project_johnnysouto.code-workspace  # Workspace do VS Code (config do Live Server)
+├── CLAUDE.md                 # Ponte para o Claude Code (aponta para docs/ai-instructions.md)
 └── README.md
 ```
 
@@ -117,9 +119,19 @@ Fluxo de branches esperado: `feature/* → develop → main`.
 - `.gitattributes`: normalização automática de line endings (LF).
 - `.nvmrc`: fixa Node 20 para consistência entre ambiente local e CI.
 
-## 8. Agentes de IA personalizados
+## 8. Regras e agentes de IA
 
-O projeto usa duas ferramentas de IA (GitHub Copilot e Claude Code), cada uma com seu próprio formato de arquivo/frontmatter para reconhecer um agente. Para evitar duplicação de conteúdo, foi adotado um padrão de **fonte única + arquivos-ponte**, documentado em `docs/agent-rules/README.md`:
+O projeto usa duas ferramentas de IA (GitHub Copilot e Claude Code), cada uma com seu próprio arquivo/local para carregar instruções automaticamente. Para evitar duplicação de conteúdo, o mesmo padrão de **fonte única + arquivos-ponte** é usado em dois níveis:
+
+### 8.1 Regras gerais do projeto
+
+- **Conteúdo real:** `docs/ai-instructions.md` — regras gerais (fluxo de branches, commits, segurança, convenções) válidas para qualquer IA.
+- **Ponte Copilot:** `.github/copilot-instructions.md` (carregado automaticamente pelo Copilot).
+- **Ponte Claude Code:** `CLAUDE.md`, na raiz do repositório (carregado automaticamente pelo Claude Code).
+
+### 8.2 Agentes específicos (procedimentos reutilizáveis)
+
+Documentado em `docs/agent-rules/README.md`:
 
 - **Conteúdo real (agnóstico, sem frontmatter):** `docs/agent-rules/*.md` — é aqui que qualquer atualização de regra deve ser feita.
 - **Ponte para o Copilot:** `.github/agents/*.md` — frontmatter específico do Copilot, corpo curto apontando para o conteúdo real.
@@ -146,6 +158,7 @@ Agentes existentes:
 | 06/09/2026 | Criação do documento a partir de leitura completa do repositório.                                                                                                                     |
 | 06/09/2026 | Padronizada a organização das regras de agentes: conteúdo agnóstico movido para `docs/agent-rules/`, com arquivos-ponte em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code); removida a pasta redundante `.agents/`. |
 | 06/09/2026 | Removidos `app/` (build Angular solto, não rastreado) e `temp.log` (arquivo residual vazio). |
+| 06/09/2026 | Criado `docs/ai-instructions.md` como fonte única das regras gerais para IAs; `CLAUDE.md` (novo) e `.github/copilot-instructions.md` viraram arquivos-ponte apontando para ele, no mesmo padrão já usado pelos agentes. |
 
 ---
 
