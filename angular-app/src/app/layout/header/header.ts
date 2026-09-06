@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { ThemeService } from '../../core/theme/theme';
+import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { MobileMenu } from '../mobile-menu/mobile-menu';
 import { NAV_LINKS } from '../nav-links';
 
@@ -18,6 +19,7 @@ import { NAV_LINKS } from '../nav-links';
 })
 export class Header {
   protected readonly themeService = inject(ThemeService);
+  protected readonly anchorScroll = inject(AnchorScrollService);
 
   /**
    * 4 links de navegacao (design-system.md secao 8.1), fonte compartilhada com o menu

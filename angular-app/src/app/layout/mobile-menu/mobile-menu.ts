@@ -1,6 +1,7 @@
 import { Component, PLATFORM_ID, effect, inject, input, output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../core/theme/theme';
+import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
 
 /** Elementos considerados "focaveis" dentro do painel, pro focus trap (ver `trapFocus`). */
@@ -54,6 +55,7 @@ export class MobileMenu {
   private shouldRestoreFocus = true;
 
   protected readonly themeService = inject(ThemeService);
+  protected readonly anchorScroll = inject(AnchorScrollService);
   protected readonly navLinks = NAV_LINKS;
   protected readonly panelId = PANEL_ID;
 

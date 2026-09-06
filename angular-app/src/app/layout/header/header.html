@@ -1,13 +1,15 @@
 <header class="header">
   <div class="header__container">
-    <a class="header__logo" href="#top" aria-label="Início">
-      JS
-    </a>
+    <a class="header__logo" href="#top" aria-label="Início"> JS </a>
 
     <div class="header__right">
       <nav class="header__nav" aria-label="Navegação principal">
         @for (link of navLinks; track link.href) {
-          <a class="header__nav-link" [href]="link.href">
+          <a
+            class="header__nav-link"
+            [href]="link.href"
+            (click)="anchorScroll.scroll($event, link.href)"
+          >
             {{ link.label }}
           </a>
         }
