@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "switchLanguage": "English",
+    "printVersion": "Versão para impressão",
+    "theme": "Tema"
+  },
+  "hero": {
+    "eyebrow": "Portfólio",
+    "title": "Desenvolvedor Full Stack",
+    "description": "Migrando o site para Angular com SCSS, SSR e integração com Figma MCP."
+  },
+  "about": {
+    "title": "Sobre",
+    "summary": "Sou Johnny Souto e trabalho com desenvolvimento web, foco em arquitetura, performance e DX.",
+    "ageLabel": "Idade:",
+    "years": "anos"
+  },
+  "stack": {
+    "title": "Stack"
+  },
+  "printer": {
+    "back": "Voltar ao site",
+    "title": "Versão para impressão",
+    "description": "Resumo profissional para exportação em PDF ou impressão.",
+    "profileTitle": "Resumo",
+    "item1": "Desenvolvimento front-end com Angular e SCSS",
+    "item2": "Back-end Node.js e Java",
+    "item3": "Experiência com CI/CD, Vercel e GitHub Actions"
+  }
+}

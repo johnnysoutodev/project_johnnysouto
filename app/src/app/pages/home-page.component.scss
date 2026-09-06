@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 2rem;
+  color: var(--text-primary);
+  background: radial-gradient(circle at top right, var(--surface-highlight), transparent 40%), var(--surface-base);
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.actions a,
+.actions button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-card);
+  padding: 0.5rem 0.85rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hero {
+  margin-top: 3rem;
+  max-width: 720px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+h1 {
+  margin: 0.75rem 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.cards {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface-card);
+  box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.55);
+}

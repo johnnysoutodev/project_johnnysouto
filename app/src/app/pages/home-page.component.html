@@ -1,0 +1,33 @@
+<main class="page">
+  <header class="topbar">
+    <a class="brand" [routerLink]="currentLang === 'en' ? '/en' : '/'">Johnny Souto</a>
+    <div class="actions">
+      <a [routerLink]="currentLang === 'en' ? '/' : '/en'">{{ 'nav.switchLanguage' | translate }}</a>
+      <a [routerLink]="currentLang === 'en' ? '/en/printer' : '/printer'">{{ 'nav.printVersion' | translate }}</a>
+      <button type="button" (click)="toggleTheme()">{{ 'nav.theme' | translate }}</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">{{ 'hero.eyebrow' | translate }}</p>
+    <h1>{{ 'hero.title' | translate }}</h1>
+    <p>{{ 'hero.description' | translate }}</p>
+  </section>
+
+  <section class="cards">
+    <article class="card">
+      <h2>{{ 'about.title' | translate }}</h2>
+      <p>{{ 'about.summary' | translate }}</p>
+      <p><strong>{{ 'about.ageLabel' | translate }}</strong> {{ age }} {{ 'about.years' | translate }}</p>
+    </article>
+
+    <article class="card">
+      <h2>{{ 'stack.title' | translate }}</h2>
+      <ul>
+        <li>Angular + SCSS + SSR</li>
+        <li>Node.js + TypeScript</li>
+        <li>Java + SQL</li>
+      </ul>
+    </article>
+  </section>
+</main>

@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "switchLanguage": "Português",
+    "printVersion": "Print version",
+    "theme": "Theme"
+  },
+  "hero": {
+    "eyebrow": "Portfolio",
+    "title": "Full Stack Developer",
+    "description": "Migrating the website to Angular with SCSS, SSR and Figma MCP integration."
+  },
+  "about": {
+    "title": "About",
+    "summary": "I am Johnny Souto, a web developer focused on architecture, performance and developer experience.",
+    "ageLabel": "Age:",
+    "years": "years"
+  },
+  "stack": {
+    "title": "Stack"
+  },
+  "printer": {
+    "back": "Back to website",
+    "title": "Print version",
+    "description": "Professional summary for PDF export or printing.",
+    "profileTitle": "Summary",
+    "item1": "Front-end development with Angular and SCSS",
+    "item2": "Back-end with Node.js and Java",
+    "item3": "Experience with CI/CD, Vercel and GitHub Actions"
+  }
+}

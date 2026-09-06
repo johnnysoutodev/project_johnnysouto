@@ -1,0 +1,27 @@
+:root {
+	--surface-base: #f5f7fb;
+	--surface-card: #ffffff;
+	--surface-highlight: rgba(12, 107, 207, 0.25);
+	--text-primary: #172132;
+	--text-secondary: #55657d;
+	--border: rgba(23, 33, 50, 0.14);
+}
+
+body {
+	margin: 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background: var(--surface-base);
+}
+
+body.dark-mode {
+	--surface-base: #0d1a2b;
+	--surface-card: #13253b;
+	--surface-highlight: rgba(255, 177, 71, 0.3);
+	--text-primary: #eef4ff;
+	--text-secondary: #b8c5db;
+	--border: rgba(238, 244, 255, 0.2);
+}
+
+* {
+	box-sizing: border-box;
+}

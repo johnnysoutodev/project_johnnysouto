@@ -1,0 +1,15 @@
+<main class="printer">
+  <a class="back" [routerLink]="currentLang === 'en' ? '/en' : '/'">{{ 'printer.back' | translate }}</a>
+
+  <h1>{{ 'printer.title' | translate }}</h1>
+  <p>{{ 'printer.description' | translate }}</p>
+
+  <section>
+    <h2>{{ 'printer.profileTitle' | translate }}</h2>
+    <ul>
+      <li>{{ 'printer.item1' | translate }}</li>
+      <li>{{ 'printer.item2' | translate }}</li>
+      <li>{{ 'printer.item3' | translate }}</li>
+    </ul>
+  </section>
+</main>
