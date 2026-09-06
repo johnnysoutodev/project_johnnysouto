@@ -25,7 +25,7 @@ O arquivo tem uma única página, com frames organizados por tema (Light/Dark) e
 | Contact me | `316:537` | 560px | Email/telefone/redes sociais |
 | Footer | `316:579` | 68px | Copyright |
 
-Sections ficam empilhadas sem gap entre si (cada uma já inclui seu próprio padding vertical).
+Sections ficam empilhadas sem gap entre si (cada uma já inclui seu próprio padding vertical — valores medidos na seção 2, "Padding de seção").
 
 ### Frames/variantes disponíveis
 
@@ -44,7 +44,57 @@ Ou seja: o design já prevê **dark mode** e **menu mobile** dedicado — vale d
 
 - **Desktop:** frame de 1440px de largura; container de conteúdo com `x=80` e `width=1280` → padding lateral de **80px**, conteúdo com largura máxima de **1280px**.
 - **Mobile:** frame de referência 375px (iPhone 8).
-- Dentro do container, colunas usam `gap`/posições múltiplas de 8px (ex.: 32px, 96px) — consistente com uma escala de espaçamento em base 8/4.
+
+### Tokens formais de espaçamento no Figma
+
+**Verificado (06/09/2026):** o arquivo **não tem variáveis de espaçamento nomeadas** (nada equivalente a `Spacing/2`, `Gap/sm` etc.). Confirmado via `get_variable_defs` em 4 frames de seção distintos (Hero `316:194`, About `316:229`, Skills `316:256`, Work `316:415`) — em todos os casos o retorno só trouxe variáveis de **cor** (`Gray/*`), **tipografia** (`Heading/*`, `Body*/*`, `Subtitle/*`) e **efeito** (`Drop Shadow/*`), nunca uma variável de espaçamento. Ou seja, ao contrário de cor/tipografia (que são tokens reutilizáveis definidos como variáveis do Figma), o espaçamento no arquivo é definido **diretamente nos valores de padding/gap do Auto Layout** de cada frame — valores "soltos", sem nome/token por trás. A tabela abaixo é, portanto, espaçamento **observado por amostragem**, não uma lista de tokens formais.
+
+### Padding de seção (medido via `get_design_context`)
+
+**Cobertura completa: as 9 seções do template foram medidas.** Primeira amostra (Hero, About, Skills, Work) confirmada em extração anterior; completada nesta rodada (06/09/2026) com Header, Experience, Testimonials, Contact me e Footer — todas com a mesma estrutura raiz `padding lateral / padding vertical`:
+
+| Seção | Node ID | Padding horizontal | Padding vertical |
+| --- | --- | --- | --- |
+| Header | `316:588` | 80px | 16px |
+| Hero | `316:194` | 80px | 96px |
+| About | `316:229` | 80px | 96px |
+| Skills | `316:256` | 80px | 96px |
+| Experience | `316:357` | 80px | 96px |
+| Work | `316:415` | 80px | 96px |
+| Testimonials | `316:510` | 80px | 96px |
+| Contact me | `316:537` | 80px | 96px |
+| Footer | `316:579` | 80px | 24px |
+
+**Resultado:** 7 das 9 seções (Hero, About, Skills, Experience, Work, Testimonials, Contact me) usam exatamente o mesmo padding de seção — **80px horizontal / 96px vertical** — confirmando que esse é o padrão do template para seções de conteúdo. **Header e Footer são exceção esperada**, e a exceção se confirmou: como têm altura fixa de 68px (barras finas, sticky/fixo no caso do Header), não cabe padding vertical de 96px — o valor real medido é **16px vertical no Header** e **24px vertical no Footer** (ambos mantêm os mesmos **80px horizontal**). O padding lateral de 80px é, portanto, universal nas 9 seções; o padding vertical de 96px é o padrão das 7 seções de conteúdo, com Header/Footer usando valores reduzidos e distintos entre si (16px vs. 24px — não há um segundo padrão comum entre eles).
+
+Dentro de cada seção, o elemento `Container` direto costuma ter ainda um `padding: 0 32px` próprio (inset adicional além dos 80px da seção) — confirmado em Hero, About, Skills, e agora também em Header, Experience, Testimonials, Contact me e Footer (ou seja, 8 das 9 seções); em Work o container não tem esse padding extra (única exceção).
+
+Margem entre seções: **0** — confirmado agora para as 9 seções via `get_metadata` no frame `316:177` (Home / Desktop / Light): a posição `y` de cada seção bate exatamente com o fim da anterior (Header 0–68 → Hero 68–620 → About 620–1582 → Skills 1582–2142 → Experience 2142–3282 → Work 3282–5130 → Testimonials 5130–5870 → Contact me 5870–6430 → Footer 6430–6498, igual à altura total do frame). Não há gap entre nenhuma das 9 — o espaçamento visual entre seções vem inteiramente do padding vertical de cada uma (96px nas 7 de conteúdo, 16px/24px em Header/Footer).
+
+### Espaçamento observado (gaps e paddings internos)
+
+Valores de `gap`/`padding` do Auto Layout encontrados nas 9 seções (amostra original de 4 — Hero, About, Skills, Work — completada em 06/09/2026 com Header, Experience, Testimonials, Contact me e Footer), do menor ao maior. **Não são tokens nomeados** — são os valores em pixels tal como aparecem no Figma:
+
+| Valor | Uso típico observado | Onde aparece |
+| --- | --- | --- |
+| 4px | `gap` entre ícones sociais (Links) | Hero, Contact me |
+| 6px | `padding` do Icon Button (botão de ícone circular) | Hero, Work, Header, Contact me |
+| 8px | `gap` ícone+texto (localização, disponibilidade, tech icon+label, tags de tecnologia; ícone+nota de copyright) | Hero, Skills, Work, Footer |
+| 10px | `gap` entre colunas da checklist "quick bits" | About |
+| 16px | `gap` entre título e subtítulo de uma seção (Row com Tag + heading); também `gap` do bloco `Actions` do Header (Icon Button + Botão) | Skills, Work, Header, Experience, Testimonials, Contact me |
+| 16px | `padding` vertical da seção (versão compacta, altura fixa de 68px — não cabe o padrão de 96px) | Header |
+| 20px/4px | `padding` horizontal/vertical do componente Tag (badge) | About, Skills, Work |
+| 20px | `gap` entre ícone, texto e botão de ação numa linha de contato (Email/Phone) — mesmo valor do Tag acima, mas uso de `gap`, não `padding` | Contact me |
+| 24px | `gap` entre blocos de conteúdo (texto+parágrafos; título+descrição+tags+ações de um card; avatar+depoimento+dados do cliente); `gap` da navegação do Header | About, Work, Header, Testimonials |
+| 24px | `padding` vertical da seção (versão compacta, altura fixa de 68px — não cabe o padrão de 96px; valor diferente do Header) | Footer |
+| 32px | `padding` horizontal do `Container` interno de uma seção (inset adicional além dos 80px) | Hero, About, Skills, Header, Experience, Testimonials, Contact me, Footer |
+| 32px | `padding` interno (nas 4 bordas) do card de item da Experience — mesmo valor do inset acima, mas aplicado como padding completo do card, não só horizontal | Experience |
+| 48px | `gap` macro entre as colunas/linhas principais de uma seção (o espaçamento mais recorrente do arquivo) | Hero, About, Skills, Work, Experience, Testimonials, Contact me |
+| 48px | `padding` interno dos cards (projeto no Work; depoimento na Testimonials) | Work, Testimonials |
+| 80px | `padding` horizontal da seção — único valor universal nas 9 seções, inclusive Header e Footer | Hero, About, Skills, Work, Experience, Testimonials, Contact me, Header, Footer |
+| 96px | `padding` vertical da seção (padrão das seções de conteúdo; Header/Footer usam 16px/24px, ver linhas acima) | Hero, About, Skills, Work, Experience, Testimonials, Contact me |
+
+> Nota: os valores 6px e 10px quebram a hipótese anterior de "múltiplos de 8px" — a escala real é mais próxima da escala padrão do Tailwind (4, 6, 8, 10, 16, 20, 24, 32, 48...) do que de uma progressão estrita em base 8. A extração anterior (amostragem pontual) tinha generalizado isso incorretamente; esta tabela substitui aquela observação. Com a cobertura das 9 seções (06/09/2026), nenhum valor de pixel novo apareceu além dos já listados na amostra original — a escala se confirmou estável; a única novidade é o **padding vertical reduzido e distinto** de Header (16px) e Footer (24px), que já era esperado por serem barras de altura fixa (68px) em vez de seções de conteúdo.
 
 ## 3. Cores (variáveis do Figma)
 
@@ -153,6 +203,8 @@ Todos os valores acima são idênticos entre Light e Dark (só a cor de texto mu
 
 ## Log de evolução
 
+- **06/09/2026** — Espaçamento (seção 2): verificado via `get_variable_defs` em 4 frames de seção (Hero `316:194`, About `316:229`, Skills `316:256`, Work `316:415`) que o Figma **não tem variáveis de espaçamento nomeadas** — só cor/tipografia/efeito são tokens formais. Extraído via `get_design_context` o padding/gap real das mesmas 4 seções: padding de seção consistente em **80px horizontal / 96px vertical** nas 4 amostradas, e uma tabela de gaps/paddings internos observados (4 a 96px). Substitui a nota genérica anterior ("múltiplos de 8px") por dados medidos — a hipótese de base 8 estrita não se confirmou (6px e 10px aparecem no arquivo).
 - **06/09/2026** — Extração de assets (ícones): 24 ícones exportados do Figma via `download_assets` em lotes manuais (Skills, depois Hero/Contact me/Footer), salvos em `src/assets/icons/`. Ver seção 6 para a lista completa e a seção 7 para a pendência restante (ícone do Header).
 - **06/09/2026** — Verificação de tipografia: conferido via `get_design_context` em Hero (`316:194`), About (`316:229`) e Experience (`316:357`) que a tipografia usa exclusivamente a família **Inter** (Google Font padrão), sem fonte customizada embutida. Nenhum arquivo de fonte precisa ser exportado — ver nota na seção 4.
 - **06/09/2026** — Extração de assets (imagens): 3 imagens raster mapeadas em lotes por seção (Hero, About, Work, Testimonials) e baixadas via `download_assets` — avatar do Hero, foto do About e thumbnail de projeto do Work (reusado nos 3 cards). Salvas em `src/assets/images/`. Testimonials não tinha foto raster (avatar ali é ícone SVG genérico). Ver seção 6.
+- **06/09/2026** — Espaçamento (seção 2), cobertura completa das 9 seções: extraído via `get_design_context` o padding/gap real das 5 seções que faltavam (Header `316:588`, Experience `316:357`, Testimonials `316:510`, Contact me `316:537`, Footer `316:579`), completando a amostra anterior (Hero, About, Skills, Work). Confirmado que o padrão **80px horizontal / 96px vertical** se mantém em Experience, Testimonials e Contact me (7 das 9 seções agora no mesmo padrão). Header e Footer confirmam a exceção esperada por terem altura fixa de 68px: padding vertical medido em **16px (Header)** e **24px (Footer)** — valores distintos entre si, ambos mantendo os 80px horizontais. Confirmado também, via `get_metadata` no frame `316:177`, que a margem entre as 9 seções é **0** (posições `y` batem exatamente, sem gap). Nenhum valor de pixel novo apareceu além dos já catalogados na amostra original — só novos usos dos mesmos valores (ver tabela "Espaçamento observado"). Seção 2 agora cobre as 9 seções do template; nenhuma pendência de padding de seção restante.
