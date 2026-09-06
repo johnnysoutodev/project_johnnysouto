@@ -51,6 +51,8 @@ export class MobileMenu {
   /** Elemento que tinha foco antes de abrir — recebe o foco de volta ao fechar (WCAG AA). */
   private lastFocusedBeforeOpen: HTMLElement | null = null;
 
+  private shouldRestoreFocus = true;
+
   protected readonly themeService = inject(ThemeService);
   protected readonly navLinks = NAV_LINKS;
   protected readonly panelId = PANEL_ID;
@@ -79,13 +81,18 @@ export class MobileMenu {
         // Empurrar pro proximo microtask garante que o binding ja aplicou antes do focus.
         queueMicrotask(() => this.focusFirstFocusableElement());
       } else {
-        this.lastFocusedBeforeOpen?.focus();
+        if (this.shouldRestoreFocus) {
+          this.lastFocusedBeforeOpen?.focus();
+        }
+
         this.lastFocusedBeforeOpen = null;
+        this.shouldRestoreFocus = true;
       }
     });
   }
 
-  protected close(): void {
+  protected close(restoreFocus = true): void {
+    this.shouldRestoreFocus = restoreFocus;
     this.closed.emit();
   }
 

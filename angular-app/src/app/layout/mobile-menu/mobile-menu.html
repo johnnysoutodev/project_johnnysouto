@@ -45,7 +45,13 @@
     <!-- Bloco 2: Links de navegacao (design-system.md 8.13, mesmos 4 links do Header) -->
     <nav class="mobile-menu__links" aria-label="Navegação principal">
       @for (link of navLinks; track link.href) {
-        <a class="mobile-menu__link" [href]="link.href" (click)="close()">{{ link.label }}</a>
+        <a
+          class="mobile-menu__link"
+          [href]="link.href"
+          (click)="close(false)"
+        >
+          {{ link.label }}
+        </a>
       }
     </nav>
 
