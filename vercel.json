@@ -1,6 +1,6 @@
 {
-  "outputDirectory": "public",
-  "buildCommand": null,
-  "installCommand": null,
+  "outputDirectory": "app/dist/app/browser",
+  "buildCommand": "cd app && npm ci && npm run build",
+  "installCommand": "npm install",
   "cleanUrls": true
 }

@@ -4,6 +4,10 @@
   "description": "Projeto do Web Site johnnysouto.com.br",
   "main": "index.js",
   "scripts": {
+    "start": "npm run start --prefix app",
+    "build": "npm run build --prefix app",
+    "serve:ssr": "npm run serve:ssr:app --prefix app",
+    "legacy:build": "grunt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
