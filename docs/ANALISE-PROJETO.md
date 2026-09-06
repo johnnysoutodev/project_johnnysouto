@@ -129,6 +129,8 @@ O projeto usa duas ferramentas de IA (GitHub Copilot e Claude Code), cada uma co
 - **Ponte Copilot:** `.github/copilot-instructions.md` (carregado automaticamente pelo Copilot).
 - **Ponte Claude Code:** `CLAUDE.md`, na raiz do repositório (carregado automaticamente pelo Claude Code).
 
+Cada ponte referencia apenas `docs/ai-instructions.md` e `docs/agent-rules/` — nenhuma das duas cita a outra pelo nome (`CLAUDE.md` não menciona `.github/copilot-instructions.md`, e vice-versa).
+
 ### 8.2 Agentes específicos (procedimentos reutilizáveis)
 
 Documentado em `docs/agent-rules/README.md`:
@@ -159,6 +161,7 @@ Agentes existentes:
 | 06/09/2026 | Padronizada a organização das regras de agentes: conteúdo agnóstico movido para `docs/agent-rules/`, com arquivos-ponte em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code); removida a pasta redundante `.agents/`. |
 | 06/09/2026 | Removidos `app/` (build Angular solto, não rastreado) e `temp.log` (arquivo residual vazio). |
 | 06/09/2026 | Criado `docs/ai-instructions.md` como fonte única das regras gerais para IAs; `CLAUDE.md` (novo) e `.github/copilot-instructions.md` viraram arquivos-ponte apontando para ele, no mesmo padrão já usado pelos agentes. |
+| 06/09/2026 | Removida a menção cruzada entre `CLAUDE.md` e `.github/copilot-instructions.md` (cada um deixou de citar o outro pelo nome). |
 
 ---
 
