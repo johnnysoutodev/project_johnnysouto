@@ -7,5 +7,4 @@
 > **Estrutura**
 > - `docs/ai-instructions.md` -> fonte única de verdade, agnóstica de ferramenta (regras gerais)
 > - `docs/agent-rules/` -> procedimentos de agentes específicos (conteúdo real)
-> - `.github/copilot-instructions.md` -> ponte para o GitHub Copilot
 > - `CLAUDE.md` -> ponte para o Claude Code (este arquivo)
