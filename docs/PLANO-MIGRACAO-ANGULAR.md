@@ -37,7 +37,7 @@ Baseado no inventário de `docs/ANALISE-PROJETO.md`, tudo isto precisa ter equiv
 - [ ] Versão pt-BR — hoje `src/pt/index.html` → passa a ser o idioma padrão (`/` ou `/pt-br/`, a definir na Fase 3).
 - [ ] Versão en-US — hoje `src/en/index.html` → rota `/en-us/`.
 - [ ] Versão **es-ES — nova**, não existe hoje.
-- [ ] Versão de impressão — hoje `src/printer/index.html` (avaliar se precisa existir por idioma).
+- [ ] **CV para download — novo formato**, substituindo a versão de impressão em HTML (`src/printer/index.html`, que sai do escopo desta migração). Documento de currículo baixável nos três idiomas: o idioma do arquivo baixado acompanha o idioma atual do site (ex.: usuário navegando em `/en-us/` baixa o CV em inglês). Formato exato do arquivo e forma de geração/entrega ainda a decidir (ver Fase 4).
 - [ ] Meta tags de SEO/Open Graph (title, description, keywords, `og:title`, `og:description`, `og:image`, `og:url`, `og:site_name`) — por idioma.
 - [ ] `robots.txt`.
 - [ ] Favicon e imagens (`bg.png`, `perfil_jjns.jpeg`).
@@ -91,7 +91,7 @@ project_johnnysouto/
 
 ### Fase 2 — Design system a partir do Figma
 - [ ] Tokens de design (cores, tipografia, espaçamento) extraídos do Figma — light e dark (ver `docs/design-system.md`).
-- [ ] Componentes reutilizáveis (header, seções do CV, footer, versão de impressão), já preparados para os dois temas (ex.: via CSS variables/tokens, não cores fixas).
+- [ ] Componentes reutilizáveis (header, seções do CV, footer), já preparados para os dois temas (ex.: via CSS variables/tokens, não cores fixas).
 - [ ] Menu mobile dedicado (overlay), conforme design do Figma, nos dois temas.
 - [ ] Toggle de dark mode (componente + lógica de alternância/persistência).
 - [ ] Aplicar o design às páginas, sem ainda ligar i18n (conteúdo fixo em pt-BR nesta fase).
@@ -106,7 +106,7 @@ project_johnnysouto/
 ### Fase 4 — Paridade de conteúdo e SEO
 - [ ] Migrar todas as meta tags/Open Graph por idioma (ver checklist da seção 3).
 - [ ] Recriar `robots.txt` e (se fizer sentido) adicionar `sitemap.xml` com as variantes de idioma.
-- [ ] Recriar a versão de impressão.
+- [ ] Implementar o download do CV nos três idiomas, entregando o arquivo no idioma atual do site — **decidir e documentar aqui** a forma de geração/padronização do download (ex.: PDF estático por idioma gerado em build, ou outra abordagem) antes de implementar.
 - [ ] Validar favicon e imagens.
 
 ### Fase 5 — Google Analytics
@@ -128,6 +128,7 @@ project_johnnysouto/
 - [ ] Revisão de conteúdo com o Johnny (principalmente as traduções em `es-ES`).
 - [ ] Validar dark mode em todas as páginas/idiomas (contraste, persistência da escolha, `prefers-color-scheme` inicial).
 - [ ] Validar menu mobile dedicado em diferentes tamanhos de tela e nos dois temas.
+- [ ] Validar que o download do CV entrega o arquivo no idioma correspondente em cada rota/idioma do site.
 
 ### Fase 8 — Corte de produção
 - [ ] Definir plano de rollback (como voltar ao site atual rapidamente se algo der errado).
@@ -171,3 +172,4 @@ project_johnnysouto/
 | 06/09/2026 | Dark mode e menu mobile dedicado adicionados ao escopo da migração (Johnny confirmou), já que ambos estão presentes no design do Figma. Atualizado objetivo, decisões arquiteturais, escopo de conteúdo, Fase 2, Fase 7, riscos e critérios de sucesso. |
 | 06/09/2026 | Wrapper do novo projeto renomeado de `web/` para `angular-app/` (nome final ainda a confirmar), mantendo o isolamento do site legado. Versão do Angular definida como Angular 21/22, exigindo Node ~24.16.x — pin de versão próprio do novo projeto, sem alterar o `.nvmrc` (Node 20) da raiz, que o site legado ainda usa. |
 | 06/09/2026 | Criado o agente `angular-scaffold` (`docs/agent-rules/angular-scaffold.md`) para executar o scaffold da Fase 1 dentro deste repositório já existente — garante `--skip-git` (sem repositório Git aninhado), SCSS, versão de Node/Angular compatível, e aplica a configuração de IA do Angular CLI para Claude/Copilot. |
+| 06/09/2026 | Versão de impressão (`src/printer/index.html`) removida do escopo, substituída por um CV para download nos três idiomas — o idioma do arquivo baixado acompanha o idioma atual do site. Forma de geração/padronização do download ainda não decidida (Fase 4). Atualizado escopo de conteúdo, Fase 2, Fase 4 e Fase 7. |
