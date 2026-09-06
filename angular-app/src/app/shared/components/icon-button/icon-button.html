@@ -1,0 +1,8 @@
+<button
+  type="button"
+  class="icon-button"
+  [class.icon-button--large]="size() === 'large'"
+  [attr.aria-label]="ariaLabel()"
+>
+  <ng-content />
+</button>

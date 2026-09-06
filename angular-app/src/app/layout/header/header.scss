@@ -1,0 +1,90 @@
+// Header — design-system.md secao 8.1. Altura fixa (68px no Figma, resultado natural do
+// padding + conteudo aqui, sem forcar `height` explicito), sem sticky/scroll (nao
+// confirmavel no Figma) e sem menu mobile dedicado ainda (fica para outra fatia).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.header {
+  @include layout.bar-section-padding(var(--space-header-padding-y));
+  background-color: var(--color-gray-default);
+}
+
+.header__container {
+  @include layout.content-container;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+
+  @include breakpoints.desktop-up {
+    gap: var(--space-24);
+  }
+}
+
+.header__logo {
+  @include typography.heading-h3-semibold;
+  color: var(--color-gray-900);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+// Navegacao e divider: escondidos abaixo do desktop nesta fatia, ja que o Figma prve um
+// menu mobile dedicado (overlay) em vez da nav horizontal — implementar esse overlay e
+// escopo de outra fatia da Fase 2, entao por ora so o layout desktop da nav e mostrado.
+.header__nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-24);
+
+  @include breakpoints.desktop-up {
+    display: flex;
+  }
+}
+
+.header__nav-link {
+  @include typography.body2-medium;
+  color: var(--color-gray-600);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-gray-900);
+  }
+}
+
+.header__divider {
+  display: none;
+  width: 1px;
+  align-self: stretch;
+  background-color: var(--color-gray-200);
+
+  @include breakpoints.desktop-up {
+    display: block;
+  }
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  flex-shrink: 0;
+}
+
+.header__cta {
+  @include typography.body2-medium;
+  padding: var(--space-6) var(--space-16);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-900);
+  color: var(--color-gray-50);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}

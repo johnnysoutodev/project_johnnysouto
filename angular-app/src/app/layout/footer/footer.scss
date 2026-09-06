@@ -1,0 +1,32 @@
+// Footer — design-system.md secao 8.2: fundo --color-gray-50 (diferente do Header, que
+// e --color-gray-default), padding 80px/24px desktop, icone 16x16 + texto Body3/Normal.
+@use 'typography';
+@use 'layout';
+
+:host {
+  display: block;
+}
+
+.footer {
+  @include layout.bar-section-padding(var(--space-footer-padding-y));
+  background-color: var(--color-gray-50);
+}
+
+.footer__container {
+  @include layout.content-container;
+  display: flex;
+  justify-content: center;
+}
+
+.footer__note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin: 0;
+  color: var(--color-gray-600);
+  @include typography.body3-normal;
+}
+
+.footer__icon {
+  flex-shrink: 0;
+}

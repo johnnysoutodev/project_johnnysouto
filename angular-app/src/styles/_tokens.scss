@@ -1,0 +1,158 @@
+// Design tokens — migrado de `docs/design-tokens.css` (por sua vez derivado de
+// `docs/design-system.md`, secoes 2, 3, 4 e 5) para dentro do projeto Angular.
+//
+// Artefato MECANICO: nenhum valor aqui foi inventado — cada variavel so traduz o que
+// ja estava documentado/validado contra o Figma (`template_portfolio_website`, file key
+// `9z2dzCKhlXWqVynN5SEeEM`). Fonte de verdade continua sendo o Figma / design-system.md;
+// este arquivo e so o formato consumido pelos componentes Angular (CSS custom properties,
+// para que a troca de tema em runtime via `[data-theme="dark"]` nao exija recompilar SCSS).
+//
+// Convencoes preservadas de `docs/design-tokens.css` (ver esse arquivo para o raciocinio
+// completo por trás de cada uma):
+// 1) Cores: MESMO nome de variavel nos dois temas, valor sobrescrito em `[data-theme="dark"]`.
+// 2) Tipografia: letter-spacing convertido de "% do tamanho da fonte" (unidade real medida
+//    no Figma) para `em`, nao pixels fixos.
+// 3) Sombras: hex de 8 digitos (`#RRGGBBAA`) preservado, sem converter para `rgba()`.
+// 4) Espacamento: NAO existe token de espacamento nomeado no Figma (confirmado via
+//    `get_variable_defs`, design-system.md secao 2) — a escala abaixo e uma convencao de
+//    engenharia nomeada pelo proprio valor em px, nao uma extracao formal.
+// 5) Border-radius: idem espacamento — nao ha variavel de tamanho nomeada no Figma
+//    (design-system.md secao 9.1). Os dois valores observados nos componentes da secao 8
+//    (8px no Icon Button, 12px no Tag/cards/timeline/depoimentos) viram uma escala pequena
+//    aqui, para reaproveitamento entre os componentes gerados nesta e nas proximas fatias.
+
+:root {
+  // ---------------------------------------------------------------------
+  // Cores — Light mode (design-system.md secao 3, tabela "Light mode")
+  // ---------------------------------------------------------------------
+  --color-gray-default: #ffffff; // Gray/Default
+  --color-gray-50: #f9fafb; // Gray/50
+  --color-gray-100: #f3f4f6; // Gray/100
+  --color-gray-200: #e5e7eb; // Gray/200
+  --color-gray-600: #4b5563; // Gray/600
+  --color-gray-700: #374151; // Gray/700
+  --color-gray-900: #111827; // Gray/900
+
+  // ---------------------------------------------------------------------
+  // Tipografia — familia (design-system.md secao 4)
+  // ---------------------------------------------------------------------
+  --font-family-base: 'Inter', sans-serif;
+
+  // Heading/H1/Bold — 60/72/-2%
+  --font-heading-h1-weight: 700;
+  --font-heading-h1-size: 60px;
+  --font-heading-h1-line-height: 72px;
+  --font-heading-h1-letter-spacing: -0.02em;
+
+  // Heading/H2/Semi Bold — 36/40/-2%
+  --font-heading-h2-semibold-weight: 600;
+  --font-heading-h2-semibold-size: 36px;
+  --font-heading-h2-semibold-line-height: 40px;
+  --font-heading-h2-semibold-letter-spacing: -0.02em;
+
+  // Heading/H3/Semi Bold — 30/36/-2%
+  --font-heading-h3-semibold-weight: 600;
+  --font-heading-h3-semibold-size: 30px;
+  --font-heading-h3-semibold-line-height: 36px;
+  --font-heading-h3-semibold-letter-spacing: -0.02em;
+
+  // Subtitle/Semi Bold — 20/28/0
+  --font-subtitle-semibold-weight: 600;
+  --font-subtitle-semibold-size: 20px;
+  --font-subtitle-semibold-line-height: 28px;
+  --font-subtitle-semibold-letter-spacing: 0;
+
+  // Subtitle/Normal — 20/28/0
+  --font-subtitle-normal-weight: 400;
+  --font-subtitle-normal-size: 20px;
+  --font-subtitle-normal-line-height: 28px;
+  --font-subtitle-normal-letter-spacing: 0;
+
+  // Body1/Normal — 18/28/0
+  --font-body1-normal-weight: 400;
+  --font-body1-normal-size: 18px;
+  --font-body1-normal-line-height: 28px;
+  --font-body1-normal-letter-spacing: 0;
+
+  // Body2/Medium — 16/24/0
+  --font-body2-medium-weight: 500;
+  --font-body2-medium-size: 16px;
+  --font-body2-medium-line-height: 24px;
+  --font-body2-medium-letter-spacing: 0;
+
+  // Body2/Normal — 16/24/0
+  --font-body2-normal-weight: 400;
+  --font-body2-normal-size: 16px;
+  --font-body2-normal-line-height: 24px;
+  --font-body2-normal-letter-spacing: 0;
+
+  // Body3/Medium — 14/20/0
+  --font-body3-medium-weight: 500;
+  --font-body3-medium-size: 14px;
+  --font-body3-medium-line-height: 20px;
+  --font-body3-medium-letter-spacing: 0;
+
+  // Body3/Normal — 14/20/0
+  --font-body3-normal-weight: 400;
+  --font-body3-normal-size: 14px;
+  --font-body3-normal-line-height: 20px;
+  --font-body3-normal-letter-spacing: 0;
+
+  // ---------------------------------------------------------------------
+  // Sombras (design-system.md secao 5)
+  // ---------------------------------------------------------------------
+  --shadow-md: 0 2px 2px #0000000f, 0 4px 3px #00000012; // Drop Shadow/md
+  --shadow-lg: 0 10px 8px #0000000a, 0 4px 3px #0000001a; // Drop Shadow/lg
+  --shadow-2xl-dark: 0 25px 25px #00000026; // Drop Shadow/2xl (dark)
+
+  // ---------------------------------------------------------------------
+  // Espacamento — escala derivada, NAO e token formal do Figma (ver nota 4 acima).
+  // Valores conforme design-system.md secao 2 ("Espacamento observado").
+  // ---------------------------------------------------------------------
+  --space-4: 4px; // gap entre icones sociais (Links)
+  --space-6: 6px; // padding do Icon Button
+  --space-8: 8px; // gap icone+texto
+  --space-10: 10px; // gap entre colunas da checklist "quick bits" (About)
+  --space-16: 16px; // gap titulo/subtitulo de secao; padding vertical do Header; padding horizontal de secao no mobile
+  --space-20: 20px; // padding horizontal do Tag; gap de linha de contato
+  --space-24: 24px; // gap entre blocos de conteudo; padding vertical do Footer
+  --space-32: 32px; // padding horizontal do Container interno; padding do card de timeline
+  --space-48: 48px; // gap macro entre colunas/linhas; padding interno de cards
+  --space-64: 64px; // padding vertical de secao no mobile (Hero/About/Skills/Work, secao 2)
+  --space-80: 80px; // padding horizontal universal de secao no desktop
+  --space-96: 96px; // padding vertical padrao das secoes de conteudo no desktop
+
+  // Aliases semanticos (apontam para a escala acima — nao duplicam valor)
+  --space-section-padding-x: var(--space-80);
+  --space-section-padding-y: var(--space-96);
+  --space-section-padding-x-mobile: var(--space-16);
+  --space-section-padding-y-mobile: var(--space-64);
+  --space-header-padding-y: var(--space-16);
+  --space-footer-padding-y: var(--space-24);
+  --space-icon-button-padding: var(--space-6);
+  --space-tag-padding-x: var(--space-20);
+  --space-tag-padding-y: 4px; // so aparece neste uso (padding vertical do Tag); nao cadastrado na escala acima
+  --space-card-padding: var(--space-48);
+  --space-timeline-item-padding: var(--space-32);
+
+  // ---------------------------------------------------------------------
+  // Border-radius — escala pequena derivada dos valores observados na secao 8 do
+  // design-system.md (ver nota 5 acima; nao e token formal do Figma).
+  // ---------------------------------------------------------------------
+  --radius-sm: 8px; // Icon Button (secao 8.3)
+  --radius-md: 12px; // Tag (8.4), card de projeto (8.5), item de timeline (8.6), card de depoimento (8.7)
+}
+
+// ---------------------------------------------------------------------
+// Cores — Dark mode (design-system.md secao 3, tabela "Dark mode")
+// Sobrescreve as MESMAS variaveis de cor definidas em `:root` (ver convencao 1 acima).
+// ---------------------------------------------------------------------
+[data-theme='dark'] {
+  --color-gray-default: #030712; // Gray/Dark/Default
+  --color-gray-50: #111827; // Gray/Dark/50
+  --color-gray-100: #1f2937; // Gray/Dark/100
+  --color-gray-200: #374151; // Gray/Dark/200
+  --color-gray-600: #d1d5db; // Gray/Dark/600
+  --color-gray-700: #e5e7eb; // Gray/Dark/700
+  --color-gray-900: #f9fafb; // Gray/Dark/900
+}

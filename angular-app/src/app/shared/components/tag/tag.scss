@@ -1,0 +1,20 @@
+// Tag — design-system.md secao 8.4: padding 20px/4px, fundo --color-gray-200, texto
+// --color-gray-600, radius 12px, Body3/Medium, hug contents (secao 9.2: sem width/height
+// fixos no Figma — largura ajustada ao texto, altura = padding + line-height).
+@use 'typography';
+
+:host {
+  display: contents;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: var(--space-tag-padding-y) var(--space-tag-padding-x);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  @include typography.body3-medium;
+}

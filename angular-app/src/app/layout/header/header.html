@@ -1,0 +1,49 @@
+<header class="header">
+  <div class="header__container">
+    <a class="header__logo" href="#top" aria-label="Início">
+      <!-- Placeholder do template Figma (design-system.md secao 8.1: "<SS />") -
+           substituir pelo nome/logo real do Johnny numa fase posterior. -->
+      SS
+    </a>
+
+    <nav class="header__nav" aria-label="Navegação principal">
+      @for (link of navLinks; track link.href) {
+        <a class="header__nav-link" [href]="link.href">{{ link.label }}</a>
+      }
+    </nav>
+
+    <span class="header__divider" aria-hidden="true"></span>
+
+    <div class="header__actions">
+      <!--
+        Icone de tema/menu do Header: PENDENTE de exportacao isolada do Figma
+        (design-system.md secoes 6 e 8.3 - node de override "I316:588;316:604;309:256"
+        nao aceito por `download_assets`). O SVG abaixo e um placeholder generico (nao e
+        a spec real do Figma) so para o botao nao ficar vazio; substituir assim que o
+        asset for exportado pelo agente `designer`. Toggle de dark mode ainda nao ligado
+        nesta fatia (PLANO-MIGRACAO-ANGULAR.md, Fase 2).
+      -->
+      <app-icon-button ariaLabel="Alternar tema">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+          />
+        </svg>
+      </app-icon-button>
+
+      <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
+      <button type="button" class="header__cta">Download CV</button>
+    </div>
+  </div>
+</header>
