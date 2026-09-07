@@ -41,6 +41,7 @@ Se as tools `mcp__figma__*` ainda não estiverem carregadas/autenticadas nesta s
 
 ### 3. Extrair do Figma
 
+- **Limitação importante: este MCP não enxerga o arquivo Figma inteiro, só o que está aberto no Figma Desktop do usuário.** `get_metadata` sem `nodeId` não lista todas as páginas do arquivo via API remota — ele lista só a página que está aberta no momento no Figma Desktop conectado (confirmado em produção em 07/09/2026: com a página "Thumbnail" aberta, `get_metadata` sem `nodeId` só devolveu "Thumbnail", mesmo o arquivo tendo outras páginas como "Styles & Components"). **Nunca conclua que uma página/frame "não existe" no arquivo só porque não apareceu num `get_metadata` sem `nodeId`** — isso mede o que está aberto, não o conteúdo do arquivo. Se precisar de algo que não está na página atualmente aberta (ex.: uma biblioteca de ícones, um arquivo de estilos/componentes centralizados), peça ao usuário para abrir a página certa no Figma Desktop e confirmar, ou peça um link com `node-id` direto para o frame/node desejado (Figma: botão direito no elemento > "Copy link to selection").
 - Use `get_metadata` para mapear a estrutura de páginas/frames/seções quando ainda não se sabe onde está o que se precisa.
 - Use `get_variable_defs` num node concreto (frame ou instância, não a página inteira) para pegar cores, tipografia e efeitos.
 - Use `get_screenshot` para conferência visual do que foi extraído.
