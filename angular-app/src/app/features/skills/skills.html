@@ -17,7 +17,13 @@
         <div class="skills__item">
           <div class="skills__item-icon" aria-hidden="true">
             @if (item.icon) {
-              <img [ngSrc]="item.icon" [width]="item.iconWidth ?? 64" height="64" alt="" />
+              <img
+                [ngSrc]="item.icon"
+                [width]="item.iconWidth ?? 64"
+                height="64"
+                alt=""
+                [class.skills__item-icon-img--invert-dark]="item.invertOnDark"
+              />
             }
           </div>
           <span class="skills__item-label">{{ item.label }}</span>

@@ -83,6 +83,25 @@
   min-height: var(--space-skills-icon-slot);
 }
 
+// Icones de marca quase pretos (ex. icon-github.svg, #181616 no Devicon) ficam
+// ilegiveis no dark mode - preto quase-puro sobre o fundo escuro do tema (falha WCAG AA
+// de contraste). `invert(1)` vira o preto em branco só quando o tema esta escuro - no
+// tema claro o filtro nao se aplica, o preto original ja tem contraste correto contra o
+// fundo branco. Marcado por item via `invertOnDark` (skills.ts) - nao um filtro global
+// no `.skills__item-icon` porque a maioria dos icones ja e colorida e nao deve ser
+// afetada.
+//
+// `:host-context([data-theme='dark'])`, NAO `[data-theme='dark'] .foo` direto: o
+// atributo `data-theme` fica no `<html>`, fora da view deste componente - com o
+// encapsulamento padrao do Angular (emulated), um seletor de ancestral escrito direto
+// recebe o atributo `_ngcontent-*` do proprio componente em cada parte do seletor
+// (inclusive na parte do ancestral), que o `<html>` nunca tem, entao a regra nunca
+// bate. `:host-context()` e o mecanismo do Angular pra exatamente esse caso (estilizar
+// com base num ancestral fora do componente, ex. um tema no `<html>`/`<body>`).
+:host-context([data-theme='dark']) .skills__item-icon-img--invert-dark {
+  filter: invert(1);
+}
+
 .skills__item-label {
   @include typography.body1-normal;
   color: var(--color-gray-600);

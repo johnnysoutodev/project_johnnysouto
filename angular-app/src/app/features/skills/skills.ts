@@ -10,31 +10,41 @@ interface SkillItem {
   /** Largura real do SVG em px (a caixa do icone tem altura fixa de 64px, mas largura
    * varia conforme a proporcao do icone - secao 8.10). Default 64 (quadrado) quando nao informado. */
   readonly iconWidth?: number;
+  /** `true` pros icones de marca monocromaticos quase pretos (ex. `icon-github.svg`,
+   * `#181616` no Devicon) - sem isso, ficam ilegiveis no dark mode (preto quase-puro
+   * sobre o fundo escuro do tema, falha WCAG AA de contraste). Aplica um filtro CSS de
+   * inversao de cor só quando `[data-theme='dark']` (ver `skills.scss`), preto vira
+   * quase-branco só no tema escuro - nao afeta o tema claro, onde o preto original ja
+   * tem contraste correto contra o fundo branco. */
+  readonly invertOnDark?: boolean;
 }
 
 /**
- * Skills — design-system.md secao 8.10. Conteudo real (secao 10): skills reais do
- * curriculo legado (`src/pt/index.html`, secao "Habilidades"), num grid unico "flat" -
- * sem titulo de categoria acima dos itens, igual ao grid do Figma (secao 8.10: 2 linhas
- * x 8 itens, sem agrupamento). A categorizacao por area (Back-End, Banco de Dados,
- * Front-End, Versionamento, Pessoais) do curriculo legado nao aparece mais como titulo
- * visual (revisao de 07/09/2026, a pedido do Johnny - a versao anterior agrupava por
- * categoria com um `<h3>` por grupo, o que o Figma nao tem) - a ordem dos itens abaixo
- * ainda segue essa categorizacao (itens da mesma area ficam agrupados na lista), so sem
- * o header visual.
+ * Skills — design-system.md secao 8.10. Grid unico "flat" - sem titulo de categoria
+ * acima dos itens, igual ao grid do Figma (secao 8.10: 2 linhas x 8 itens, sem
+ * agrupamento).
  *
- * Icones (secao 10, decisao revista em 07/09/2026): 3 itens tinham icone com match
- * direto no Figma (`icon-javascript`, `icon-nodejs`, `icon-git`) - os outros 17 ficavam
- * texto-only por decisao anterior de "nao baixar icone de fora do Figma", o que deixava
- * a secao real bem diferente do grid all-icon do design original. Revertido a pedido do
- * Johnny: 9 icones adicionais baixados do Devicon (MIT, github.com/devicons/devicon) pra
- * fechar o match de skills reais sem equivalente no Figma - Spring, Java, MySQL, Oracle
- * Database, SQL Server, HTML5, CSS3, jQuery, Grunt. LESS (sem icone "so simbolo" no
- * Devicon, so wordmark) foi substituido por Sass/Scss no conteudo real - `icon-sass.svg`
- * ja existia (extraido do Figma, template tambem tinha Sass no grid original). Ficam
- * texto-only, ainda sem icone disponivel em lugar nenhum: Servlet/JSP (nao e uma marca
- * com logo), OOP e RWD (conceitos, nao tecnologias/marcas) e os 4 itens de "Pessoais"
- * (traços de personalidade, fora do escopo de "icone de tecnologia" do Figma).
+ * Ordem dos itens (revisao de 07/09/2026, a pedido do Johnny): embaralhada de proposito,
+ * intercalando categorias (Back-End, Banco de Dados, Front-End, Versionamento, Cloud,
+ * Ferramentas) uma a uma - nao agrupada por area como antes, pra o grid nao ficar com
+ * "blocos" visuais de icones parecidos (ex. 4 databases seguidos). A categoria de cada
+ * item continua marcada como comentario inline, so como referencia - nao afeta o
+ * render, so documentacao. Ordem fixa (nao gerada em runtime): o site e SSR/prerender,
+ * gerar a ordem com `Math.random()` no componente arriscaria um mismatch de hydration
+ * (servidor renderiza uma ordem, o browser calcula outra na primeira execucao).
+ *
+ * Icones (secao 10 do design-system.md tem o historico completo da decisao): a lista
+ * inicial replicava 1:1 o curriculo legado (`src/pt/index.html`), com varios itens sem
+ * match de icone no Figma (Servlet/JSP, OOP, RWD, soft skills) - texto-only. Revisao de
+ * 07/09/2026 (a pedido do Johnny, editando o componente diretamente) trocou a lista pra
+ * um conjunto atualizado de skills reais, todas com icone: 3 vieram do Figma
+ * (`icon-javascript`, `icon-nodejs`, `icon-git`), `icon-sass` tambem ja existia no Figma
+ * (template original tinha Sass no grid), e o restante veio do Devicon (MIT,
+ * github.com/devicons/devicon) - Spring, Java, TypeScript, MySQL, PostgreSQL, MongoDB,
+ * DynamoDB, HTML5, CSS3, AngularJS, Grunt, GitHub, Azure, VS Code. AWS usa a variante
+ * `plain-wordmark` do Devicon (o unico ícone existente pra marca - nao ha um "so
+ * simbolo" isolado). `icon-github.svg` (`#181616`, quase preto) usa `invertOnDark` pra
+ * nao ficar ilegivel no dark mode (ver o proprio campo na interface `SkillItem`).
  */
 @Component({
   selector: 'app-skills',
@@ -44,22 +54,24 @@ interface SkillItem {
 })
 export class Skills {
   protected readonly items: readonly SkillItem[] = [
-    // Back-End
-    { label: 'Spring Framework', icon: '/assets/icons/icon-spring.svg' },
-    { label: 'Node.js', icon: '/assets/icons/icon-nodejs.svg', iconWidth: 57 },
-    { label: 'Java SE 8', icon: '/assets/icons/icon-java.svg' },
-    // Banco de Dados
-    { label: 'MySQL', icon: '/assets/icons/icon-mysql.svg' },
-    { label: 'Oracle Database', icon: '/assets/icons/icon-oracle.svg' },
-    { label: 'SQL Server', icon: '/assets/icons/icon-sqlserver.svg' },
-    // Front-End
-    { label: 'HTML5', icon: '/assets/icons/icon-html5.svg' },
-    { label: 'CSS3', icon: '/assets/icons/icon-css3.svg' },
-    { label: 'JavaScript', icon: '/assets/icons/icon-javascript.svg' },
-    { label: 'jQuery', icon: '/assets/icons/icon-jquery.svg' },
-    { label: 'Sass/Scss', icon: '/assets/icons/icon-sass.svg' },
-    { label: 'Grunt', icon: '/assets/icons/icon-grunt.svg' },
-    // Versionamento
-    { label: 'Git', icon: '/assets/icons/icon-git.svg' },
+    { label: 'Spring', icon: '/assets/icons/icon-spring.svg' }, // Back-End
+    { label: 'MySQL', icon: '/assets/icons/icon-mysql.svg' }, // Banco de Dados
+    { label: 'HTML5', icon: '/assets/icons/icon-html5.svg' }, // Front-End
+    { label: 'Git', icon: '/assets/icons/icon-git.svg' }, // Versionamento
+    { label: 'AWS', icon: '/assets/icons/icon-aws.svg' }, // Cloud
+    { label: 'VS Code', icon: '/assets/icons/icon-vscode.svg' }, // Ferramentas
+    { label: 'CSS3', icon: '/assets/icons/icon-css3.svg' }, // Front-End
+    { label: 'Node.js', icon: '/assets/icons/icon-nodejs.svg', iconWidth: 57 }, // Back-End
+    { label: 'PostgreSQL', icon: '/assets/icons/icon-postgresql.svg' }, // Banco de Dados
+    { label: 'Angular', icon: '/assets/icons/icon-angularjs.svg' }, // Front-End
+    { label: 'GitHub', icon: '/assets/icons/icon-github.svg', invertOnDark: true }, // Versionamento
+    { label: 'Azure', icon: '/assets/icons/icon-azure.svg' }, // Cloud
+    { label: 'JavaScript', icon: '/assets/icons/icon-javascript.svg' }, // Front-End
+    { label: 'Java', icon: '/assets/icons/icon-java.svg' }, // Back-End
+    { label: 'MongoDB', icon: '/assets/icons/icon-mongodb.svg', iconWidth: 30 }, // Banco de Dados
+    { label: 'Sass/Scss', icon: '/assets/icons/icon-sass.svg' }, // Front-End
+    { label: 'TypeScript', icon: '/assets/icons/icon-typescript.svg' }, // Back-End
+    { label: 'DynamoDB', icon: '/assets/icons/icon-dynamodb.svg' }, // Banco de Dados
+    { label: 'Grunt', icon: '/assets/icons/icon-grunt.svg' }, // Front-End
   ];
 }

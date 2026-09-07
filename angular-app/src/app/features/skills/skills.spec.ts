@@ -33,46 +33,52 @@ describe('Skills', () => {
     expect(renderedItems.length).toBe(expectedItemCount);
   });
 
-  it('renders an icon for every skill with a real match (Figma-native + Devicon, design-system.md secao 10)', () => {
+  it('renders an icon for every skill in the current list (Figma-native + Devicon, design-system.md secao 10)', () => {
     const icons = fixture.debugElement.queryAll(By.css('.skills__item-icon img'));
-    expect(icons.length).toBe(13);
+    const items = fixture.debugElement.queryAll(By.css('.skills__item'));
+
+    // Revisao de 07/09/2026: a lista atual (19 skills, ordem embaralhada por categoria -
+    // ver skills.ts) so tem itens com match de icone real (3 nativos do Figma +
+    // icon-sass, tambem do Figma + 15 do Devicon) - nenhum item texto-only, diferente da
+    // lista anterior (que incluia Servlet/JSP, OOP, RWD e soft skills sem icone
+    // disponivel).
+    expect(icons.length).toBe(items.length);
 
     const srcAttrs = icons.map((icon) => icon.nativeElement.getAttribute('src') as string).sort();
     expect(srcAttrs).toEqual(
       [
+        '/assets/icons/icon-angularjs.svg',
+        '/assets/icons/icon-aws.svg',
+        '/assets/icons/icon-azure.svg',
         '/assets/icons/icon-css3.svg',
+        '/assets/icons/icon-dynamodb.svg',
         '/assets/icons/icon-git.svg',
+        '/assets/icons/icon-github.svg',
         '/assets/icons/icon-grunt.svg',
         '/assets/icons/icon-html5.svg',
         '/assets/icons/icon-java.svg',
         '/assets/icons/icon-javascript.svg',
-        '/assets/icons/icon-jquery.svg',
+        '/assets/icons/icon-mongodb.svg',
         '/assets/icons/icon-mysql.svg',
         '/assets/icons/icon-nodejs.svg',
-        '/assets/icons/icon-oracle.svg',
+        '/assets/icons/icon-postgresql.svg',
         '/assets/icons/icon-sass.svg',
         '/assets/icons/icon-spring.svg',
-        '/assets/icons/icon-sqlserver.svg',
+        '/assets/icons/icon-typescript.svg',
+        '/assets/icons/icon-vscode.svg',
       ].sort(),
     );
   });
 
-  it('renders the remaining skills as text-only, with an empty (but present) icon slot for alignment', () => {
-    const items = fixture.debugElement.queryAll(By.css('.skills__item'));
-    const textOnlyItems = items.filter(
-      (item) => item.query(By.css('img')) === null,
-    );
+  it('inverts the near-black GitHub icon in dark mode (WCAG AA contrast, ver skills.ts/skills.scss)', () => {
+    const githubImg = fixture.debugElement
+      .queryAll(By.css('.skills__item-icon img'))
+      .find((img) => (img.nativeElement.getAttribute('src') as string).includes('icon-github'));
 
-    // 20 itens no total (5 Back-End + 3 Banco de Dados + 7 Front-End + 1 Versionamento +
-    // 4 Pessoais, design-system.md secao 10) - 13 com icone (3 nativos do Figma + 9 do
-    // Devicon + Sass/Scss ja extraido do Figma, revisao de 07/09/2026) = 7 texto-only
-    // (Servlet/JSP, OOP, RWD, 4 itens de Pessoais - nenhuma marca/tecnologia com logo).
-    expect(textOnlyItems.length).toBe(7);
-
-    for (const item of textOnlyItems) {
-      expect(item.query(By.css('.skills__item-icon'))).not.toBeNull();
-      expect(item.query(By.css('.skills__item-label'))).not.toBeNull();
-    }
+    expect(githubImg).toBeDefined();
+    expect(
+      githubImg!.nativeElement.classList.contains('skills__item-icon-img--invert-dark'),
+    ).toBe(true);
   });
 
   it('renders the "Skills" tag', () => {
