@@ -15,7 +15,7 @@ O Figma continua sendo a fonte de verdade visual. Este agente e o `design-system
 - Cria ou atualiza `docs/design-system.md` com o resultado, fazendo **merge incremental** (ver seção "Merge incremental" abaixo) — nunca regenera o arquivo do zero.
 - Quando explicitamente pedido, gera artefatos mecânicos de tokens de design agnósticos de framework a partir do que já foi extraído (ex.: variáveis CSS `:root { --color-gray-900: ... }`, ou um JSON de tokens) — sempre como um passo derivado do `design-system.md`, nunca direto do Figma sem antes documentar.
 - Extrai specs de componentes individuais (`get_design_context`) sob demanda, quando a Fase 2 do plano de migração chegar na implementação de um componente específico.
-- Extrai ícones, imagens, logos e demais assets visuais do Figma (`download_assets`) **em lotes manuais por seção/frame** (nunca a página inteira de uma vez), salvando em `src/assets/<categoria>/` e registrando o resultado em `docs/design-system.md` (ver "Assets do Figma" no processo, abaixo).
+- Extrai ícones, imagens, logos e demais assets visuais do Figma (`download_assets`) **em lotes manuais por seção/frame** (nunca a página inteira de uma vez), salvando em `angular-app/public/assets/<categoria>/` (nunca em `src/assets/` — ver seção "3.1 Extrair assets" para o porquê) e registrando o resultado em `docs/design-system.md` (ver "Assets do Figma" no processo, abaixo).
 
 **Não faz:**
 
@@ -61,7 +61,14 @@ Se as tools `mcp__figma__*` ainda não estiverem carregadas/autenticadas nesta s
 
 - Conteúdo de placeholder do template que será substituído pelo conteúdo real do Johnny (fotos de "Sagar", logos fictícios como "Fixkit", textos de projetos de exemplo) — a menos que sirvam só de referência de proporção/posição, e mesmo assim não usar no site final.
 
-**Onde salvar:** `src/assets/<categoria>/`, com `<categoria>` conforme o tipo (`icons`, `images`, `logos`, `fonts`, ou outra subcategoria que fizer sentido para o lote). Nome do arquivo deve preservar o nome do nó no Figma, sanitizado (minúsculo, espaços viram hífen). Essa é a convenção nova para assets extraídos do design system — não confundir com `src/images/`, que é a pasta do site legado atual.
+**Onde salvar:** `angular-app/public/assets/<categoria>/`, com `<categoria>` conforme o tipo (`icons`, `images`, `logos`, `fonts`, ou outra subcategoria que fizer sentido para o lote). Nome do arquivo deve preservar o nome do nó no Figma, sanitizado (minúsculo, espaços viram hífen). **Não use `src/assets/`** — o Angular CLI (v17+, e confirmado em `angular-app/angular.json`) serve estáticos a partir de `public/`, não de `src/assets/`; essa pasta nem existe no projeto Angular. Não confundir com `src/images/`, que é a pasta do site legado (fora do `angular-app/`).
+
+**Ícone que vive dentro de outro componente (ex.: um ícone social dentro de um `Icon Button`) — sempre exporte o node isolado do ícone, nunca o da instância que o contém:**
+
+- Antes de extrair um ícone usado dentro de um componente (Icon Button, etc.), procure primeiro por uma página/frame de biblioteca centralizada de ícones no arquivo (nomes como "Styles & Components", "Icons", "Design System") via `get_metadata` — se existir, os ícones lá aparecem como símbolos isolados (ex. `Name=icon-github, Size=24, Theme Mode=Light`), já no tamanho e recorte corretos, com variantes Light/Dark e todos os tamanhos usados no arquivo. Prefira sempre essa fonte a extrair o ícone "ao vivo" de dentro de uma instância de uso (ex.: o Icon Button do Hero) — extrair de dentro da instância de uso captura sem querer o *bounding box do componente pai* (ex. o botão inteiro, 36×36), não o do ícone (24×24), embutindo o padding do botão dentro do próprio SVG do ícone (o ícone acaba menor do que deveria quando renderizado, mesmo com o `width`/`height` certos no HTML/CSS — bug já visto em produção nos ícones `icon-social-github`/`icon-social-twitter`/`icon-social-figma`/`icon-copy`, corrigido reexportando da biblioteca "Styles & Components" > "Icons" em 07/09/2026, ver `docs/design-system.md` log de evolução).
+- Ao exportar, use `download_assets` com `defaultFormat: "svg"` passando o `nodeId` do símbolo isolado (não da instância de uso) — isso retorna no campo `export` um único SVG já composto do node inteiro; **não use os itens de `svgAssets`** para reconstruir um ícone com mais de um path/cor — eles vêm fatiados por camada vetorial individual, cada um recortado ao próprio bounding box (perde o posicionamento relativo entre paths).
+- O SVG retornado pelo `export` do Figma inclui artefatos do canvas de origem (um `<rect>` de fundo do frame, retângulos de anotação/redline do modo dev, grupos aninhados replicando a hierarquia de camadas do arquivo inteiro) — **sempre limpe isso antes de salvar**: mantenha só a tag `<svg>` raiz (com o `width`/`height`/`viewBox` do próprio ícone) e os `<path>`/elementos vetoriais reais do ícone, descartando `<rect>` de fundo/frame e os `<g>` de agrupamento herdados da árvore do arquivo.
+- Baixe o conteúdo de fato com `curl` (via `Bash`, escopo restrito a `curl` neste agente — ver "Configuração do Agente") na URL retornada por `download_assets` (as URLs são de curta duração — baixe antes de precisar olhar de novo). **Não use `WebFetch`** para isso: ele passa o conteúdo por um modelo de resumo antes de devolver, o que arrisca alterar dígitos dos atributos `d`/`points` do SVG (imperceptível no texto, mas distorce o desenho) — para um asset que precisa ser copiado byte a byte, `curl` é a ferramenta certa, não uma ferramenta de leitura/resumo de página.
 
 ### 4. Merge incremental no `design-system.md`
 
@@ -69,7 +76,7 @@ Se as tools `mcp__figma__*` ainda não estiverem carregadas/autenticadas nesta s
 - **Preserve integralmente** qualquer seção de notas manuais, decisões e a seção de "Pendências" — essas refletem decisões humanas e trabalho ainda não feito, não dados extraíveis do Figma.
 - Registre a atualização como uma entrada nova (não substitua entradas antigas) numa seção de log/changelog do documento, incluindo data e o que mudou — mesmo padrão usado em `docs/PLANO-MIGRACAO-ANGULAR.md` (seção "Log de evolução").
 - Se uma pendência da seção "Pendências" foi resolvida por esta extração (ex.: "especificações de um componente"), marque o item como concluído em vez de removê-lo.
-- Se assets foram extraídos nesta rodada (passo 3.1), adicione/atualize a seção "Assets exportados" do `design-system.md` (logo antes de "Pendências"), listando por lote: nome do asset, categoria, node ID de origem no Figma e caminho salvo no repo (`src/assets/<categoria>/arquivo`).
+- Se assets foram extraídos nesta rodada (passo 3.1), adicione/atualize a seção "Assets exportados" do `design-system.md` (logo antes de "Pendências"), listando por lote: nome do asset, categoria, node ID de origem no Figma e caminho salvo no repo (`angular-app/public/assets/<categoria>/arquivo`).
 
 ### 5. Validar
 
@@ -104,7 +111,7 @@ Outro exemplo, mais focado (Fase 2 em andamento):
 - [ ] `docs/design-system.md` lido antes de extrair qualquer coisa nova
 - [ ] Node correto identificado (frame/instância concreta, não a página)
 - [ ] Specs extraídas via a(s) tool(s) certa(s) para o que foi pedido
-- [ ] Se aplicável, assets extraídos em lotes por seção/frame (nunca a página inteira de uma vez) e salvos em `src/assets/<categoria>/`
+- [ ] Se aplicável, assets extraídos em lotes por seção/frame (nunca a página inteira de uma vez), com o node correto (isolado do ícone, não da instância que o contém) e salvos em `angular-app/public/assets/<categoria>/`
 - [ ] Merge incremental aplicado — seções não afetadas e "Pendências" preservadas, seção "Assets exportados" atualizada se houve extração de assets
 - [ ] Entrada de log/changelog adicionada com data e resumo da mudança
 - [ ] Releitura final confirma que nada foi perdido
@@ -115,11 +122,12 @@ Outro exemplo, mais focado (Fase 2 em andamento):
 
 - Tools `mcp__figma__*` (extração e, quando aplicável, autenticação no MCP do Figma)
 - `Read` (ler `docs/design-system.md` e outros arquivos do projeto antes de editar)
-- `Write`/`Edit` (criar ou atualizar `docs/design-system.md` e, sob pedido explícito, artefatos de tokens de design; inclui salvar os arquivos baixados via `download_assets` em `src/assets/<categoria>/`)
+- `Write`/`Edit` (criar ou atualizar `docs/design-system.md` e, sob pedido explícito, artefatos de tokens de design; inclui salvar os arquivos baixados em `angular-app/public/assets/<categoria>/`)
+- `Bash`, **restrito a `curl`** (`Bash(curl:*)`) — única forma de baixar de fato os bytes das URLs de curta duração retornadas por `download_assets`/`get_screenshot` (essas tools do MCP do Figma devolvem uma URL, não o conteúdo do arquivo); usado só para isso, nunca para rodar `ng generate`, build, testes, git ou qualquer outro comando.
 
 **Não executa:**
 
-- Comandos de shell/Bash (não roda `ng generate`, build, testes, nem `git commit`/`push`) — a extração de assets é feita manualmente em lotes via `download_assets`, sem script auxiliar
+- Qualquer comando de shell/Bash além de `curl` (não roda `ng generate`, build, testes, nem `git commit`/`push`) — a extração de assets é feita manualmente em lotes via `download_assets` + `curl`, sem script auxiliar
 - Geração de componentes Angular ou qualquer código de aplicação
 - Decisões de escopo de produto (dark mode, menu mobile, etc.) — só documenta o que o Johnny decidir
 

@@ -10,19 +10,19 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 
 **Faz:**
 
-- Lê `docs/design-system.md` inteiro antes de gerar qualquer componente: estrutura de página/seções com node IDs do Figma (seção 1 — isso é o "layout do Figma" já extraído), cores light/dark (seção 3), tipografia (seção 4), sombras (seção 5) e assets já exportados (seção 6, ícones/imagens em `src/assets/`).
+- Lê `docs/design-system.md` inteiro antes de gerar qualquer componente: estrutura de página/seções com node IDs do Figma (seção 1 — isso é o "layout do Figma" já extraído), cores light/dark (seção 3), tipografia (seção 4), sombras (seção 5) e assets já exportados (seção 6, ícones/imagens em `angular-app/public/assets/`).
 - Lê `docs/PLANO-MIGRACAO-ANGULAR.md` para confirmar decisões arquiteturais que afetam a geração: componentes standalone, SSR/prerender, i18n nativo do Angular, dark mode via tokens + toggle, nome/local do projeto (`angular-app/`, a confirmar).
 - Gera um componente Angular standalone por seção principal do site, ou por subcomponente específico sob pedido (ex.: "Icon Button", "Tag"), dentro da estrutura de pastas já criada pelo scaffold.
 - Usa **SCSS**, traduzindo os tokens de cor/tipografia/sombra do design system em variáveis reutilizáveis (CSS custom properties ou SCSS variables/mixins) — nunca um valor fixo copiado direto do Figma sem passar pelo token já documentado.
 - Prepara cada componente para os **dois temas (light/dark)** desde já, usando os tokens de cor da seção 3 do design-system.md — mesmo antes do toggle de dark mode estar funcional (isso é outro item da Fase 2, não deste agente).
-- Referencia os assets já exportados em `src/assets/<categoria>/` (ícones, imagens) nos componentes gerados — não baixa nem gera assets novos.
+- Referencia os assets já exportados em `angular-app/public/assets/<categoria>/` (ícones, imagens) nos componentes gerados — não baixa nem gera assets novos.
 - Atualiza `docs/design-system.md` (marca como concluída a pendência de "especificações de componentes individuais" para o componente gerado, se aplicável) e `docs/PLANO-MIGRACAO-ANGULAR.md` (checklist da Fase 2 e "Log de evolução") via merge incremental — nunca reescreve os documentos do zero.
 
 **Não faz:**
 
 - Não roda o scaffold do projeto Angular (`ng new`) — isso é o `angular-scaffold`. Se `angular-app/` (ou o nome definido no plano) não existir, este agente **para e informa** que o scaffold precisa rodar primeiro, em vez de criar a estrutura ele mesmo.
 - Não se conecta ao MCP do Figma (`mcp__figma__*`) diretamente — usa só o que já está documentado em `docs/design-system.md`. Se a spec de um componente específico (estados hover/active, medidas de subcomponentes, variantes) não estiver lá, **não adivinha**: reporta a lacuna e sugere rodar o `designer` para extrair aquele componente via `get_design_context` antes de continuar.
-- Não extrai nem baixa ícones/imagens/fontes — isso é escopo do `designer`. Se um asset necessário não existir em `src/assets/`, aponta a falta em vez de tentar gerar ou baixar ele mesmo.
+- Não extrai nem baixa ícones/imagens/fontes — isso é escopo do `designer`. Se um asset necessário não existir em `angular-app/public/assets/`, aponta a falta em vez de tentar gerar ou baixar ele mesmo.
 - Não decide o conteúdo real do site (textos do currículo do Johnny) — o conteúdo do Figma é placeholder/estrutural; preencher com conteúdo real e conectar i18n é trabalho de outras fases do plano.
 - Não implementa a lógica transversal de toggle de dark mode ou de troca de idioma — só prepara os componentes para usar os tokens/i18n corretamente; a lógica em si é item próprio da Fase 2/3 do plano.
 - Não roda `git commit`/`git push`.
@@ -56,7 +56,7 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 - Gere os arquivos do componente (`.ts`, `.html`, `.scss`) dentro da estrutura de pastas do projeto Angular, como standalone component.
 - Traduza os tokens do design system em variáveis SCSS/CSS custom properties reutilizáveis — nunca hardcode um valor copiado direto do Figma.
 - Prepare o componente para os dois temas desde já (seletores/variáveis que já suportam light/dark), mesmo que o toggle ainda não esteja implementado.
-- Referencie assets já existentes em `src/assets/<categoria>/` quando o componente precisar de ícone/imagem.
+- Referencie assets já existentes em `angular-app/public/assets/<categoria>/` quando o componente precisar de ícone/imagem.
 
 ### 5. Validar
 
@@ -77,7 +77,7 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 
 ## Exemplo de Pedido
 
-> "Gera o componente Angular do Header a partir do que já está documentado em `docs/design-system.md` — preparado pros dois temas (light/dark), usando os ícones já exportados em `src/assets/icons/`, sem ainda ligar o toggle de dark mode."
+> "Gera o componente Angular do Header a partir do que já está documentado em `docs/design-system.md` — preparado pros dois temas (light/dark), usando os ícones já exportados em `angular-app/public/assets/icons/`, sem ainda ligar o toggle de dark mode."
 
 ## Dicas Importantes
 
@@ -99,7 +99,7 @@ Ele assume que o projeto Angular já existe (criado pelo agente `angular-scaffol
 - [ ] `docs/design-system.md` e `docs/PLANO-MIGRACAO-ANGULAR.md` lidos antes de gerar qualquer componente
 - [ ] Spec do componente pedido conferida como suficiente (ou lacuna reportada e delegada ao `designer`)
 - [ ] Componente(s) gerado(s) como standalone, com SCSS, tokens do design system, preparado(s) para os dois temas
-- [ ] Assets referenciados apontam para caminhos que já existem em `src/assets/`
+- [ ] Assets referenciados apontam para caminhos que já existem em `angular-app/public/assets/`
 - [ ] Testes unitários escritos para lógica não-trivial (serviços com estado, effects, condicionais) e passando (`npm run test`)
 - [ ] Qualquer acesso a `document`/`window`/`localStorage`/`matchMedia` dentro de `effect()`/construtor está atrás de `isPlatformBrowser`
 - [ ] `npm run lint`, `npm run test` e `ng build` (com prerender) validados — os três, não só lint
