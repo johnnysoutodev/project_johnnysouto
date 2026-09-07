@@ -1,6 +1,5 @@
-// Skills — design-system.md secao 8.10. Conteudo real agrupado por categoria (secao 10:
-// Back-End, Banco de Dados, Front-End, Versionamento, Pessoais), diferente do grid flat
-// "2 linhas x 8 itens" do Figma - ver comentario detalhado em `skills.ts`.
+// Skills — design-system.md secao 8.10. Grid unico "flat" (sem titulo de categoria por
+// cima dos itens, revisao de 07/09/2026 - ver `skills.ts` para o historico da decisao).
 //
 // Achado da secao 8.10: o item `Tech` do Figma nao tem variante texto-only, e o
 // `justify-center` do item desalinha o label quando o icone e omitido (a maioria dos
@@ -54,32 +53,14 @@
   color: var(--color-gray-600);
 }
 
-.skills__groups {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-48);
-}
-
-.skills__group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-16);
-}
-
-// Titulo de categoria: NAO existe no Figma (secao 8.10 e um grid flat, sem categorias) -
-// decisao de UI por convencao, necessaria pra nao perder a categorizacao real do
-// curriculo legado (secao 10). Estilo escolhido (Body2/Medium, gray-900) por analogia ao
-// "gap 16px entre titulo e subtitulo de secao" ja documentado na secao 2, aplicado aqui
-// num nivel menor (titulo de subgrupo, nao de secao inteira).
-.skills__group-title {
-  @include typography.body2-medium;
-  margin: 0;
-  color: var(--color-gray-900);
-}
-
 .skills__row {
   display: flex;
   flex-wrap: wrap;
+  // `center` (nao `space-between` como no Figma, secao 8.10) porque agora e uma unica
+  // lista de 20 itens (nao mais 8 por linha) - quebra em N linhas de tamanho variavel
+  // conforme o viewport, e "space-between" esticaria de forma irregular a ultima linha
+  // parcial. Decisao de implementacao, nao extraida do Figma.
+  justify-content: center;
   align-items: flex-start;
   // Gap macro (48px, secao 2) entre itens na horizontal, mesmo valor reaproveitado em
   // quase todas as secoes; 24px na vertical pro wrap em telas estreitas (nao medido no

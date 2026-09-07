@@ -21,40 +21,38 @@ describe('Skills', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders the 5 real skill categories from the legacy resume, in order', () => {
-    const titles = fixture.debugElement
-      .queryAll(By.css('.skills__group-title'))
-      .map((el) => el.nativeElement.textContent.trim());
-
-    expect(titles).toEqual([
-      'Back-End',
-      'Banco de Dados',
-      'Front-End',
-      'Versionamento',
-      'Pessoais',
-    ]);
+  it('renders a flat grid with no category title (matches the Figma grid, secao 8.10 - revisao 07/09/2026)', () => {
+    const titles = fixture.debugElement.queryAll(By.css('.skills__group-title'));
+    expect(titles.length).toBe(0);
   });
 
   it('renders every skill item declared in the component (no item dropped/duplicated)', () => {
-    const expectedItemCount = component['groups'].reduce(
-      (total, group) => total + group.items.length,
-      0,
-    );
+    const expectedItemCount = component['items'].length;
     const renderedItems = fixture.debugElement.queryAll(By.css('.skills__item'));
 
     expect(renderedItems.length).toBe(expectedItemCount);
   });
 
-  it('renders an icon for exactly the 3 skills with a real Figma match (JS, Node.js, Git)', () => {
+  it('renders an icon for every skill with a real match (Figma-native + Devicon, design-system.md secao 10)', () => {
     const icons = fixture.debugElement.queryAll(By.css('.skills__item-icon img'));
-    expect(icons.length).toBe(3);
+    expect(icons.length).toBe(13);
 
     const srcAttrs = icons.map((icon) => icon.nativeElement.getAttribute('src') as string).sort();
     expect(srcAttrs).toEqual(
       [
+        '/assets/icons/icon-css3.svg',
         '/assets/icons/icon-git.svg',
+        '/assets/icons/icon-grunt.svg',
+        '/assets/icons/icon-html5.svg',
+        '/assets/icons/icon-java.svg',
         '/assets/icons/icon-javascript.svg',
+        '/assets/icons/icon-jquery.svg',
+        '/assets/icons/icon-mysql.svg',
         '/assets/icons/icon-nodejs.svg',
+        '/assets/icons/icon-oracle.svg',
+        '/assets/icons/icon-sass.svg',
+        '/assets/icons/icon-spring.svg',
+        '/assets/icons/icon-sqlserver.svg',
       ].sort(),
     );
   });
@@ -66,8 +64,10 @@ describe('Skills', () => {
     );
 
     // 20 itens no total (5 Back-End + 3 Banco de Dados + 7 Front-End + 1 Versionamento +
-    // 4 Pessoais, design-system.md secao 10) - 3 com icone = 17 texto-only.
-    expect(textOnlyItems.length).toBe(17);
+    // 4 Pessoais, design-system.md secao 10) - 13 com icone (3 nativos do Figma + 9 do
+    // Devicon + Sass/Scss ja extraido do Figma, revisao de 07/09/2026) = 7 texto-only
+    // (Servlet/JSP, OOP, RWD, 4 itens de Pessoais - nenhuma marca/tecnologia com logo).
+    expect(textOnlyItems.length).toBe(7);
 
     for (const item of textOnlyItems) {
       expect(item.query(By.css('.skills__item-icon'))).not.toBeNull();
