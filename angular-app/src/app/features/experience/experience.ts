@@ -35,9 +35,33 @@ interface ExperienceItem {
 export class Experience {
   protected readonly items: readonly ExperienceItem[] = [
     {
-      company: 'Coca-Cola FEMSA (via Capgemini)',
-      role: 'Consultor',
-      period: 'Julho de 2021 | Atual',
+      company: 'Totvs',
+      role: 'Desenvolvedor Front-end',
+      period: 'Março de 2026 | Atual',
+      bullets: [
+        'Desenvolvimento de software front-end com Angular e IA generativa Claude',
+        'Integração com APIs e desenvolvimento de componentes reutilizáveis',
+        'Deploy com GitHub Actions',
+        'Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes',
+        'Busca constante por melhorias na experiência do usuário e na eficiência do desenvolvimento',
+      ],
+    },
+    {
+      company: 'Santander',
+      role: 'Analista de Suporte de Sistemas (DevOps)',
+      period: 'Junho de 2024 | Janeiro 2026',
+      bullets: [
+        'Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco',
+        'Garantia de boas práticas de desenvolvimento e segurança',
+        'Apoio a times na adoção de esteiras CI/CD com GitHub Actions',
+        'Integração de ferramentas de qualidade e segurança de código, como SonarQube e Fortify',
+        'Gestão e estruturação de repositórios no GitHub, promovendo padronização de código e governança de pipelines',
+      ],
+    },
+    {
+      company: 'Capgemini',
+      role: 'Consultor de Sistemas',
+      period: 'Julho de 2021 | Janeiro 2024',
       bullets: [
         'Administração de dados SQL, SAP e Salesforce',
         'Gestão de dados por fórmulas e gráficos dinâmicos',
@@ -47,7 +71,7 @@ export class Experience {
     },
     {
       company: 'Telefônica Brasil',
-      role: 'Analista Suporte de Sistemas (SOC)',
+      role: 'Analista de Suporte de Sistemas (SOC)',
       period: 'Agosto de 2019 | Maio de 2021',
       bullets: [
         'Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec',
@@ -67,7 +91,7 @@ export class Experience {
     },
     {
       company: 'Telefônica Educação Digital',
-      role: 'Programador',
+      role: 'Desenvolvedor Front-end',
       period: 'Agosto de 2015 | Julho de 2017',
       bullets: [
         'HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js',
@@ -77,7 +101,7 @@ export class Experience {
     },
     {
       company: 'RCS Sistemas',
-      role: 'Desenvolvedor de Sistemas Trainee',
+      role: 'Desenvolvedor de Sistemas CRM',
       period: 'Maio de 2015 | Julho de 2015',
       bullets: [
         'Force.com da Salesforce',
