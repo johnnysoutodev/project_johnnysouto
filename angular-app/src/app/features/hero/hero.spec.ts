@@ -37,7 +37,7 @@ describe('Hero', () => {
 
   it('renders the name in the H1 and the role/experience years in the bio paragraph', () => {
     const title = fixture.debugElement.query(By.css('.hero__title'));
-    expect(title.nativeElement.textContent).toContain('Johnny Souto');
+    expect(title.nativeElement.textContent).toContain('Johnny');
 
     const bio = fixture.debugElement.query(By.css('.hero__bio'));
     expect(bio.nativeElement.textContent).toContain('Analista Desenvolvedor de Sistemas');

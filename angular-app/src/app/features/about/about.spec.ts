@@ -49,7 +49,7 @@ describe('About', () => {
     expect(fullText).toContain('Gestão da Tecnologia da Informação');
     expect(fullText).toContain('Uninove');
     expect(fullText).toContain('Inglês intermediário');
-    expect(fullText).toContain('Casado e pai de um filho');
+    expect(fullText).toContain('Casado e pai do João Victor.');
   });
 
   it('renders the profile photo inside the picture block', () => {
@@ -60,8 +60,8 @@ describe('About', () => {
     expect(photo.nativeElement.getAttribute('alt')).toBe('Johnny Souto');
   });
 
-  it('renders the "About me" tag', () => {
+  it('renders the "Sobre mim" tag', () => {
     const tag = fixture.debugElement.query(By.css('app-tag'));
-    expect(tag.nativeElement.textContent.trim()).toBe('About me');
+    expect(tag.nativeElement.textContent.trim()).toBe('Sobre mim');
   });
 });

@@ -25,9 +25,9 @@ describe('Work', () => {
     expect(fixture.nativeElement.id).toBe('work');
   });
 
-  it('renders the "Work" tag', () => {
+  it('renders the "Projetos" tag', () => {
     const tag = fixture.debugElement.query(By.css('app-tag'));
-    expect(tag.nativeElement.textContent.trim()).toBe('Work');
+    expect(tag.nativeElement.textContent.trim()).toBe('Projetos');
   });
 
   it('renders exactly the 2 real projects (Pitcher, ProFuturo), not the 3 fictitious Figma cards', () => {
