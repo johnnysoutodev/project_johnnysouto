@@ -1,0 +1,67 @@
+// ScrollToTop — nao existe no Figma (secao 8, "tudo estatico" - sem scroll/interacao
+// documentada em lugar nenhum do arquivo). Decisao de UX/engenharia pura, a pedido do
+// Johnny (08/09/2026): botao flutuante que aparece depois de rolar (`scroll-to-top.ts`)
+// e volta ao topo com o mesmo scroll animado dos links de nav (`AnchorScrollService`).
+@use 'breakpoints';
+
+:host {
+  display: contents;
+}
+
+.scroll-to-top {
+  position: fixed;
+  right: var(--space-24);
+  bottom: var(--space-24);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--color-gray-default);
+  color: var(--color-gray-900);
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  // Escondido por opacidade (nao `display: none`) pra manter a transicao suave;
+  // `pointer-events: none` enquanto escondido evita clique/foco por teclado num botao
+  // invisivel (reforcado tambem via `[attr.tabindex]`/`[attr.aria-hidden]` no template).
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  // `:hover` tem mais especificidade que a `opacity: 0` base (0,2,0 vs 0,1,0) - sem o
+  // escopo em `&--visible` aqui, um toque mobile "grudava" o hover (nao existe mouse pra
+  // "destravar" - toque simula hover e ele fica ativo ate o usuario tocar em outro lugar,
+  // comportamento padrao de navegador mobile) e a opacidade de hover (0.88) vencia a
+  // opacidade de escondido (0) permanentemente, mesmo com `isVisible`/`aria-hidden`/
+  // `tabindex` todos corretos por baixo - o botao parecia nunca sumir, mas era só visual
+  // (achado real via QA do Johnny num dispositivo mobile real, 08/09/2026, depois de 2
+  // tentativas de correção em JS que não resolveram porque o bug nunca foi de JS).
+  // `@media (hover: hover)` reforça o mesmo cuidado pra qualquer dispositivo sem hover
+  // de verdade, nao só nesse caso especifico.
+  @media (hover: hover) {
+    &--visible:hover {
+      opacity: 0.88;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  @include breakpoints.desktop-up {
+    right: var(--space-48);
+    bottom: var(--space-48);
+  }
+}
