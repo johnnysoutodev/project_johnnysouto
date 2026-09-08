@@ -45,15 +45,18 @@
 
     <div class="hero__right">
       <!--
-        Composicao em camadas no lugar da foto (design-system.md secao 8.8): retangulo
-        de fundo deslocado atras + bloco frontal com borda branca. Sem foto real
-        disponivel (secao 10) - bloco neutro com iniciais "JS" no lugar do `<img>` de
-        placeholder do template.
+        Composicao em camadas (design-system.md secao 8.8): retangulo de fundo deslocado
+        atras + bloco frontal com borda branca contendo a foto real de Johnny.
       -->
       <div class="hero__pic-container">
         <div class="hero__pic-background" aria-hidden="true"></div>
         <div class="hero__pic">
-          <span class="hero__pic-initials" aria-hidden="true">JS</span>
+          <img
+            ngSrc="/assets/images/profile_johnnysouto.jpeg"
+            fill
+            priority
+            alt="Johnny Souto"
+          />
         </div>
       </div>
     </div>

@@ -141,21 +141,13 @@
   top: 0;
   left: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 280px;
   height: 320px;
+  overflow: hidden;
   border: 8px solid var(--color-gray-default);
-  // Placeholder neutro (design-system.md secao 10: sem foto real) - sempre via token de
-  // cor, nunca um valor fixo. `--color-gray-600` e decisao de implementacao (nao ha cor
-  // documentada pra esse slot no Figma, la e uma foto de verdade) - escolhido por manter
-  // contraste adequado com `--color-gray-default` nos dois temas (a escala de cinza se
-  // inverte no dark mode, secao 3, entao os dois tokens continuam opostos o bastante).
   background-color: var(--color-gray-600);
-}
 
-.hero__pic-initials {
-  @include typography.heading-h2-semibold;
-  color: var(--color-gray-default);
+  img {
+    object-fit: cover;
+  }
 }

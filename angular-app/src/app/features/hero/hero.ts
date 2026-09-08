@@ -21,8 +21,8 @@ export function calculateExperienceYears(
 
 /**
  * Hero — design-system.md secao 8.8. Duas colunas (`gap: 48px`): esquerda com
- * nome/cargo/bio + links sociais; direita com a composicao em camadas no lugar da foto
- * (secao 10: sem foto real disponivel — bloco neutro com iniciais no lugar do `<img>`).
+ * nome/cargo/bio + links sociais; direita com a composicao em camadas (retangulo de
+ * fundo + bloco frontal com a foto real de Johnny).
  *
  * Bloco "Location + Hire" da spec original (8.8) NAO entra aqui: nao ha dado real de
  * localizacao/disponibilidade no curriculo do Johnny, e a secao 10 (decisoes de

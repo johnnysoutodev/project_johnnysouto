@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { Tag } from '../../shared/components/tag/tag';
 import { calculateExperienceYears } from '../hero/hero';
 
@@ -24,7 +25,7 @@ import { calculateExperienceYears } from '../hero/hero';
  */
 @Component({
   selector: 'app-about',
-  imports: [Tag],
+  imports: [Tag, NgOptimizedImage],
   host: { id: 'about' },
   templateUrl: './about.html',
   styleUrl: './about.scss',

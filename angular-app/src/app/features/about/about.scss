@@ -98,15 +98,15 @@
   top: 0;
   right: 0;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 240px;
   height: 288px;
+  overflow: hidden;
   border: 8px solid var(--color-gray-50);
-  // Mesma decisao do Hero: token de cor (nao valor fixo) pro placeholder neutro, ja que
-  // o Figma nao define cor pra esse slot (la e uma foto de verdade).
   background-color: var(--color-gray-600);
+
+  img {
+    object-fit: cover;
+  }
 
   @include breakpoints.tablet-up {
     width: 320px;
@@ -117,13 +117,6 @@
     width: 400px;
     height: 480px;
   }
-}
-
-.about__pic-initials {
-  @include typography.heading-h2-semibold;
-  // Mesmo par de tokens do Hero (`--color-gray-default` sobre `--color-gray-600`) -
-  // os dois se invertem juntos no dark mode (secao 3), preservando o contraste.
-  color: var(--color-gray-default);
 }
 
 .about__content {

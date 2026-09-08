@@ -52,11 +52,12 @@ describe('About', () => {
     expect(fullText).toContain('Casado e pai de um filho');
   });
 
-  it('renders a neutral placeholder photo (no <img>), same treatment as the Hero (no real photo available)', () => {
-    expect(fixture.debugElement.query(By.css('img'))).toBeNull();
-
-    const initials = fixture.debugElement.query(By.css('.about__pic-initials'));
-    expect(initials.nativeElement.textContent.trim()).toBe('JS');
+  it('renders the profile photo inside the picture block', () => {
+    const photo = fixture.debugElement.query(By.css('.about__pic img'));
+    expect(photo.nativeElement.getAttribute('ng-src') ?? photo.nativeElement.src).toContain(
+      'photo_johnnysouto_01.jpg',
+    );
+    expect(photo.nativeElement.getAttribute('alt')).toBe('Johnny Souto');
   });
 
   it('renders the "About me" tag', () => {
