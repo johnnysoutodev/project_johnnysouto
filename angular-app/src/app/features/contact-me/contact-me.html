@@ -90,36 +90,22 @@
       <p class="contact-me__social-text">Você também pode me encontrar por aqui:</p>
 
       <!--
-        Os dois links abaixo usam o mesmo padrao (icone + texto num unico <a>, nao o
-        Icon Button) - a versao anterior tinha o GitHub como Icon Button so-icone colado
-        no texto do LinkedIn, sem nada separando os dois: dava a entender visualmente que
-        o icone pertencia ao link do LinkedIn (ficava ao lado do texto dele), quando na
-        verdade levava pro GitHub. Corrigido dando um rotulo visivel pro GitHub tambem
-        (mesmo texto do aria-label anterior) e gap maior entre os dois links.
+        Icon Button so-icone pros 2 links, mesmo padrao do Hero (08/09/2026, a pedido do
+        Johnny: agora que o LinkedIn tambem tem icone proprio, nao precisa mais do texto
+        da URL visivel ao lado - o icone sozinho ja deixa claro qual link e qual, sem a
+        ambiguidade que motivava o texto visivel antes de o LinkedIn ganhar icone).
       -->
       <div class="contact-me__links">
-        <a
-          class="contact-me__social-link"
-          [href]="githubUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <app-icon-button [href]="githubUrl" ariaLabel="GitHub de Johnny Souto (abre em nova aba)">
           <img ngSrc="/assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
-          github.com/johnnysoutodev
-        </a>
+        </app-icon-button>
 
-        <!--
-          LinkedIn sem icone (design-system.md secoes 8.12/10: nenhum icone de LinkedIn
-          existe no arquivo Figma, confirmado via search_design_system/get_metadata).
-        -->
-        <a
-          class="contact-me__social-link"
+        <app-icon-button
           [href]="linkedinUrl"
-          target="_blank"
-          rel="noopener noreferrer"
+          ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
         >
-          linkedin.com/in/johnnysouto
-        </a>
+          <img ngSrc="/assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+        </app-icon-button>
       </div>
     </div>
   </div>

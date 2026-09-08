@@ -52,12 +52,14 @@ describe('Hero', () => {
     expect(githubLink.nativeElement.getAttribute('target')).toBe('_blank');
   });
 
-  it('renders LinkedIn as a plain text link, not an Icon Button (no icon in the Figma file)', () => {
-    const linkedinLink = fixture.debugElement.query(By.css('.hero__linkedin-link'));
+  it('renders the LinkedIn icon button as a real external link', () => {
+    const linkedinLink = fixture.debugElement.query(
+      By.css('a.icon-button[aria-label^="LinkedIn"]'),
+    );
     expect(linkedinLink.nativeElement.getAttribute('href')).toBe(
       'https://www.linkedin.com/in/johnnysouto',
     );
-    expect(linkedinLink.nativeElement.textContent.trim()).toBe('LinkedIn');
+    expect(linkedinLink.nativeElement.getAttribute('target')).toBe('_blank');
   });
 
   it('does not render a location/availability badge (no real data, design-system.md secao 10)', () => {

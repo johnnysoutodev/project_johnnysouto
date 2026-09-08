@@ -41,10 +41,11 @@ export class Hero {
 
   /**
    * LinkedIn real do Johnny — sem icone equivalente no Figma (design-system.md secoes
-   * 8.12/10, confirmado ausente no arquivo). Renderizado como link de texto simples (ver
-   * `hero.html`), em vez de um SVG generico "emprestado" de fora do Figma dentro de um
-   * Icon Button: opcao mais simples e acessivel, sem inventar um asset visual que o
-   * design nao definiu.
+   * 8.12/10, confirmado ausente no arquivo). Ficou como link de texto simples ate
+   * 08/09/2026, quando o Johnny pediu um icone pra ficar no mesmo padrao visual do
+   * GitHub — desenhado do zero no mesmo estilo dos icones existentes (outline, 24x24,
+   * `icon-social-linkedin.svg`), nao "emprestado" de fora do Figma sem critério.
+   * Renderizado como Icon Button (ver `hero.html`), igual ao GitHub.
    */
   protected readonly linkedinUrl = 'https://www.linkedin.com/in/johnnysouto';
 

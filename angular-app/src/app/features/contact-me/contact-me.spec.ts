@@ -58,27 +58,24 @@ describe('ContactMe', () => {
     expect(phoneLink.nativeElement.textContent.trim()).toBe('+55 11 99703-7799');
   });
 
-  it('renders GitHub as a link with icon + visible label (not icon-only, so it cannot be mistaken for the LinkedIn link next to it)', () => {
-    const socialLinks = fixture.debugElement.queryAll(
-      By.css('.contact-me__links a.contact-me__social-link'),
-    );
+  it('renders GitHub and LinkedIn as icon-only Icon Button links (real hrefs, real icons)', () => {
+    const socialLinks = fixture.debugElement.queryAll(By.css('.contact-me__links a.icon-button'));
+    expect(socialLinks.length).toBe(2);
+
     const githubLink = socialLinks[0];
     expect(githubLink.nativeElement.getAttribute('href')).toBe('https://github.com/johnnysoutodev');
     expect(githubLink.nativeElement.getAttribute('target')).toBe('_blank');
-    expect(githubLink.nativeElement.textContent.trim()).toBe('github.com/johnnysoutodev');
-    expect(githubLink.nativeElement.querySelector('img')).toBeTruthy();
-  });
-
-  it('renders LinkedIn as a plain text link, no icon (none in the Figma file)', () => {
-    const socialLinks = fixture.debugElement.queryAll(
-      By.css('.contact-me__links a.contact-me__social-link'),
+    const githubIcon = githubLink.nativeElement.querySelector('img');
+    expect(githubIcon.getAttribute('ng-src') ?? githubIcon.src).toContain(
+      'icon-social-github.svg',
     );
+
     const linkedinLink = socialLinks[1];
     expect(linkedinLink.nativeElement.getAttribute('href')).toBe(
       'https://www.linkedin.com/in/johnnysouto',
     );
-    expect(linkedinLink.nativeElement.textContent.trim()).toBe('linkedin.com/in/johnnysouto');
-    expect(linkedinLink.nativeElement.querySelector('img')).toBeFalsy();
+    expect(linkedinLink.nativeElement.getAttribute('target')).toBe('_blank');
+    expect(linkedinLink.nativeElement.querySelector('img')).toBeTruthy();
   });
 
   it('copies the given value to the clipboard and reverts the "copied" feedback after a few seconds', async () => {

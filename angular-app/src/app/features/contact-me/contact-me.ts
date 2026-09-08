@@ -15,10 +15,14 @@ type CopyField = 'email' | 'phone';
  *
  * Conteudo real (secao 10 + pedido desta tarefa): email `johnnyjns@gmail.com` (icone
  * `icon-mail`); telefone `+55 11 99703-7799` como link `tel:+5511997037799` (icone
- * `icon-phone`); GitHub `github.com/johnnysoutodev` (icone
- * `icon-social-github`, mesmo padrao ja usado no Hero - Icon Button linkando pra fora);
- * LinkedIn `linkedin.com/in/johnnysouto` como link de texto simples, SEM icone (decisao
- * ja confirmada em 8.12/10 - nao ha icone de LinkedIn em lugar nenhum do arquivo Figma).
+ * `icon-phone`); GitHub (`github.com/johnnysoutodev`) e LinkedIn
+ * (`linkedin.com/in/johnnysouto`) como Icon Button so-icone, mesmo padrao do Hero -
+ * `icon-social-github`/`icon-social-linkedin` (esse ultimo desenhado do zero no mesmo
+ * estilo dos existentes, 08/09/2026, ja que o Figma nao tem um pra LinkedIn, confirmado
+ * em 8.12/10). Texto da URL visivel ao lado do icone (versao anterior a 08/09/2026)
+ * removido a pedido do Johnny depois que os 2 links passaram a ter icone proprio - a
+ * ambiguidade que motivava o texto (icone do GitHub colado no texto do LinkedIn, sem
+ * nada separando os dois - ver `contact-me.html`) deixou de existir.
  *
  * Email/telefone viram links reais (`mailto:`/`tel:`) - decisao de implementacao por
  * convencao (nao uma spec extraida do 8.12, que so documenta o texto como conteudo

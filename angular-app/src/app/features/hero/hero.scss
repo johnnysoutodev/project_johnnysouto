@@ -79,31 +79,11 @@
 .hero__links {
   display: flex;
   align-items: center;
-  // `--space-8` (gap icone+texto, design-system.md secao 2) em vez do `--space-4`
-  // documentado pra "gap entre icones sociais" - aqui a linha mistura um Icon Button
-  // (so icone) com um link de texto (LinkedIn), mais proximo do padrao "icone+texto"
-  // do que do padrao "varios icones lado a lado" que o valor de 4px descreve.
-  gap: var(--space-8);
-}
-
-.hero__linkedin-link {
-  @include typography.body2-medium;
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-6) var(--space-16);
-  border-radius: var(--radius-sm);
-  color: var(--color-gray-600);
-  text-decoration: none;
-  transition: opacity 0.15s ease;
-
-  &:hover {
-    opacity: 0.72;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-gray-900);
-    outline-offset: 2px;
-  }
+  // `--space-4` (gap entre icones sociais, design-system.md secao 2) - os 2 links
+  // (GitHub, LinkedIn) agora sao Icon Button so-icone (08/09/2026: LinkedIn ganhou um
+  // icone desenhado no mesmo estilo, deixou de ser link de texto), entao o gap "varios
+  // icones lado a lado" se aplica de verdade.
+  gap: var(--space-4);
 }
 
 .hero__right {

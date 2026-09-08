@@ -104,30 +104,14 @@
   color: var(--color-gray-600);
 }
 
+// Icon Button so-icone (08/09/2026: antes icone+texto/URL visivel - com os 2 links
+// tendo icone proprio agora, o texto da URL virou redundante, removido a pedido do
+// Johnny). `--space-4` (gap entre icones sociais, design-system.md secao 2), mesmo
+// valor ja usado no `.hero__links` equivalente.
 .contact-me__links {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  // Gap maior que o espacamento interno de um unico chip (--space-8, abaixo) - precisa
-  // ficar visualmente claro que GitHub e LinkedIn sao 2 links diferentes, nao um so.
-  gap: var(--space-24);
-}
-
-// Icone (quando existe) + texto num unico <a> - mesmo tratamento pros dois links (o
-// GitHub tem icone ja limpo/corrigido, seção 6 do design-system.md; o LinkedIn nao tem
-// icone no Figma, secoes 8.12/10, entao fica so o texto).
-.contact-me__social-link {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-8);
-  @include typography.body2-medium;
-  color: var(--color-gray-600);
-  text-decoration: none;
-
-  &:hover,
-  &:focus-visible {
-    color: var(--color-gray-900);
-    text-decoration: underline;
-  }
+  gap: var(--space-4);
 }

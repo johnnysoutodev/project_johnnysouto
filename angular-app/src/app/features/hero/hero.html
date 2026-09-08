@@ -30,18 +30,17 @@
           </app-icon-button>
 
           <!--
-            LinkedIn nao tem icone no Figma (ver comentario em hero.ts) - link de texto
-            simples em vez de Icon Button, para nao inventar um SVG fora do que o design
-            ja definiu.
+            LinkedIn nao tinha icone exportado do Figma (ver comentario em hero.ts) - um
+            SVG novo foi desenhado no mesmo estilo dos icones existentes (outline,
+            24x24, mesma cor fixa `#4B5563`), pra manter o padrao visual dos 2 links
+            lado a lado como Icon Button (08/09/2026, a pedido do Johnny).
           -->
-          <a
-            class="hero__linkedin-link"
+          <app-icon-button
             [href]="linkedinUrl"
-            target="_blank"
-            rel="noopener noreferrer"
+            ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
           >
-            LinkedIn
-          </a>
+            <img ngSrc="/assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+          </app-icon-button>
         </div>
       </div>
     </div>
