@@ -31,7 +31,7 @@ describe('Testimonials', () => {
     const names = cards.map((card) =>
       card.query(By.css('.testimonials__name')).nativeElement.textContent.trim(),
     );
-    expect(names).toEqual(['Alexandre Franco', 'Raphael Simon']);
+    expect(names).toEqual(['Alexandre Franco', 'Raphaela Simon']);
   });
 
   it('renders each real photo inside the avatar circle (not the generic icon)', () => {
@@ -50,7 +50,7 @@ describe('Testimonials', () => {
     expect(
       raphaelPhoto.nativeElement.getAttribute('ng-src') ?? raphaelPhoto.nativeElement.src,
     ).toContain('profile_testmonial_02.png');
-    expect(raphaelPhoto.nativeElement.getAttribute('alt')).toBe('Raphael Simon');
+    expect(raphaelPhoto.nativeElement.getAttribute('alt')).toBe('Raphaela Simon');
   });
 
   it('renders each card with quote + name + role', () => {

@@ -58,9 +58,9 @@ export class Testimonials {
         'firme e competência."',
     },
     {
-      name: 'Raphael Simon',
+      name: 'Raphaela Simon',
       role: 'Coordenadora da Totvs',
-      photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphael Simon' },
+      photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
       quote:
         '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +
         'competência técnica, postura colaborativa e senso de responsabilidade ' +
