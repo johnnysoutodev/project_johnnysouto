@@ -1,17 +1,48 @@
 // Header — design-system.md secao 8.1. Altura fixa (68px no Figma, resultado natural do
-// padding + conteudo aqui, sem forcar `height` explicito), sem sticky/scroll (nao
-// confirmavel no Figma) e sem menu mobile dedicado ainda (fica para outra fatia).
+// padding + conteudo aqui, sem forcar `height` explicito).
 @use 'typography';
 @use 'layout';
 @use 'breakpoints';
 
+// `display: contents` (nao `block`) - achado ao implementar o sticky (08/09/2026): com
+// `block`, `app-header` (o host, so 68px de altura - o tamanho do proprio `.header`
+// dentro) vira a "containing block" efetiva do `.header` sticky, e como esse box so tem
+// 68px, o sticky nao tem NENHUM espaco pra "grudar" (o range de scroll em que o
+// elemento poderia ficar preso e zero) - o header simplesmente rolava junto com a
+// pagina, sem nunca sticar. `display: contents` remove o wrapper `app-header` da arvore
+// de layout, entao `.header` passa a ser efetivamente filho direto de `app-root` (agora
+// com `display: block` global, ver `styles.scss`) - um container do tamanho da pagina
+// inteira, dando ao sticky o espaco de verdade que ele precisa. Mesmo padrao ja usado
+// no `icon-button.scss`/`.header__theme-toggle` deste projeto pra wrappers que nao
+// devem gerar caixa propria no layout.
 :host {
-  display: block;
+  display: contents;
 }
 
+// Sticky + blur reativo ao scroll (08/09/2026, a pedido do Johnny - decisao de
+// UX/engenharia, nao spec do Figma, que "nao confirma" comportamento de scroll pro
+// Header, ver header.ts). `z-index: 40` fica abaixo do menu mobile (100,
+// mobile-menu.scss) - o overlay sempre cobre o header quando aberto. No topo da pagina
+// (`.header` sem `--scrolled`) o fundo continua o mesmo solido de sempre
+// (`--color-gray-default`) - so DEPOIS de rolar (`isScrolled()`, `header.ts`) o fundo
+// vira semi-transparente com blur atras + sombra, dando profundidade sem mudar a
+// aparencia no primeiro paint (sem risco de flash, ja que comeca solido).
 .header {
   @include layout.bar-section-padding(var(--space-header-padding-y));
+  position: sticky;
+  top: 0;
+  z-index: 40;
   background-color: var(--color-gray-default);
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &--scrolled {
+    background-color: var(--color-header-scrolled-bg);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 .header__container {

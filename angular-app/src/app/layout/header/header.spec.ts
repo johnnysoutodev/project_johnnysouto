@@ -1,6 +1,7 @@
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from './header';
 import { MobileMenu } from '../mobile-menu/mobile-menu';
 
@@ -95,5 +96,60 @@ describe('Header', () => {
 
       expect(menuToggleButton().getAttribute('aria-expanded')).toBe('false');
     });
+  });
+
+  describe('sticky + blur ao rolar', () => {
+    function scrollTo(y: number) {
+      vi.spyOn(window, 'scrollY', 'get').mockReturnValue(y);
+      window.dispatchEvent(new Event('scroll'));
+      fixture.detectChanges();
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('starts without the "scrolled" class at the top of the page', () => {
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('.header')).nativeElement.classList).not.toContain(
+        'header--scrolled',
+      );
+    });
+
+    it('adds the "scrolled" class after passing the scroll threshold', () => {
+      fixture.detectChanges();
+
+      scrollTo(100);
+
+      expect(fixture.debugElement.query(By.css('.header')).nativeElement.classList).toContain(
+        'header--scrolled',
+      );
+    });
+
+    it('removes the "scrolled" class again when scrolling back up to the top', () => {
+      fixture.detectChanges();
+      scrollTo(100);
+
+      scrollTo(0);
+
+      expect(fixture.debugElement.query(By.css('.header')).nativeElement.classList).not.toContain(
+        'header--scrolled',
+      );
+    });
+  });
+
+});
+
+describe('Header - sticky + blur ao rolar - SSR', () => {
+  it('nao acessa "window" na plataforma servidor', async () => {
+    await TestBed.configureTestingModule({
+      imports: [Header],
+      providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
+    }).compileComponents();
+
+    const serverFixture = TestBed.createComponent(Header);
+    expect(() => serverFixture.detectChanges()).not.toThrow();
+    expect(serverFixture.componentInstance['isScrolled']()).toBe(false);
   });
 });
