@@ -99,7 +99,7 @@ describe('ScrollToTop', () => {
     fixture.detectChanges();
     const scrollSpy = vi
       .spyOn(TestBed.inject(AnchorScrollService), 'scroll')
-      .mockImplementation(() => {});
+      .mockImplementation(() => undefined);
 
     expect(link().nativeElement.getAttribute('href')).toBe('#top');
 
@@ -111,7 +111,7 @@ describe('ScrollToTop', () => {
   it('esconde o botao direto no clique, sem depender do proximo frame de polling chegar (mobile, 08/09/2026)', () => {
     fixture.detectChanges();
     scrollTo(500);
-    vi.spyOn(TestBed.inject(AnchorScrollService), 'scroll').mockImplementation(() => {});
+    vi.spyOn(TestBed.inject(AnchorScrollService), 'scroll').mockImplementation(() => undefined);
     expect(link().nativeElement.classList).toContain('scroll-to-top--visible');
 
     link().triggerEventHandler('click', new MouseEvent('click', { button: 0 }));
@@ -127,7 +127,7 @@ describe('ScrollToTop', () => {
     // que tem `metaKey` setado (equivalente ao que aquela checagem removida rejeitaria).
     fixture.detectChanges();
     scrollTo(500);
-    vi.spyOn(TestBed.inject(AnchorScrollService), 'scroll').mockImplementation(() => {});
+    vi.spyOn(TestBed.inject(AnchorScrollService), 'scroll').mockImplementation(() => undefined);
     expect(link().nativeElement.classList).toContain('scroll-to-top--visible');
 
     link().triggerEventHandler('click', new MouseEvent('click', { metaKey: true }));
