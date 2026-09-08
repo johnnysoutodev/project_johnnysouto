@@ -35,7 +35,7 @@ export class IconButton {
 
   /**
    * Link externo opcional (ex.: redes sociais no Hero/Contact me, acao de projeto no
-   * Work - design-system.md secoes 8.3/8.8). Quando definido, o componente renderiza um
+   * Project - design-system.md secoes 8.3/8.8). Quando definido, o componente renderiza um
    * `<a>` em vez de `<button>` - colocar um `<button>` dentro de um `<a>` (ou vice-versa)
    * seria conteudo interativo aninhado (HTML invalido); trocar o elemento raiz resolve
    * isso sem duplicar o markup/estilo do botao de icone para cada uso que precisa linkar.

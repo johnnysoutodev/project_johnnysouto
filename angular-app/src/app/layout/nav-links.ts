@@ -4,7 +4,8 @@ export interface NavLink {
 }
 
 /**
- * 4 links de navegacao (design-system.md secao 8.1: About/Work/Testimonials/Contact),
+ * 4 links de navegacao (design-system.md secao 8.1: About/Work/Testimonials/Contact - o
+ * "Work" da spec e o `#project` abaixo, componente Angular renomeado em 08/09/2026),
  * mesma ordem/rotulos reaproveitados no menu mobile (secao 8.13, "mesmos rotulos/ordem
  * da navegacao do Header desktop"). Fonte unica compartilhada entre `Header` (nav
  * horizontal, escondida abaixo do desktop) e `MobileMenu` (overlay, visivel abaixo do
@@ -12,7 +13,7 @@ export interface NavLink {
  */
 export const NAV_LINKS: readonly NavLink[] = [
   { label: 'Sobre', href: '#about' },
-  { label: 'Projetos', href: '#work' },
+  { label: 'Projetos', href: '#project' },
   { label: 'Depoimentos', href: '#testimonials' },
   { label: 'Contato', href: '#contact' },
 ];

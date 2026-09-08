@@ -1,7 +1,9 @@
-// Work — design-system.md secao 8.5 (card de projeto). Unica secao sem o inset extra de
-// 32px do Container (secao 2) - aqui o container tem `padding-x: 64px` proprio (1280px -
-// 2*64px = 1152px, a largura real do card), entao NAO usa o mixin `layout.content-container`
-// (que aplicaria os 32px padrao das outras 6 secoes de conteudo).
+// Project (renomeado de "Work" em 08/09/2026, a pedido do Johnny) — design-system.md
+// secao 8.5 (card de projeto, node Figma continua se chamando "Work" na ferramenta de
+// design). Unica secao sem o inset extra de 32px do Container (secao 2) - aqui o
+// container tem `padding-x: 64px` proprio (1280px - 2*64px = 1152px, a largura real do
+// card), entao NAO usa o mixin `layout.content-container` (que aplicaria os 32px padrao
+// das outras 6 secoes de conteudo).
 @use 'typography';
 @use 'layout';
 @use 'breakpoints';
@@ -10,12 +12,12 @@
   display: block;
 }
 
-.work {
+.project {
   @include layout.section-padding;
   background-color: var(--color-gray-default);
 }
 
-.work__container {
+.project__container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +30,7 @@
   }
 }
 
-.work__heading {
+.project__heading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,21 +38,21 @@
   text-align: center;
 }
 
-.work__subtitle {
+.project__subtitle {
   @include typography.subtitle-normal;
   max-width: 576px;
   margin: 0;
   color: var(--color-gray-600);
 }
 
-.work__list {
+.project__list {
   display: flex;
   flex-direction: column;
   gap: var(--space-48);
   width: 100%;
 }
 
-.work__card {
+.project__card {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -65,15 +67,31 @@
   }
 }
 
-// Lado da imagem: bloco neutro (design-system.md secao 10 - sem thumbnail real
-// disponivel), mantendo cor de fundo/borda/radius/sombra da spec 8.5.
-.work__image {
+// Lado da imagem: logo do projeto (08/09/2026) centralizado sobre o bloco neutro
+// original (design-system.md secao 10 - sem thumbnail/screenshot real disponivel),
+// mantendo cor de fundo/borda/radius/sombra da spec 8.5. `object-fit: contain` porque o
+// logo (fonte externa, aspect ratio variavel) nao deve ser cortado como uma foto seria.
+.project__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   min-height: 200px;
+  padding: var(--space-32);
   border: 1px solid var(--color-gray-100);
   border-radius: var(--radius-md);
   background-color: var(--color-gray-50);
   box-shadow: var(--shadow-lg);
+
+  img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    // `--logo-max-height` setada no `.project__image` pai quando o projeto define
+    // `logo.displayMaxHeight` (herdada via custom property) - fallback 160px.
+    max-height: var(--logo-max-height, 160px);
+    object-fit: contain;
+  }
 
   @include breakpoints.desktop-up {
     flex: 1 1 0%;
@@ -83,7 +101,7 @@
   }
 }
 
-.work__content {
+.project__content {
   display: flex;
   flex: 1 1 0%;
   flex-direction: column;
@@ -98,36 +116,36 @@
 // entao foi agrupado bem junto ao titulo (mesmo par tipografico da Experience:
 // `subtitle-semibold` + `body2-normal`/`--color-gray-700`) em vez de virar um 5o bloco
 // solto com o mesmo espacamento dos outros - decisao de conteudo/UI, nao extraida do Figma.
-.work__heading-group {
+.project__heading-group {
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
 }
 
-.work__title {
+.project__title {
   @include typography.subtitle-semibold;
   margin: 0;
   color: var(--color-gray-900);
 }
 
-.work__period {
+.project__period {
   @include typography.body2-normal;
   margin: 0;
   color: var(--color-gray-700);
 }
 
-.work__description {
+.project__description {
   @include typography.body2-normal;
   margin: 0;
   color: var(--color-gray-600);
 }
 
-.work__tags {
+.project__tags {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-8);
 }
 
-.work__actions {
+.project__actions {
   display: flex;
 }

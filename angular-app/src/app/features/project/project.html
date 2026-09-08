@@ -1,0 +1,88 @@
+<section class="project">
+  <div class="project__container">
+    <div class="project__heading">
+      <app-tag>Projetos</app-tag>
+      <p class="project__subtitle">Alguns dos projetos dos quais fiz parte:</p>
+    </div>
+
+    <div class="project__list">
+      @for (project of projects; track project.name) {
+        <article class="project__card">
+          <!--
+            Lado da imagem: logo do projeto (fornecido pelo Johnny, 08/09/2026) centralizado
+            sobre o bloco neutro (design-system.md secao 10: projetos corporativos internos,
+            sem thumbnail/screenshot real disponivel) - sem `<img>` de placeholder ficticio
+            do template original.
+          -->
+          <!--
+            `--logo-max-height` (custom property, le pelo `max-height` da regra CSS do
+            `<img>` em `project.scss`) fica no `<div>`, nao na `<img>`: o
+            `NgOptimizedImage` limpa qualquer `style.*` setado direto no elemento que ele
+            gerencia (confirmado via inspecao do DOM renderizado - um binding direto no
+            `<img>` simplesmente nao aparecia no elemento final), entao o override
+            precisa vir de um elemento pai via heranca de custom property.
+          -->
+          <div
+            class="project__image"
+            [style.background-color]="project.imageBackground ?? null"
+            [style.--logo-max-height]="
+              project.logo?.displayMaxHeight ? project.logo!.displayMaxHeight + 'px' : null
+            "
+          >
+            @if (project.logo; as logo) {
+              <img
+                [ngSrc]="logo.src"
+                [width]="logo.width"
+                [height]="logo.height"
+                [alt]="'Logo do projeto ' + project.name"
+              />
+            }
+          </div>
+
+          <div class="project__content">
+            <div class="project__heading-group">
+              <h3 class="project__title">{{ project.name }}</h3>
+              <p class="project__period">{{ project.period }}</p>
+            </div>
+            <p class="project__description">{{ project.description }}</p>
+
+            <div class="project__tags">
+              @for (tag of project.tags; track tag) {
+                <app-tag>{{ tag }}</app-tag>
+              }
+            </div>
+
+            @if (project.actionHref) {
+              <div class="project__actions">
+                <app-icon-button [href]="project.actionHref" [ariaLabel]="project.actionAriaLabel!">
+                  <!--
+                    Icone generico de "link externo" - nao ha icone especifico exportado
+                    do Figma pra essa acao (design-system.md secao 6/8.5 nao cobrem o
+                    icone interno do Icon Button do card de projeto), mesma convencao ja
+                    usada no icone de tema/menu do Header (placeholder inline comentado
+                    como tal).
+                  -->
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <path d="M15 3h6v6" />
+                    <path d="M10 14 21 3" />
+                  </svg>
+                </app-icon-button>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

@@ -5,7 +5,7 @@ import { calculateExperienceYears } from '../hero/hero';
 
 /**
  * About — design-system.md secao 8.9. Foto sempre a esquerda, bloco de texto (heading +
- * bio + checklist) sempre a direita, sem alternancia de lado (diferente do card do Work,
+ * bio + checklist) sempre a direita, sem alternancia de lado (diferente do card do Project,
  * secao 8.5, que alterna). `host: { id: 'about' }` pro anchor `#about` ja referenciado
  * pela navegacao do Header (`layout/header/header.ts`).
  *

@@ -13,11 +13,11 @@ interface Testimonial {
  * de raiz/heading documentada (ao contrario de About/Skills/Experience/Contact me,
  * secoes 8.9-8.12) - o heading abaixo (Tag + Subtitle/Normal centralizado) segue o
  * MESMO padrao repetido nas outras secoes de conteudo com heading centralizado, mesma
- * inferencia ja registrada no Work (`features/work/work.ts`), nao uma extracao formal
- * do node `316:510`. Fundo (`--color-gray-50`) tambem por inferencia: o Figma nao
+ * inferencia ja registrada no Project (`features/project/project.ts`), nao uma extracao
+ * formal do node `316:510`. Fundo (`--color-gray-50`) tambem por inferencia: o Figma nao
  * documenta a cor de fundo da RAIZ da secao (so a do card, branco, replicada em
  * `testimonials.scss`), mas o padrao alternado ja confirmado nas outras secoes (Hero
- * branco / About cinza / Skills branco / Experience cinza / Work branco, ja
+ * branco / About cinza / Skills branco / Experience cinza / Project branco, ja
  * implementado) aponta pra Testimonials cinza, fechando a sequencia com Contact me
  * (branco, confirmado na spec 8.12) e Footer (cinza, 8.2).
  * `host: { id: 'testimonials' }` para a ancora `#testimonials` ja referenciada pela
