@@ -1,0 +1,48 @@
+// Icon Button — design-system.md secao 8.3.
+// Duas variantes de tamanho (36x36 "default" / 44x44 "large"), padding 6px e
+// border-radius 8px iguais nas duas, fundo transparente, hug contents nos dois eixos
+// (secao 9.2: sem width/height fixos no Figma — o tamanho final e padding + icone).
+//
+// O elemento projetado via `ng-content` (SVG/img) deve usar `width/height:
+// var(--icon-button-icon-size)` para ficar coerente com a variante escolhida (24px no
+// "default", 32px no "large") — o componente so expoe a variavel, nao forca a marcacao
+// interna, ja que o icone real varia por instancia (tema/menu, redes sociais, copiar...).
+
+:host {
+  display: contents;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-icon-button-padding);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  --icon-button-icon-size: 24px;
+
+  // Hover/active/focus: NAO confirmavel no Figma (design-system.md secao 8.3 — nenhum
+  // frame estatico com state "Hover"/"Active" foi encontrado). Convencao sensata do
+  // projeto (opacidade sutil), nao uma spec extraida do Figma.
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:active {
+    opacity: 0.56;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+}
+
+.icon-button--large {
+  --icon-button-icon-size: 32px;
+}

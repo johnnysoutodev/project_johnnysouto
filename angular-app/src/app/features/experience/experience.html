@@ -1,0 +1,55 @@
+<section class="experience">
+  <div class="experience__container">
+    <div class="experience__heading">
+      <app-tag>Experiência profissional</app-tag>
+      <p class="experience__subtitle">
+        Um resumo rápido das minhas experiências profissionais:
+      </p>
+    </div>
+
+    <ol class="experience__list">
+      @for (item of items; track item.company) {
+        <li>
+          <article class="experience__item">
+            <!--
+              Slot de largura fixa (design-system.md secao 8.6: logo 102x28) - garante que
+              a coluna de conteudo comece sempre na mesma posicao X, seja logo (aspect
+              ratio variavel) ou texto (RCS, sem logo disponivel).
+            -->
+            <div class="experience__logo-slot">
+              @if (item.logo; as logo) {
+                <img
+                  class="experience__logo"
+                  [ngSrc]="logo.src"
+                  [width]="logo.width"
+                  [height]="logo.height"
+                  [style.max-height.px]="logo.displayHeight ?? null"
+                  [style.max-width.px]="logo.displayWidth ?? null"
+                  [alt]="item.company"
+                />
+              } @else {
+                <span class="experience__company">{{ item.company }}</span>
+              }
+            </div>
+
+            <div class="experience__positions">
+              @for (position of item.positions; track position.role + position.period) {
+                <div class="experience__position">
+                  <div class="experience__position-header">
+                    <h3 class="experience__role">{{ position.role }}</h3>
+                    <span class="experience__period">{{ position.period }}</span>
+                  </div>
+                  <ul class="experience__bullets">
+                    @for (bullet of position.bullets; track bullet) {
+                      <li>{{ bullet }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </article>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

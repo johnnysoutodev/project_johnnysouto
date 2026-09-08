@@ -1,0 +1,199 @@
+// Header — design-system.md secao 8.1. Altura fixa (68px no Figma, resultado natural do
+// padding + conteudo aqui, sem forcar `height` explicito).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+// `display: contents` (nao `block`) - achado ao implementar o sticky (08/09/2026): com
+// `block`, `app-header` (o host, so 68px de altura - o tamanho do proprio `.header`
+// dentro) vira a "containing block" efetiva do `.header` sticky, e como esse box so tem
+// 68px, o sticky nao tem NENHUM espaco pra "grudar" (o range de scroll em que o
+// elemento poderia ficar preso e zero) - o header simplesmente rolava junto com a
+// pagina, sem nunca sticar. `display: contents` remove o wrapper `app-header` da arvore
+// de layout, entao `.header` passa a ser efetivamente filho direto de `app-root` (agora
+// com `display: block` global, ver `styles.scss`) - um container do tamanho da pagina
+// inteira, dando ao sticky o espaco de verdade que ele precisa. Mesmo padrao ja usado
+// no `icon-button.scss`/`.header__theme-toggle` deste projeto pra wrappers que nao
+// devem gerar caixa propria no layout.
+:host {
+  display: contents;
+}
+
+// Sticky + blur reativo ao scroll (08/09/2026, a pedido do Johnny - decisao de
+// UX/engenharia, nao spec do Figma, que "nao confirma" comportamento de scroll pro
+// Header, ver header.ts). `z-index: 40` fica abaixo do menu mobile (100,
+// mobile-menu.scss) - o overlay sempre cobre o header quando aberto. No topo da pagina
+// (`.header` sem `--scrolled`) o fundo continua o mesmo solido de sempre
+// (`--color-gray-default`) - so DEPOIS de rolar (`isScrolled()`, `header.ts`) o fundo
+// vira semi-transparente com blur atras + sombra, dando profundidade sem mudar a
+// aparencia no primeiro paint (sem risco de flash, ja que comeca solido).
+.header {
+  @include layout.bar-section-padding(var(--space-header-padding-y));
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: var(--color-gray-default);
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &--scrolled {
+    background-color: var(--color-header-scrolled-bg);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+.header__container {
+  @include layout.content-container;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+
+  @include breakpoints.desktop-up {
+    gap: var(--space-24);
+  }
+}
+
+.header__logo {
+  @include typography.heading-h3-semibold;
+  color: var(--color-gray-900);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header__logo-short {
+  display: inline;
+}
+
+.header__logo-full {
+  display: none;
+}
+
+@include breakpoints.desktop-up {
+  .header__logo-short {
+    display: none;
+  }
+
+  .header__logo-full {
+    display: inline;
+  }
+}
+
+// Navegacao e divider: escondidos abaixo do desktop nesta fatia, ja que o Figma prve um
+// menu mobile dedicado (overlay) em vez da nav horizontal — implementar esse overlay e
+// escopo de outra fatia da Fase 2, entao por ora so o layout desktop da nav e mostrado.
+.header__nav {
+  display: none;
+  align-items: center;
+  gap: var(--space-24);
+
+  @include breakpoints.desktop-up {
+    display: flex;
+  }
+}
+
+.header__nav-link {
+  @include typography.body2-medium;
+  color: var(--color-gray-600);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-gray-900);
+  }
+}
+
+.header__divider {
+  display: none;
+  width: 1px;
+  align-self: stretch;
+  background-color: var(--color-gray-200);
+
+  @include breakpoints.desktop-up {
+    display: block;
+  }
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  flex-shrink: 0;
+}
+
+.header__cta {
+  @include typography.body2-medium;
+  display: none;
+  padding: var(--space-6) var(--space-16);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-900);
+  color: var(--color-gray-50);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  @include breakpoints.desktop-up {
+    display: inline-flex;
+  }
+}
+
+// Botao de hamburguer (abre o menu mobile, layout/mobile-menu/) — visivel por padrao
+// (mobile-first) e escondido a partir do desktop, ou seja, equivalente a combinar
+// `breakpoints.mobile-only` + `breakpoints.tablet-only` (o oposto exato de onde
+// `.header__nav` aparece, acima) sem precisar de 2 media queries separadas.
+.header__menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gray-900);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:active {
+    opacity: 0.56;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  @include breakpoints.desktop-up {
+    display: none;
+  }
+}
+
+.header__right {
+  display: flex;
+  align-items: stretch;
+  margin-left: auto;
+  gap: var(--space-16);
+
+  @include breakpoints.desktop-up {
+    gap: var(--space-24);
+  }
+}
+
+.header__theme-toggle {
+  display: none;
+
+  @include breakpoints.desktop-up {
+    display: contents;
+  }
+}

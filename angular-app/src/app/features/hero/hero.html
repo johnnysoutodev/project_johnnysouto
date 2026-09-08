@@ -1,0 +1,66 @@
+<section class="hero">
+  <div class="hero__container">
+    <div class="hero__left">
+      <div class="hero__content">
+        <!-- `&nbsp;` antes do emoji (nao um espaco normal) - impede o navegador de
+             quebrar linha bem antes do 👋 num viewport estreito, deixando o emoji
+             sozinho na linha seguinte (achado do Johnny, 08/09/2026). -->
+        <h1 class="hero__title">Olá, eu sou o Johnny&nbsp;👋</h1>
+        <p class="hero__bio">
+          <!--
+            RASCUNHO a revisar (design-system.md secao 10) - bio redigida a partir do
+            cargo real (Analista Desenvolvedor de Sistemas) e do tempo de experiencia
+            calculado a partir da primeira experiencia real documentada (Nielsen do
+            Brasil, Jan/2006). Nao e texto literal do curriculo nem do Figma (que so
+            tinha uma bio placeholder de pessoa fictícia) - precisa de revisao do Johnny
+            antes de ir pra producao.
+          -->
+          Analista Desenvolvedor de Sistemas com mais de {{ experienceYears }} anos de
+          experiência na análise e desenvolvimento de sistemas corporativos e aplicações web.
+        </p>
+      </div>
+
+      <div class="hero__actions">
+        <div class="hero__links">
+          <app-icon-button
+            [href]="githubUrl"
+            ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
+          >
+            <img ngSrc="/assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+          </app-icon-button>
+
+          <!--
+            LinkedIn nao tinha icone exportado do Figma (ver comentario em hero.ts) - um
+            SVG novo foi desenhado no mesmo estilo dos icones existentes (outline,
+            24x24, mesma cor fixa `#4B5563`), pra manter o padrao visual dos 2 links
+            lado a lado como Icon Button (08/09/2026, a pedido do Johnny).
+          -->
+          <app-icon-button
+            [href]="linkedinUrl"
+            ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
+          >
+            <img ngSrc="/assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+          </app-icon-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__right">
+      <!--
+        Composicao em camadas (design-system.md secao 8.8): retangulo de fundo deslocado
+        atras + bloco frontal com borda branca contendo a foto real de Johnny.
+      -->
+      <div class="hero__pic-container">
+        <div class="hero__pic-background" aria-hidden="true"></div>
+        <div class="hero__pic">
+          <img
+            ngSrc="/assets/images/profile_johnnysouto.jpeg"
+            fill
+            priority
+            alt="Johnny Souto"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

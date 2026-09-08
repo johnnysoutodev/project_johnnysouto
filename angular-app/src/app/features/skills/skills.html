@@ -1,0 +1,34 @@
+<section class="skills">
+  <div class="skills__container">
+    <div class="skills__heading">
+      <app-tag>Skills</app-tag>
+      <p class="skills__subtitle">
+        <!--
+          Traducao/adaptacao livre do subtitulo do Figma ("The skills, tools and
+          technologies I am really good at:", secao 8.10) - o curriculo legado nao tinha
+          esse heading; mesma convencao de "copy adaptada" ja usada no Hero/About.
+        -->
+        As tecnologias e ferramentas com as quais eu trabalho no dia a dia:
+      </p>
+    </div>
+
+    <div class="skills__row">
+      @for (item of items; track item.label) {
+        <div class="skills__item">
+          <div class="skills__item-icon" aria-hidden="true">
+            @if (item.icon) {
+              <img
+                [ngSrc]="item.icon"
+                [width]="item.iconWidth ?? 64"
+                height="64"
+                alt=""
+                [class.skills__item-icon-img--invert-dark]="item.invertOnDark"
+              />
+            }
+          </div>
+          <span class="skills__item-label">{{ item.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>

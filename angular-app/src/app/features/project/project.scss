@@ -1,0 +1,172 @@
+// Project (renomeado de "Work" em 08/09/2026, a pedido do Johnny) — design-system.md
+// secao 8.5 (card de projeto, node Figma continua se chamando "Work" na ferramenta de
+// design). Unica secao sem o inset extra de 32px do Container (secao 2) - aqui o
+// container tem `padding-x: 64px` proprio (1280px - 2*64px = 1152px, a largura real do
+// card), entao NAO usa o mixin `layout.content-container` (que aplicaria os 32px padrao
+// das outras 6 secoes de conteudo).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.project {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.project__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+  max-width: 1280px;
+  margin-inline: auto;
+
+  @include breakpoints.desktop-up {
+    padding-inline: 64px;
+  }
+}
+
+.project__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.project__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.project__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  width: 100%;
+}
+
+// Card com radius+sombra propria (design-system.md 8.5: "Border-radius: 12px (card
+// inteiro e a imagem interna)", "Sombra: --shadow-md no card inteiro; a imagem interna
+// tem sua propria sombra, mais pronunciada - --shadow-lg") - 2 caixas arredondadas
+// aninhadas DE PROPOSITO, confirmado na spec (revertido 08/09/2026 apos o Johnny checar
+// o Figma de novo - a remocao anterior, achando que era um bug de "card fantasma", nao
+// procedia). `padding: 48px` (--space-card-padding) no CARD (nao mais so no lado do
+// texto) + `gap: 48px` entre as 2 colunas: e o que da espaco pra sombra da imagem
+// "respirar" sem colar na borda do card nem no texto.
+//
+// `min-height: 480px` (NAO `height: 480px` fixo) no desktop-up: a spec 8.5 mediu 480px
+// nos 3 cards ficticios do Figma, mas o conteudo real (mais tags que os placeholders,
+// ex. Pitcher App com 5 tags em 2 linhas) as vezes precisa de mais altura - com `height`
+// fixo, esse excesso vazava visualmente pra fora do card (tags/acao "ver projeto"
+// aparecendo fora da sombra, reportado pelo Johnny). `min-height` mantem os 480px como
+// piso (bate com os cards menores) mas deixa o card crescer quando o conteudo real
+// precisar, sem cortar nem vazar.
+.project__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--space-card-padding);
+  gap: var(--space-48);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-md);
+
+  @include breakpoints.desktop-up {
+    flex-direction: row;
+    min-height: 480px;
+  }
+}
+
+// Lado da imagem: logo do projeto (08/09/2026) centralizado sobre o bloco neutro
+// original (design-system.md secao 10 - sem thumbnail/screenshot real disponivel),
+// mantendo cor de fundo/borda/radius/sombra da spec 8.5. `object-fit: contain` porque o
+// logo (fonte externa, aspect ratio variavel) nao deve ser cortado como uma foto seria.
+.project__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 200px;
+  // 48px (--space-card-padding), nao 32px - "Padding interno: 48px em ambas as
+  // colunas" (8.5), mesmo valor ja usado em `.project__content` abaixo.
+  padding: var(--space-card-padding);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50);
+  box-shadow: var(--shadow-lg);
+
+  img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    // `--logo-max-height` setada no `.project__image` pai quando o projeto define
+    // `logo.displayMaxHeight` (herdada via custom property) - fallback 160px.
+    max-height: var(--logo-max-height, 160px);
+    object-fit: contain;
+  }
+
+  @include breakpoints.desktop-up {
+    flex: 1 1 0%;
+    // `min-height: 384px` (nao `height` fixo) - acompanha o card: 384px bate quando o
+    // card esta no piso de 480px (480 - 48 - 48, o padding do card), mas cresce junto
+    // se o card crescer por causa de mais conteudo de texto (`align-self: stretch`,
+    // valor padrao do eixo cruzado do flex - a imagem preenche a altura da linha toda,
+    // nao fica menor que o lado do texto quando ele precisa de mais espaco).
+    min-height: 384px;
+  }
+}
+
+.project__content {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+// Titulo + periodo: `gap: 8px` intencionalmente MENOR que o `gap: 24px` entre os 4
+// blocos principais (titulo -> descricao -> tags -> acao, spec 8.5) - o periodo nao faz
+// parte da spec original do card (que so previa titulo/descricao/tags/acao); conteudo
+// real do curriculo (secao "Projetos" de `src/pt/index.html`) sempre inclui o periodo,
+// entao foi agrupado bem junto ao titulo (mesmo par tipografico da Experience:
+// `subtitle-semibold` + `body2-normal`/`--color-gray-700`) em vez de virar um 5o bloco
+// solto com o mesmo espacamento dos outros - decisao de conteudo/UI, nao extraida do Figma.
+.project__heading-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.project__title {
+  @include typography.subtitle-semibold;
+  margin: 0;
+  color: var(--color-gray-900);
+}
+
+.project__period {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-700);
+}
+
+.project__description {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.project__actions {
+  display: flex;
+}

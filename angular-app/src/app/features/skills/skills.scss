@@ -1,0 +1,109 @@
+// Skills — design-system.md secao 8.10. Grid unico "flat" (sem titulo de categoria por
+// cima dos itens, revisao de 07/09/2026 - ver `skills.ts` para o historico da decisao).
+//
+// Achado da secao 8.10: o item `Tech` do Figma nao tem variante texto-only, e o
+// `justify-center` do item desalinha o label quando o icone e omitido (a maioria dos
+// skills reais e texto-only - so 3 dos 20 itens tem icone). A propria secao 8.10
+// documenta 2 saidas possiveis, a decidir na implementacao:
+//   (a) reservar um slot vazio do tamanho do icone (64px) mesmo sem icone, mantendo
+//       `justify-center`/`gap: 8px`;
+//   (b) trocar o alinhamento do item para linhas fixas (uma linha pro "slot" do icone,
+//       vazia quando nao houver, outra pro label).
+//
+// Escolhida a opcao (a): `.skills__item-icon` sempre reserva `min-height:
+// var(--space-skills-icon-slot)` (64px) e fica centralizado, com ou sem `<img>` dentro -
+// os labels da mesma linha ficam alinhados entre si porque a altura do slot e igual em
+// todos os itens (com ou sem icone), sem depender de nenhuma altura de linha externa.
+// Justificativa: e a mudanca mais simples sobre o item ja documentado na secao 8.10 (um
+// unico elemento sempre renderizado, sem duplicar o item em variantes "com/sem icone"),
+// enquanto a opcao (b) exigiria coordenar 2 alturas fixas por contexto de uso (grid flat
+// de 8 x linha por categoria, aqui) para continuar alinhando entre si.
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.skills {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.skills__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+}
+
+.skills__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.skills__subtitle {
+  @include typography.subtitle-normal;
+  margin: 0;
+  max-width: 576px;
+  color: var(--color-gray-600);
+}
+
+.skills__row {
+  display: flex;
+  flex-wrap: wrap;
+  // `center` (nao `space-between` como no Figma, secao 8.10) porque agora e uma unica
+  // lista de 20 itens (nao mais 8 por linha) - quebra em N linhas de tamanho variavel
+  // conforme o viewport, e "space-between" esticaria de forma irregular a ultima linha
+  // parcial. Decisao de implementacao, nao extraida do Figma.
+  justify-content: center;
+  align-items: flex-start;
+  // Gap macro (48px, secao 2) entre itens na horizontal, mesmo valor reaproveitado em
+  // quase todas as secoes; 24px na vertical pro wrap em telas estreitas (nao medido no
+  // Figma pra este uso especifico - decisao de implementacao).
+  column-gap: var(--space-48);
+  row-gap: var(--space-24);
+}
+
+.skills__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.skills__item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--space-skills-icon-slot);
+}
+
+// Icones de marca quase pretos (ex. icon-github.svg, #181616 no Devicon) ficam
+// ilegiveis no dark mode - preto quase-puro sobre o fundo escuro do tema (falha WCAG AA
+// de contraste). `invert(1)` vira o preto em branco só quando o tema esta escuro - no
+// tema claro o filtro nao se aplica, o preto original ja tem contraste correto contra o
+// fundo branco. Marcado por item via `invertOnDark` (skills.ts) - nao um filtro global
+// no `.skills__item-icon` porque a maioria dos icones ja e colorida e nao deve ser
+// afetada.
+//
+// `:host-context([data-theme='dark'])`, NAO `[data-theme='dark'] .foo` direto: o
+// atributo `data-theme` fica no `<html>`, fora da view deste componente - com o
+// encapsulamento padrao do Angular (emulated), um seletor de ancestral escrito direto
+// recebe o atributo `_ngcontent-*` do proprio componente em cada parte do seletor
+// (inclusive na parte do ancestral), que o `<html>` nunca tem, entao a regra nunca
+// bate. `:host-context()` e o mecanismo do Angular pra exatamente esse caso (estilizar
+// com base num ancestral fora do componente, ex. um tema no `<html>`/`<body>`).
+:host-context([data-theme='dark']) .skills__item-icon-img--invert-dark {
+  filter: invert(1);
+}
+
+.skills__item-label {
+  @include typography.body1-normal;
+  color: var(--color-gray-600);
+  white-space: nowrap;
+}

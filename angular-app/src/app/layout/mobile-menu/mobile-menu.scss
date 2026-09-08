@@ -1,0 +1,184 @@
+// Menu mobile (overlay) — design-system.md secao 8.13.
+@use 'typography';
+@use 'breakpoints';
+
+:host {
+  display: contents;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  // Enquanto fechado, nao intercepta cliques no resto da pagina (o painel tambem fica
+  // fora da viewport via `transform`, mas isso reforça o comportamento sem depender so
+  // da posicao).
+  pointer-events: none;
+
+  // Escondido a partir do desktop — mesmo breakpoint (invertido) do botao hamburguer
+  // que abre este overlay (header.scss, `.header__menu-toggle`) e oposto de onde a nav
+  // horizontal do Header aparece (`breakpoints.desktop-up`).
+  @include breakpoints.desktop-up {
+    display: none;
+  }
+}
+
+.mobile-menu--open {
+  pointer-events: auto;
+}
+
+.mobile-menu__scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-mobile-menu-scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.mobile-menu--open .mobile-menu__scrim {
+  opacity: 1;
+}
+
+.mobile-menu__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  // Figma mediu só o frame mobile de 375px: painel de 320px (~85% da largura total,
+  // "left: 55px, width: 320px" — design-system.md 8.13). Reproduzido de forma
+  // proporcional/responsiva (nao um px fixo) com `min(85%, 320px)`: bate exatamente com
+  // a medida em telas de 375px (320px = 85% de 376px) e nao ultrapassa 320px em telas
+  // maiores dentro da faixa mobile. No tablet (onde o Figma nao tem referencia — mesma
+  // ressalva ja registrada em design-system.md secao 7/9.4), um teto maior evita um
+  // drawer desproporcionalmente estreito numa tela de ate 1023px.
+  width: min(85%, 320px);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-2xl-dark);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+
+  @include breakpoints.tablet-only {
+    width: min(60%, 400px);
+  }
+}
+
+.mobile-menu--open .mobile-menu__panel {
+  transform: translateX(0);
+}
+
+.mobile-menu__logo-row,
+.mobile-menu__links,
+.mobile-menu__actions {
+  // 3 blocos empilhados sem gap entre si, cada um delimitado pelo proprio padding
+  // (design-system.md 8.13).
+  padding: var(--space-16);
+}
+
+.mobile-menu__logo-row,
+.mobile-menu__links {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.mobile-menu__logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-menu__logo {
+  @include typography.heading-h3-bold-mobile;
+  color: var(--color-gray-900);
+}
+
+.mobile-menu__close,
+.mobile-menu__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gray-900);
+  cursor: pointer;
+  // Hover/active/focus: mesma convencao ja usada no Icon Button (shared/components/icon-
+  // button/icon-button.scss) — nao confirmavel no Figma (secao 8.3), decisao do projeto.
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:active {
+    opacity: 0.56;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+}
+
+.mobile-menu__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.mobile-menu__link {
+  @include typography.body2-medium;
+  color: var(--color-gray-600);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-gray-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+}
+
+.mobile-menu__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.mobile-menu__theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-menu__theme-label {
+  @include typography.body2-normal;
+  color: var(--color-gray-600);
+}
+
+.mobile-menu__cta {
+  @include typography.body2-medium;
+  width: 100%;
+  padding: var(--space-6) var(--space-16);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-900);
+  color: var(--color-gray-50);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+}

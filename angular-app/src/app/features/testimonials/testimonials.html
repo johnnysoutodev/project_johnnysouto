@@ -1,0 +1,63 @@
+<section class="testimonials">
+  <div class="testimonials__container">
+    <div class="testimonials__heading">
+      <app-tag>Depoimentos</app-tag>
+      <p class="testimonials__subtitle">
+        <!--
+          Nota de placeholder VISIVEL na pagina renderizada (design-system.md secao 10),
+          alem dos nomes ja ficticios abaixo e do comentario em testimonials.ts - qualquer
+          revisor olhando a secao (nao so o codigo-fonte) percebe que os 3 depoimentos
+          sao de exemplo.
+        -->
+        Depoimentos reais de clientes ou colegas de trabalho.
+      </p>
+    </div>
+
+    <div class="testimonials__list">
+      @for (testimonial of testimonials; track testimonial.name) {
+        <article class="testimonials__card">
+          <!--
+            Avatar: foto real (08/09/2026, ver design-system.md secao 10) quando
+            disponivel. Sem foto (design-system.md secao 8.7/6, decisao original) - um
+            circulo de cor solida com um icone SVG generico de usuario dentro. Icone
+            inline (nao ha asset exportado do Figma pra esse SVG, mesma convencao ja
+            usada no icone de tema/menu do Header e no icone de "link externo" do Project).
+          -->
+          <div class="testimonials__avatar">
+            @if (testimonial.photo; as photo) {
+              <img
+                class="testimonials__avatar-img"
+                [ngSrc]="photo.src"
+                width="64"
+                height="64"
+                [alt]="photo.alt"
+              />
+            } @else {
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" />
+              </svg>
+            }
+          </div>
+
+          <p class="testimonials__quote">{{ testimonial.quote }}</p>
+
+          <div class="testimonials__customer">
+            <span class="testimonials__name">{{ testimonial.name }}</span>
+            <span class="testimonials__role">{{ testimonial.role }}</span>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

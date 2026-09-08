@@ -1,0 +1,79 @@
+<section class="about">
+  <div class="about__container">
+    <div class="about__tag-row">
+      <app-tag>Sobre mim</app-tag>
+    </div>
+
+    <div class="about__row">
+      <div class="about__photo">
+        <!--
+          Composicao em camadas espelhada do Hero (design-system.md secao 8.9): fundo
+          deslocado para baixo-esquerda, foto deslocada para cima-direita (inverso do
+          Hero, onde o fundo fica atras a direita/baixo).
+        -->
+        <div class="about__pic-container">
+          <div class="about__pic-background" aria-hidden="true"></div>
+          <div class="about__pic">
+            <img
+              ngSrc="/assets/images/photo_about_02.jpeg"
+              fill
+              priority
+              alt="Ipê-amarelo florido"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="about__content">
+        <h3 class="about__heading">Curioso(a) sobre mim? Aqui vai:</h3>
+
+        <div class="about__bio">
+          <!--
+            RASCUNHO a revisar (design-system.md secao 10, mesma ressalva ja registrada no
+            Hero) - bio expandida a partir da mesma base do Hero (cargo real + anos de
+            experiencia calculados), mais empresas/formacao/dados pessoais ja documentados
+            no curriculo legado (src/pt/index.html). Nao e texto literal do curriculo nem
+            do Figma (que so tinha uma bio placeholder de pessoa ficticia) - precisa de
+            revisao do Johnny antes de ir pra producao.
+          -->
+          <p>
+            Sou Analista Desenvolvedor de Sistemas com mais de {{ experienceYears }} anos
+            de experiência no desenvolvimento de sistemas corporativos e aplicações web,
+            passando por empresas como Totvs, Coca-Cola, Vivo, Nielsen entre outras empresas.
+          </p>
+          <p>
+            No dia a dia trabalho principalmente com back-end (Java, Node.js) e front-end
+            (JavaScript, Angular), sempre buscando entender o problema de negócio por
+            trás de cada sistema antes de escrever a primeira linha de código.
+          </p>
+          <p>
+            Sou formado em Gestão da Tecnologia da Informação pela Uninove, e continuo
+            estudando novas tecnologias e boas práticas de desenvolvimento por conta
+            própria.
+          </p>
+        </div>
+
+        <p class="about__transition">Por fim, alguns fatos rápidos sobre mim.</p>
+
+        <div class="about__checklist">
+          <ul class="about__checklist-column">
+            <li>
+              Mais de {{ experienceYears }} anos de experiência em desenvolvimento de
+              sistemas
+            </li>
+            <li>Superior em Gestão da Tecnologia da Informação (Uninove)</li>
+          </ul>
+          <ul class="about__checklist-column">
+            <li>Inglês intermediário (leitura, escrita e compreensão oral)</li>
+            <li>Casado e pai de um menino.</li>
+          </ul>
+        </div>
+
+        <p class="about__closing">
+          Quer bater um papo sobre alguma oportunidade ou projeto? Fique à vontade para
+          entrar em contato.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,190 @@
+/**
+ * Design tokens — derivado de `docs/design-system.md` (seções 2, 3, 4 e 5).
+ *
+ * Artefato MECÂNICO: nenhum valor aqui foi inventado — cada variável só traduz
+ * para CSS custom properties o que já estava documentado e validado contra o
+ * Figma (`template_portfolio_website`, file key `9z2dzCKhlXWqVynN5SEeEM`).
+ * Fonte de verdade continua sendo o Figma / `docs/design-system.md`; este
+ * arquivo é só o formato consumível por CSS.
+ *
+ * Local temporário: o projeto Angular (`angular-app/`) ainda não existe
+ * (scaffold pendente — ver `docs/agent-rules/angular-scaffold.md`). Por isso
+ * este arquivo vive em `docs/`, fora de `src/`/`public/` (site legado, não
+ * deve ser tocado sem alinhamento explícito). Quando o scaffold Angular e o
+ * `angular-components` rodarem, este conteúdo deve migrar para dentro do
+ * projeto Angular (ex.: `angular-app/src/styles/tokens.scss` ou equivalente).
+ *
+ * ---------------------------------------------------------------------------
+ * CONVENÇÕES ADOTADAS (e por quê)
+ * ---------------------------------------------------------------------------
+ *
+ * 1) Cores (light/dark): usamos os MESMOS nomes de variável para os dois
+ *    temas — o valor muda dentro de `[data-theme="dark"]`. Alternativa
+ *    descartada: sufixo `-dark` em cada variável (ex.: `--color-gray-dark-900`).
+ *    Motivo da escolha: no Figma, "Gray/900" e "Gray/Dark/900" cumprem o MESMO
+ *    papel semântico (texto principal) em cada tema — variáveis com o mesmo
+ *    nome e escopo por seletor deixam o consumo no CSS de componente trivial
+ *    (`color: var(--color-gray-900)` funciona nos dois temas sem duplicar
+ *    regras). Usamos `[data-theme="dark"]` (não `prefers-color-scheme`)
+ *    porque dark mode aqui é uma decisão de produto ainda em aberto
+ *    (`docs/design-system.md`, seção 7, pendência "decidir com o Johnny") —
+ *    um atributo explícito permite um toggle controlado pelo Icon Button de
+ *    tema do Header, em vez de amarrar ao SO do usuário.
+ *
+ * 2) Tipografia: cada estilo (ex. Heading/H1/Bold) vira um grupo de variáveis
+ *    `--font-<token>-*` (weight/size/line-height/letter-spacing), nome
+ *    rastreável 1:1 ao token da tabela da seção 4. Letter-spacing: o Figma
+ *    documenta o valor como "-2"/"0" sem unidade explícita na tabela; nesta
+ *    extração (Tarefa 2, nó Hero `316:203`, estilo nomeado
+ *    "Heading/H1/Bold - Desktop") confirmamos via `get_design_context` que
+ *    esse "-2" é **-2% do tamanho da fonte** (60px → -1.2px renderizado,
+ *    1.2/60 = 2%) — não pixels absolutos. Convertido aqui para `em`
+ *    (-2% = -0.02em), que é a unidade CSS correspondente a "porcentagem do
+ *    tamanho de fonte" e permanece correta em qualquer tamanho de tela.
+ *
+ * 3) Sombras: tradução direta dos valores de `Drop Shadow/*` (seção 5) para
+ *    `box-shadow`, mantendo múltiplas camadas via vírgula. As cores usam hex
+ *    de 8 dígitos (`#RRGGBBAA`) porque é exatamente o formato exportado pelo
+ *    Figma (cor + alpha) — nenhuma conversão para `rgba()` foi feita, para
+ *    não arredondar o valor de alpha.
+ *
+ * 4) Espaçamento: a seção 2 do `design-system.md` deixa explícito que **não
+ *    existem tokens de espaçamento nomeados no Figma** (nenhuma variável tipo
+ *    "Spacing/sm" foi encontrada via `get_variable_defs`) — os valores são
+ *    soltos, aplicados diretamente em padding/gap de cada Auto Layout. A
+ *    escala abaixo (`--space-4` … `--space-96`) é, portanto, uma CONVENÇÃO
+ *    PRÁTICA criada aqui para nomear os valores observados (4, 6, 8, 10, 16,
+ *    20, 24, 32, 48, 80, 96px) — nomeada pelo próprio valor em pixels (não
+ *    por índice arbitrário tipo `--space-1..12`) para ficar imediatamente
+ *    rastreável à tabela "Espaçamento observado" da seção 2, sem exigir uma
+ *    tabela de conversão à parte. Os aliases semânticos na segunda metade do
+ *    bloco de espaçamento apontam para essa mesma escala, também
+ *    referenciando o uso documentado (ex.: padding de seção, padding do Tag).
+ */
+
+:root {
+  /* ---------------------------------------------------------------------
+   * Cores — Light mode (seção 3, tabela "Light mode")
+   * --------------------------------------------------------------------- */
+  --color-gray-default: #ffffff; /* Gray/Default */
+  --color-gray-50: #f9fafb; /* Gray/50 */
+  --color-gray-100: #f3f4f6; /* Gray/100 */
+  --color-gray-200: #e5e7eb; /* Gray/200 */
+  --color-gray-600: #4b5563; /* Gray/600 */
+  --color-gray-700: #374151; /* Gray/700 */
+  --color-gray-900: #111827; /* Gray/900 */
+
+  /* ---------------------------------------------------------------------
+   * Tipografia — família (seção 4)
+   * --------------------------------------------------------------------- */
+  --font-family-base: "Inter", sans-serif;
+
+  /* Heading/H1/Bold — 60/72/-2% */
+  --font-heading-h1-weight: 700;
+  --font-heading-h1-size: 60px;
+  --font-heading-h1-line-height: 72px;
+  --font-heading-h1-letter-spacing: -0.02em;
+
+  /* Heading/H2/Semi Bold — 36/40/-2% */
+  --font-heading-h2-semibold-weight: 600;
+  --font-heading-h2-semibold-size: 36px;
+  --font-heading-h2-semibold-line-height: 40px;
+  --font-heading-h2-semibold-letter-spacing: -0.02em;
+
+  /* Heading/H3/Semi Bold — 30/36/-2% (confirmado -0.6px em instância Bold do mesmo tamanho, ver nota de unidade acima) */
+  --font-heading-h3-semibold-weight: 600;
+  --font-heading-h3-semibold-size: 30px;
+  --font-heading-h3-semibold-line-height: 36px;
+  --font-heading-h3-semibold-letter-spacing: -0.02em;
+
+  /* Subtitle/Semi Bold — 20/28/0 */
+  --font-subtitle-semibold-weight: 600;
+  --font-subtitle-semibold-size: 20px;
+  --font-subtitle-semibold-line-height: 28px;
+  --font-subtitle-semibold-letter-spacing: 0;
+
+  /* Subtitle/Normal — 20/28/0 */
+  --font-subtitle-normal-weight: 400;
+  --font-subtitle-normal-size: 20px;
+  --font-subtitle-normal-line-height: 28px;
+  --font-subtitle-normal-letter-spacing: 0;
+
+  /* Body1/Normal — 18/28/0 */
+  --font-body1-normal-weight: 400;
+  --font-body1-normal-size: 18px;
+  --font-body1-normal-line-height: 28px;
+  --font-body1-normal-letter-spacing: 0;
+
+  /* Body2/Medium — 16/24/0 */
+  --font-body2-medium-weight: 500;
+  --font-body2-medium-size: 16px;
+  --font-body2-medium-line-height: 24px;
+  --font-body2-medium-letter-spacing: 0;
+
+  /* Body2/Normal — 16/24/0 */
+  --font-body2-normal-weight: 400;
+  --font-body2-normal-size: 16px;
+  --font-body2-normal-line-height: 24px;
+  --font-body2-normal-letter-spacing: 0;
+
+  /* Body3/Medium — 14/20/0 */
+  --font-body3-medium-weight: 500;
+  --font-body3-medium-size: 14px;
+  --font-body3-medium-line-height: 20px;
+  --font-body3-medium-letter-spacing: 0;
+
+  /* Body3/Normal — 14/20/0 */
+  --font-body3-normal-weight: 400;
+  --font-body3-normal-size: 14px;
+  --font-body3-normal-line-height: 20px;
+  --font-body3-normal-letter-spacing: 0;
+
+  /* ---------------------------------------------------------------------
+   * Sombras (seção 5)
+   * --------------------------------------------------------------------- */
+  --shadow-md: 0 2px 2px #0000000f, 0 4px 3px #00000012; /* Drop Shadow/md */
+  --shadow-lg: 0 10px 8px #0000000a, 0 4px 3px #0000001a; /* Drop Shadow/lg */
+  --shadow-2xl-dark: 0 25px 25px #00000026; /* Drop Shadow/2xl (dark) */
+
+  /* ---------------------------------------------------------------------
+   * Espaçamento — ESCALA DERIVADA, NÃO É TOKEN FORMAL DO FIGMA (ver nota
+   * de convenção #4 no topo do arquivo). Valores conforme seção 2.
+   * --------------------------------------------------------------------- */
+  --space-4: 4px; /* gap entre ícones sociais (Links) */
+  --space-6: 6px; /* padding do Icon Button */
+  --space-8: 8px; /* gap ícone+texto */
+  --space-10: 10px; /* gap entre colunas da checklist "quick bits" (About) */
+  --space-16: 16px; /* gap título/subtítulo de seção; padding vertical do Header */
+  --space-20: 20px; /* padding horizontal do Tag; gap de linha de contato */
+  --space-24: 24px; /* gap entre blocos de conteúdo; padding vertical do Footer */
+  --space-32: 32px; /* padding horizontal do Container interno; padding do card de timeline */
+  --space-48: 48px; /* gap macro entre colunas/linhas; padding interno de cards */
+  --space-80: 80px; /* padding horizontal universal de seção */
+  --space-96: 96px; /* padding vertical padrão das seções de conteúdo */
+
+  /* Aliases semânticos (apontam para a escala acima — não duplicam valor) */
+  --space-section-padding-x: var(--space-80);
+  --space-section-padding-y: var(--space-96);
+  --space-header-padding-y: var(--space-16);
+  --space-footer-padding-y: var(--space-24);
+  --space-icon-button-padding: var(--space-6);
+  --space-tag-padding-x: var(--space-20);
+  --space-tag-padding-y: 4px; /* não cadastrado na escala acima por só aparecer neste uso (padding vertical do Tag) */
+  --space-card-padding: var(--space-48);
+  --space-timeline-item-padding: var(--space-32);
+}
+
+/* ---------------------------------------------------------------------
+ * Cores — Dark mode (seção 3, tabela "Dark mode")
+ * Sobrescreve as MESMAS variáveis de cor definidas em `:root` — ver
+ * convenção #1 no topo do arquivo.
+ * --------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-gray-default: #030712; /* Gray/Dark/Default */
+  --color-gray-50: #111827; /* Gray/Dark/50 */
+  --color-gray-100: #1f2937; /* Gray/Dark/100 */
+  --color-gray-200: #374151; /* Gray/Dark/200 */
+  --color-gray-600: #d1d5db; /* Gray/Dark/600 */
+  --color-gray-700: #e5e7eb; /* Gray/Dark/700 */
+  --color-gray-900: #f9fafb; /* Gray/Dark/900 */
+}
