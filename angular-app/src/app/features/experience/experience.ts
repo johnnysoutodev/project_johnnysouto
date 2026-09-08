@@ -49,7 +49,7 @@ export class Experience {
     {
       company: 'Santander',
       role: 'Analista de Suporte de Sistemas (DevOps)',
-      period: 'Junho de 2024 | Janeiro 2026',
+      period: 'Junho de 2024 | Janeiro de 2026',
       bullets: [
         'Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco',
         'Garantia de boas práticas de desenvolvimento e segurança',
@@ -61,7 +61,7 @@ export class Experience {
     {
       company: 'Capgemini',
       role: 'Consultor de Sistemas',
-      period: 'Julho de 2021 | Janeiro 2024',
+      period: 'Julho de 2021 | Janeiro de 2024',
       bullets: [
         'Administração de dados SQL, SAP e Salesforce',
         'Gestão de dados por fórmulas e gráficos dinâmicos',
