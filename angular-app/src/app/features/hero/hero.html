@@ -2,7 +2,10 @@
   <div class="hero__container">
     <div class="hero__left">
       <div class="hero__content">
-        <h1 class="hero__title">Olá, eu sou o Johnny 👋</h1>
+        <!-- `&nbsp;` antes do emoji (nao um espaco normal) - impede o navegador de
+             quebrar linha bem antes do 👋 num viewport estreito, deixando o emoji
+             sozinho na linha seguinte (achado do Johnny, 08/09/2026). -->
+        <h1 class="hero__title">Olá, eu sou o Johnny&nbsp;👋</h1>
         <p class="hero__bio">
           <!--
             RASCUNHO a revisar (design-system.md secao 10) - bio redigida a partir do
