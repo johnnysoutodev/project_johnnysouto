@@ -24,43 +24,47 @@ describe('Testimonials', () => {
     expect(fixture.nativeElement.id).toBe('testimonials');
   });
 
-  it('renders exactly 3 cards, side by side (not stacked), with clearly fictitious names', () => {
+  it('renders exactly 2 real cards, side by side (not stacked), in the right order', () => {
     const cards = fixture.debugElement.queryAll(By.css('.testimonials__card'));
-    expect(cards.length).toBe(3);
+    expect(cards.length).toBe(2);
 
     const names = cards.map((card) =>
       card.query(By.css('.testimonials__name')).nativeElement.textContent.trim(),
     );
-    expect(names).toEqual([
-      'Depoimento de exemplo 1',
-      'Depoimento de exemplo 2',
-      'Depoimento de exemplo 3',
-    ]);
+    expect(names).toEqual(['Alexandre Franco', 'Raphael Simon']);
   });
 
-  it('shows a visible placeholder note in the heading subtitle, not just a code comment', () => {
-    const subtitle = fixture.debugElement.query(By.css('.testimonials__subtitle'));
-    expect(subtitle.nativeElement.textContent.toLowerCase()).toContain('exemplo');
-  });
-
-  it('renders a generic icon (not a raster photo) inside each solid-colored avatar circle', () => {
+  it('renders each real photo inside the avatar circle (not the generic icon)', () => {
     const avatars = fixture.debugElement.queryAll(By.css('.testimonials__avatar'));
-    expect(avatars.length).toBe(3);
+    expect(avatars.length).toBe(2);
 
-    for (const avatar of avatars) {
-      expect(avatar.query(By.css('img'))).toBeNull();
-      expect(avatar.query(By.css('svg'))).toBeTruthy();
-    }
+    const alexandrePhoto = avatars[0].query(By.css('img'));
+    expect(avatars[0].query(By.css('svg'))).toBeNull();
+    expect(
+      alexandrePhoto.nativeElement.getAttribute('ng-src') ?? alexandrePhoto.nativeElement.src,
+    ).toContain('profile_testmonial_01.jpeg');
+    expect(alexandrePhoto.nativeElement.getAttribute('alt')).toBe('Alexandre Franco');
+
+    const raphaelPhoto = avatars[1].query(By.css('img'));
+    expect(avatars[1].query(By.css('svg'))).toBeNull();
+    expect(
+      raphaelPhoto.nativeElement.getAttribute('ng-src') ?? raphaelPhoto.nativeElement.src,
+    ).toContain('profile_testmonial_02.png');
+    expect(raphaelPhoto.nativeElement.getAttribute('alt')).toBe('Raphael Simon');
   });
 
   it('renders each card with quote + name + role', () => {
-    const firstCard = fixture.debugElement.queryAll(By.css('.testimonials__card'))[0];
+    const cards = fixture.debugElement.queryAll(By.css('.testimonials__card'));
 
-    expect(firstCard.query(By.css('.testimonials__quote')).nativeElement.textContent).toContain(
-      'depoimento de exemplo',
+    expect(cards[0].query(By.css('.testimonials__quote')).nativeElement.textContent).toContain(
+      'Excelente profissional',
     );
-    expect(firstCard.query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
-      'Cargo e empresa fictícios',
+    expect(cards[0].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
+      'DBA da Capgemini',
+    );
+
+    expect(cards[1].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
+      'Coordenadora da Totvs',
     );
   });
 });

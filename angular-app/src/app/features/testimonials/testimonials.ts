@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { Tag } from '../../shared/components/tag/tag';
 
-/** Um card de depoimento (design-system.md secao 8.7). */
+/** Foto real do avatar, quando disponivel (ver `Testimonial.photo`). */
+interface TestimonialPhoto {
+  readonly src: string;
+  readonly alt: string;
+}
+
+/**
+ * Um card de depoimento (design-system.md secao 8.7). `photo` opcional: quando ausente,
+ * o avatar cai no icone generico de usuario (ver `testimonials.html`).
+ */
 interface Testimonial {
   readonly name: string;
   readonly role: string;
   readonly quote: string;
+  readonly photo?: TestimonialPhoto;
 }
 
 /**
@@ -23,18 +34,14 @@ interface Testimonial {
  * `host: { id: 'testimonials' }` para a ancora `#testimonials` ja referenciada pela
  * navegacao do Header.
  *
- * CONTEUDO 100% FICTICIO (design-system.md secao 10: "sem equivalente real - decisao:
- * manter a estrutura do Figma com 3 depoimentos ficticios, claramente marcados no
- * componente como placeholder temporario"). O curriculo do Johnny nao tem secao de
- * depoimentos - os 3 itens abaixo NAO sao pessoas reais, nem inspirados em pessoas
- * reais. Marcados de duas formas (alem deste comentario): (1) nome literal "Depoimento
- * de exemplo N" em vez de um nome humano inventado que poderia ser confundido com uma
- * pessoa real; (2) nota visivel no subtitulo do heading (`testimonials.html`),
- * perceptivel a qualquer revisor olhando a pagina RENDERIZADA, nao so o codigo-fonte.
+ * CONTEUDO REAL (08/09/2026, a pedido do Johnny - substitui a decisao original da
+ * secao 10, que previa 3 depoimentos ficticios por falta de equivalente real): 2
+ * depoimentos reais, com foto (`photo`, ver `TestimonialPhoto`) fornecida pelo Johnny em
+ * `public/assets/images/`.
  */
 @Component({
   selector: 'app-testimonials',
-  imports: [Tag],
+  imports: [Tag, NgOptimizedImage],
   host: { id: 'testimonials' },
   templateUrl: './testimonials.html',
   styleUrl: './testimonials.scss',
@@ -42,29 +49,28 @@ interface Testimonial {
 export class Testimonials {
   protected readonly testimonials: readonly Testimonial[] = [
     {
-      name: 'Depoimento de exemplo 1',
-      role: 'Cargo e empresa fictícios',
+      name: 'Alexandre Franco',
+      role: 'DBA da Capgemini',
+      photo: { src: '/assets/images/profile_testmonial_01.jpeg', alt: 'Alexandre Franco' },
       quote:
-        'Texto de depoimento de exemplo, usado apenas para demonstrar o layout desta ' +
-        'seção. Ainda não há depoimentos reais de clientes ou colegas de trabalho ' +
-        'cadastrados aqui.',
+        '"Excelente profissional, sempre empenhado e focado em seus desafios. ' +
+        'Coordenou uma migração de projeto com 22 pessoas com postura ' +
+        'firme e competência."',
     },
     {
-      name: 'Depoimento de exemplo 2',
-      role: 'Cargo e empresa fictícios',
+      name: 'Raphael Simon',
+      role: 'Coordenadora da Totvs',
+      photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphael Simon' },
       quote:
-        'Este também é um depoimento fictício, com um comprimento de texto um pouco ' +
-        'diferente do primeiro, só para simular a variação de altura entre os cards ' +
-        'já prevista no design original.',
-    },
-    {
-      name: 'Depoimento de exemplo 3',
-      role: 'Cargo e empresa fictícios',
-      quote:
-        'Terceiro depoimento de exemplo, propositalmente mais longo que os dois ' +
-        'anteriores, reproduzindo a variação de altura observada nos 3 cards ' +
-        'originais do Figma (design-system.md, seção 8.7) — lá também o card mais ' +
-        'alto é o que tem o texto mais extenso.',
+        '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +
+        'competência técnica, postura colaborativa e senso de responsabilidade ' +
+        'fazem muita diferença nas nossas entregas. Destaco também sua abertura ' +
+        'para aprender sobre UX e sua generosidade em compartilhar conhecimento. ' +
+        'Nossas trocas sempre ampliam minha visão sobre os desafios e ' +
+        'possibilidades do desenvolvimento front-end. É um profissional que ' +
+        'fortalece o time, tanto pela qualidade do que entrega quanto pela forma ' +
+        'como contribui para o crescimento de quem trabalha ao seu lado. É um ' +
+        'prazer contar com a sua parceria!"',
     },
   ];
 }
