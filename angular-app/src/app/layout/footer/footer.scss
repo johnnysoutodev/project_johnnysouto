@@ -27,6 +27,24 @@
   @include typography.body3-normal;
 }
 
-.footer__icon {
-  flex-shrink: 0;
+// Cor fixa (nao um token - a paleta do Figma, secao 3, so tem tons de cinza, sem
+// vermelho catalogado) - decorativo, mesmo valor nos dois temas.
+.footer__heart {
+  color: #e11d48;
+}
+
+.footer__link {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 2px;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
 }

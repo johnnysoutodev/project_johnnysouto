@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 
 /**
- * Footer — design-system.md secao 8.2. Estrutura simples (icone de copyright + texto),
- * sem elementos interativos (sem estado de hover/active a documentar).
+ * Footer — design-system.md secao 8.2. Estrutura simples, so texto (icone de copyright
+ * do Figma removido pelo Johnny). "JSD Technologies" (08/09/2026, a pedido do Johnny) e
+ * um link real pro site da JSD Technologies (`https://www.jsdeveloper.com.br/`),
+ * `target="_blank"` com `rel="noopener noreferrer"` (mitiga reverse tabnabbing).
  */
 @Component({
   selector: 'app-footer',
-  imports: [NgOptimizedImage],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })
