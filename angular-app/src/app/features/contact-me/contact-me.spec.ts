@@ -44,15 +44,17 @@ describe('ContactMe', () => {
     ]);
   });
 
-  it('renders the email as a real mailto: link with the real address', () => {
+  it('renders the email as a real mailto: link with the real address and a pre-filled subject', () => {
     const emailLink = fixture.debugElement.query(By.css('.contact-me__row--email a'));
-    expect(emailLink.nativeElement.getAttribute('href')).toBe('mailto:johnnyjns@gmail.com');
+    expect(emailLink.nativeElement.getAttribute('href')).toBe(
+      'mailto:johnnyjns@gmail.com?subject=Vamos%20bater%20um%20papo%3F',
+    );
     expect(emailLink.nativeElement.textContent.trim()).toBe('johnnyjns@gmail.com');
   });
 
-  it('renders the WhatsApp number as a real wa.me link, displayed in the readable phone format', () => {
+  it('renders the phone number as a real tel: link, displayed in the readable phone format', () => {
     const phoneLink = fixture.debugElement.query(By.css('.contact-me__row--phone a'));
-    expect(phoneLink.nativeElement.getAttribute('href')).toBe('https://wa.me/5511997037799');
+    expect(phoneLink.nativeElement.getAttribute('href')).toBe('tel:+5511997037799');
     expect(phoneLink.nativeElement.textContent.trim()).toBe('+55 11 99703-7799');
   });
 

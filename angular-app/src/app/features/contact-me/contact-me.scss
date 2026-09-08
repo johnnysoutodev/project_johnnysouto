@@ -44,28 +44,46 @@
   width: 100%;
 }
 
+// `gap: 8px` no mobile (em vez do `--space-20` do desktop) - achado do Johnny
+// (08/09/2026): icone + email/telefone + botao de copiar nao cabiam numa linha so num
+// viewport de 375px com o texto no tamanho Heading/H2 do Figma (36px) - ver tambem a
+// reducao de fonte do `.contact-me__row-value` abaixo. `flex-wrap: wrap` continua como
+// rede de seguranca (nao deve mais disparar pro conteudo real atual, mas nao ha spec de
+// mobile no Figma pra garantir isso pra qualquer valor futuro).
 .contact-me__row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--space-20);
+  gap: var(--space-8);
   max-width: 100%;
+
+  @include breakpoints.tablet-up {
+    gap: var(--space-20);
+  }
 }
 
 .contact-me__row-icon {
   flex-shrink: 0;
 }
 
-// Heading/H2/Semi Bold (secao 8.12/4) - texto grande o suficiente pra quebrar em telas
-// estreitas (`word-break`), ja que email/telefone sao valores de comprimento variavel
-// que o Figma nao previu quebrando linha.
+// Heading/H2/Semi Bold (secao 8.12/4) e o tamanho documentado, mas o Figma nao tem
+// frame de mobile pra essa secao (design-system.md secao 9.4) - no desktop (36px) o
+// texto nao cabia numa linha so com o icone+botao de copiar num viewport de 375px
+// (achado do Johnny, 08/09/2026). Reduzido no mobile pra `subtitle-semibold` (20px/28px,
+// mesmo token ja usado noutras secoes, nao um valor novo) - mesma convencao de
+// engenharia ja usada no H1 do Hero (`hero.scss`) para o mesmo tipo de problema; volta
+// pro tamanho cheio do Figma a partir do tablet, onde ja sobra largura real.
 .contact-me__row-value {
-  @include typography.heading-h2-semibold;
+  @include typography.subtitle-semibold;
   max-width: 100%;
   overflow-wrap: break-word;
   color: var(--color-gray-900);
   text-decoration: none;
+
+  @include breakpoints.tablet-up {
+    @include typography.heading-h2-semibold;
+  }
 
   &:hover,
   &:focus-visible {

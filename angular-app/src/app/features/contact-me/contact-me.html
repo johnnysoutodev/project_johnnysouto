@@ -1,7 +1,7 @@
 <section class="contact-me">
   <div class="contact-me__container">
     <div class="contact-me__heading">
-      <app-tag>Get in touch</app-tag>
+      <app-tag>Entre em contato</app-tag>
       <p class="contact-me__subtitle">Prefira o canal que for mais conveniente para você:</p>
     </div>
 
@@ -15,7 +15,7 @@
           height="32"
           alt=""
         />
-        <a class="contact-me__row-value" [href]="'mailto:' + email">{{ email }}</a>
+        <a class="contact-me__row-value" [href]="mailtoHref">{{ email }}</a>
         <app-icon-button
           size="large"
           [ariaLabel]="copiedField() === 'email' ? 'Email copiado!' : 'Copiar email'"

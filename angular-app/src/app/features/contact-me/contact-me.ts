@@ -14,16 +14,17 @@ type CopyField = 'email' | 'phone';
  * Header.
  *
  * Conteudo real (secao 10 + pedido desta tarefa): email `johnnyjns@gmail.com` (icone
- * `icon-mail`); WhatsApp `+55 11 99703-7799` como link `https://wa.me/5511997037799`
- * (icone `icon-phone`, reaproveita a linha de telefone - secao 10, "WhatsApp nao
- * precisa de icone social novo"); GitHub `github.com/johnnysoutodev` (icone
+ * `icon-mail`); telefone `+55 11 99703-7799` como link `tel:+5511997037799` (icone
+ * `icon-phone`); GitHub `github.com/johnnysoutodev` (icone
  * `icon-social-github`, mesmo padrao ja usado no Hero - Icon Button linkando pra fora);
  * LinkedIn `linkedin.com/in/johnnysouto` como link de texto simples, SEM icone (decisao
  * ja confirmada em 8.12/10 - nao ha icone de LinkedIn em lugar nenhum do arquivo Figma).
  *
- * Email/telefone viram links reais (`mailto:`/`https://wa.me/...`) - decisao de
- * implementacao por convencao (nao uma spec extraida do 8.12, que so documenta o texto
- * como conteudo visual), consistente com GitHub/LinkedIn ja serem links reais no Hero.
+ * Email/telefone viram links reais (`mailto:`/`tel:`) - decisao de implementacao por
+ * convencao (nao uma spec extraida do 8.12, que so documenta o texto como conteudo
+ * visual), consistente com GitHub/LinkedIn ja serem links reais no Hero. O telefone era
+ * originalmente um link `https://wa.me/...` (WhatsApp) - trocado pelo Johnny pra um
+ * `tel:` simples (liga direto, sem depender do WhatsApp estar instalado).
  */
 @Component({
   selector: 'app-contact-me',
@@ -45,8 +46,14 @@ export class ContactMe {
   private resetTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly email = 'johnnyjns@gmail.com';
+  /**
+   * Assunto pre-preenchido do link de email (a pedido do Johnny, 08/09/2026) -
+   * `encodeURIComponent` no assunto (nao concatenacao direta no template) pra escapar
+   * o espaco/acentos corretamente na query string do `mailto:`.
+   */
+  protected readonly mailtoHref = `mailto:${this.email}?subject=${encodeURIComponent('Vamos bater um papo?')}`;
   protected readonly phoneDisplay = '+55 11 99703-7799';
-  protected readonly phoneHref = 'https://wa.me/5511997037799';
+  protected readonly phoneHref = 'tel:+5511997037799';
   protected readonly githubUrl = 'https://github.com/johnnysoutodev';
   protected readonly linkedinUrl = 'https://www.linkedin.com/in/johnnysouto';
 
