@@ -90,8 +90,8 @@ interface ProjectItem {
 export class Project {
   protected readonly projects: readonly ProjectItem[] = [
     {
-      name: 'Pitcher',
-      period: 'Julho de 2021 | Projeto em desenvolvimento',
+      name: 'Pitcher App',
+      period: 'Julho de 2021 | Outubro de 2023',
       description:
         'Para otimização do trabalho diário dos promotores, a Coca-Cola FEMSA decidiu ' +
         'por substituir o aplicativo MfCoke pelo Pitcher. Nessa mudança, sou o ' +
@@ -101,7 +101,7 @@ export class Project {
         'configuração do App Pitcher em todos os dispositivos necessários, dos mais de ' +
         '3000 colaboradores, onde os dados coletados resultam em relatórios gráficos ' +
         'para agilizar a tomada de decisão.',
-      tags: ['MS-SQL Server', 'SAP', 'Salesforce'],
+      tags: ['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets'],
       // Sem link publico disponivel no legado (secao 10/comentario acima) - acao omitida.
       logo: { src: '/assets/images/logo_pitcher_black.png', width: 280, height: 100 },
       imageBackground: '#f9fafb',

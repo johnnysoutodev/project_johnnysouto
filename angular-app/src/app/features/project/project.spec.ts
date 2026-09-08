@@ -35,7 +35,7 @@ describe('Project', () => {
       .queryAll(By.css('.project__title'))
       .map((el) => el.nativeElement.textContent.trim());
 
-    expect(titles).toEqual(['Pitcher', 'ProFuturo']);
+    expect(titles).toEqual(['Pitcher App', 'ProFuturo']);
   });
 
   it('renders the real period for each project', () => {
@@ -44,7 +44,7 @@ describe('Project', () => {
       .map((el) => el.nativeElement.textContent.trim());
 
     expect(periods).toEqual([
-      'Julho de 2021 | Projeto em desenvolvimento',
+      'Julho de 2021 | Outubro de 2023',
       'Agosto de 2015 | Dezembro de 2016',
     ]);
   });
@@ -55,7 +55,7 @@ describe('Project', () => {
     const pitcherTags = cards[0]
       .queryAll(By.css('.project__tags app-tag'))
       .map((el) => el.nativeElement.textContent.trim());
-    expect(pitcherTags).toEqual(['MS-SQL Server', 'SAP', 'Salesforce']);
+    expect(pitcherTags).toEqual(['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets']);
 
     const profuturoTags = cards[1]
       .queryAll(By.css('.project__tags app-tag'))
@@ -90,7 +90,7 @@ describe('Project', () => {
     expect(
       pitcherLogo.nativeElement.getAttribute('ng-src') ?? pitcherLogo.nativeElement.src,
     ).toContain('logo_pitcher_black.png');
-    expect(pitcherLogo.nativeElement.getAttribute('alt')).toBe('Logo do projeto Pitcher');
+    expect(pitcherLogo.nativeElement.getAttribute('alt')).toBe('Logo do projeto Pitcher App');
 
     const profuturoLogo = cards[1].query(By.css('.project__image img'));
     expect(

@@ -52,18 +52,35 @@
   width: 100%;
 }
 
+// Card com radius+sombra propria (design-system.md 8.5: "Border-radius: 12px (card
+// inteiro e a imagem interna)", "Sombra: --shadow-md no card inteiro; a imagem interna
+// tem sua propria sombra, mais pronunciada - --shadow-lg") - 2 caixas arredondadas
+// aninhadas DE PROPOSITO, confirmado na spec (revertido 08/09/2026 apos o Johnny checar
+// o Figma de novo - a remocao anterior, achando que era um bug de "card fantasma", nao
+// procedia). `padding: 48px` (--space-card-padding) no CARD (nao mais so no lado do
+// texto) + `gap: 48px` entre as 2 colunas: e o que da espaco pra sombra da imagem
+// "respirar" sem colar na borda do card nem no texto.
+//
+// `min-height: 480px` (NAO `height: 480px` fixo) no desktop-up: a spec 8.5 mediu 480px
+// nos 3 cards ficticios do Figma, mas o conteudo real (mais tags que os placeholders,
+// ex. Pitcher App com 5 tags em 2 linhas) as vezes precisa de mais altura - com `height`
+// fixo, esse excesso vazava visualmente pra fora do card (tags/acao "ver projeto"
+// aparecendo fora da sombra, reportado pelo Johnny). `min-height` mantem os 480px como
+// piso (bate com os cards menores) mas deixa o card crescer quando o conteudo real
+// precisar, sem cortar nem vazar.
 .project__card {
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: var(--space-card-padding);
+  gap: var(--space-48);
   border-radius: var(--radius-md);
   background-color: var(--color-gray-default);
   box-shadow: var(--shadow-md);
-  overflow: hidden;
 
   @include breakpoints.desktop-up {
     flex-direction: row;
-    height: 480px;
+    min-height: 480px;
   }
 }
 
@@ -77,7 +94,9 @@
   justify-content: center;
   flex-shrink: 0;
   min-height: 200px;
-  padding: var(--space-32);
+  // 48px (--space-card-padding), nao 32px - "Padding interno: 48px em ambas as
+  // colunas" (8.5), mesmo valor ja usado em `.project__content` abaixo.
+  padding: var(--space-card-padding);
   border: 1px solid var(--color-gray-100);
   border-radius: var(--radius-md);
   background-color: var(--color-gray-50);
@@ -95,9 +114,12 @@
 
   @include breakpoints.desktop-up {
     flex: 1 1 0%;
-    min-height: 0;
-    height: 384px;
-    align-self: center;
+    // `min-height: 384px` (nao `height` fixo) - acompanha o card: 384px bate quando o
+    // card esta no piso de 480px (480 - 48 - 48, o padding do card), mas cresce junto
+    // se o card crescer por causa de mais conteudo de texto (`align-self: stretch`,
+    // valor padrao do eixo cruzado do flex - a imagem preenche a altura da linha toda,
+    // nao fica menor que o lado do texto quando ele precisa de mais espaco).
+    min-height: 384px;
   }
 }
 
@@ -106,7 +128,6 @@
   flex: 1 1 0%;
   flex-direction: column;
   gap: var(--space-24);
-  padding: var(--space-card-padding);
 }
 
 // Titulo + periodo: `gap: 8px` intencionalmente MENOR que o `gap: 24px` entre os 4
