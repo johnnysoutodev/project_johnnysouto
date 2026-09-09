@@ -103,7 +103,7 @@ export class Project {
         'para agilizar a tomada de decisão.',
       tags: ['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets'],
       // Sem link publico disponivel no legado (secao 10/comentario acima) - acao omitida.
-      logo: { src: '/assets/images/logo_pitcher_black.png', width: 280, height: 100 },
+      logo: { src: '/assets/images/logo_project_coca-cola_femsa.png', width: 280, height: 100 },
       imageBackground: '#f9fafb',
     },
     {
