@@ -95,6 +95,7 @@
   @include typography.body2-normal;
   margin: 0;
   color: var(--color-gray-600);
+  text-align: justify;
 }
 
 .testimonials__customer {

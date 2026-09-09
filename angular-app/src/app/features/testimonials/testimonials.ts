@@ -59,18 +59,12 @@ export class Testimonials {
     },
     {
       name: 'Raphaela Simon',
-      role: 'Coordenadora da Totvs',
+      role: 'Líder da Totvs',
       photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
       quote:
         '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +
         'competência técnica, postura colaborativa e senso de responsabilidade ' +
-        'fazem muita diferença nas nossas entregas. Destaco também sua abertura ' +
-        'para aprender sobre UX e sua generosidade em compartilhar conhecimento. ' +
-        'Nossas trocas sempre ampliam minha visão sobre os desafios e ' +
-        'possibilidades do desenvolvimento front-end. É um profissional que ' +
-        'fortalece o time, tanto pela qualidade do que entrega quanto pela forma ' +
-        'como contribui para o crescimento de quem trabalha ao seu lado. É um ' +
-        'prazer contar com a sua parceria!"',
+        'fazem muita diferença nas nossas entregas."',
     },
   ];
 }
