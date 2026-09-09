@@ -196,7 +196,7 @@ export class Experience {
     },
     {
       company: 'Nielsen',
-      logo: { src: '/assets/images/logo_nielsen.png', width: 240, height: 40 },
+      logo: { src: '/assets/images/logo_nielsen.jpg', width: 240, height: 40 },
       positions: [
         {
           role: 'Operador de Computador',
