@@ -2,10 +2,36 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>AngularApp</title>
+    <title>Johnny Souto | Engenheiro de Software</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      SEO por idioma: title/description/canonical/og:* sao definidos por idioma em
+      `core/seo/seo.ts` (o Angular nao processa `i18n` no index.html); os valores abaixo sao
+      so o padrao (pt-BR) caso o JS/prerender nao rode. `hreflang` e igual em todos os idiomas
+      (lista completa + x-default apontando para a raiz, que redireciona pelo idioma do
+      navegador - ver vercel.json).
+    -->
+    <meta
+      name="description"
+      content="Engenheiro de Software com mais de 20 anos de experiência em TI: front-end, back-end, bancos de dados, Cloud e DevOps. Portfólio profissional de Johnny Souto."
+    />
+    <link rel="alternate" hreflang="pt-BR" href="https://www.johnnysouto.com.br/pt-br/" />
+    <link rel="alternate" hreflang="en-US" href="https://www.johnnysouto.com.br/en-us/" />
+    <link rel="alternate" hreflang="es-ES" href="https://www.johnnysouto.com.br/es-es/" />
+    <link rel="alternate" hreflang="x-default" href="https://www.johnnysouto.com.br/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Johnny Souto" />
+    <meta
+      property="og:title"
+      content="Johnny Souto | Engenheiro de Software"
+      i18n-content="@@seo.title"
+    />
+    <meta
+      property="og:image"
+      content="https://www.johnnysouto.com.br/pt-br/assets/images/profile_johnnysouto.jpeg"
+    />
     <!-- Fonte "Inter" (docs/design-system.md secao 4) - Google Font padrao, sem arquivo local -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
