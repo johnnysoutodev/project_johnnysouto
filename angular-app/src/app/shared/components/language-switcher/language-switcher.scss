@@ -1,0 +1,36 @@
+@use 'typography';
+
+:host {
+  display: block;
+}
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.language-switcher__link {
+  @include typography.body2-medium;
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-sm);
+  color: var(--color-gray-600);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--color-gray-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  // Idioma atual: destacado, sem parecer clicavel (a navegacao e ignorada em `LanguageService.select`).
+  &--current {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-900);
+    cursor: default;
+  }
+}

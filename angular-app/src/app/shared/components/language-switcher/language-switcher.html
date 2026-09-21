@@ -1,0 +1,15 @@
+<nav class="language-switcher" aria-label="Idioma" i18n-aria-label="@@language.switcher.aria">
+  @for (locale of language.locales; track locale.code) {
+    <a
+      class="language-switcher__link"
+      [class.language-switcher__link--current]="locale.code === language.current.code"
+      [href]="language.hrefFor(locale)"
+      [attr.lang]="locale.code"
+      [attr.hreflang]="locale.code"
+      [attr.aria-label]="locale.name"
+      [attr.aria-current]="locale.code === language.current.code ? 'true' : null"
+      (click)="onSelect($event, locale)"
+      >{{ locale.short }}</a
+    >
+  }
+</nav>

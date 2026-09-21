@@ -103,6 +103,8 @@
     "nav.projects": "Proyectos",
     "nav.testimonials": "Testimonios",
     "nav.contact": "Contacto",
-    "scrolltop.aria": "Volver arriba"
+    "scrolltop.aria": "Volver arriba",
+    "language.switcher.aria": "Idioma",
+    "mobilemenu.language.label": "Idioma"
   }
 }

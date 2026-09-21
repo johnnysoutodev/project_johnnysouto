@@ -4,6 +4,7 @@ import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { MobileMenu } from '../mobile-menu/mobile-menu';
+import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
 import { NAV_LINKS } from '../nav-links';
 import { menuToggleLabel, themeToggleLabel } from '../../core/i18n/labels';
 
@@ -25,7 +26,7 @@ const SCROLL_THRESHOLD_PX = 8;
  */
 @Component({
   selector: 'app-header',
-  imports: [IconButton, MobileMenu],
+  imports: [IconButton, MobileMenu, LanguageSwitcher],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })

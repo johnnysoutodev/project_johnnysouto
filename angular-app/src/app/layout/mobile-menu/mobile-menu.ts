@@ -4,6 +4,7 @@ import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
 import { themeToggleLabel } from '../../core/i18n/labels';
+import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
 
 /** Elementos considerados "focaveis" dentro do painel, pro focus trap (ver `trapFocus`). */
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
@@ -38,7 +39,7 @@ const PANEL_ID = 'mobile-menu-panel';
  */
 @Component({
   selector: 'app-mobile-menu',
-  imports: [],
+  imports: [LanguageSwitcher],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
 })

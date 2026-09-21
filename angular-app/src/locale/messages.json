@@ -98,11 +98,13 @@
     "nav.main.aria": "Navegação principal",
     "cta.download-cv": "Download CV",
     "mobilemenu.dialog.aria": "Menu de navegação",
+    "mobilemenu.language.label": "Idioma",
     "mobilemenu.theme.label": "Trocar Tema",
     "nav.about": "Sobre",
     "nav.projects": "Projetos",
     "nav.testimonials": "Depoimentos",
     "nav.contact": "Contato",
-    "scrolltop.aria": "Voltar ao topo"
+    "scrolltop.aria": "Voltar ao topo",
+    "language.switcher.aria": "Idioma"
   }
 }
