@@ -41,7 +41,9 @@
             },
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "polyfills": ["@angular/localize/init"],
+            "i18nMissingTranslation": "error"
           },
           "configurations": {
             "production": {
@@ -57,12 +59,25 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "localize": true
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "en-US": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["en-US"]
+            },
+            "es-ES": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["es-ES"]
             }
           },
           "defaultConfiguration": "production"
@@ -75,6 +90,12 @@
             },
             "development": {
               "buildTarget": "project_johnnysouto:build:development"
+            },
+            "en-US": {
+              "buildTarget": "project_johnnysouto:build:en-US"
+            },
+            "es-ES": {
+              "buildTarget": "project_johnnysouto:build:es-ES"
             }
           },
           "defaultConfiguration": "development"
@@ -86,6 +107,22 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": {
+          "code": "pt-BR",
+          "subPath": "pt-br"
+        },
+        "locales": {
+          "en-US": {
+            "translation": "src/locale/messages.en-US.xlf",
+            "subPath": "en-us"
+          },
+          "es-ES": {
+            "translation": "src/locale/messages.es-ES.xlf",
+            "subPath": "es-es"
           }
         }
       }
