@@ -35,12 +35,9 @@
               "includePaths": ["src/styles"]
             },
             "server": "src/main.server.ts",
-            "outputMode": "server",
+            "outputMode": "static",
             "security": {
               "allowedHosts": []
-            },
-            "ssr": {
-              "entry": "src/server.ts"
             },
             "polyfills": ["@angular/localize/init"],
             "i18nMissingTranslation": "error"
