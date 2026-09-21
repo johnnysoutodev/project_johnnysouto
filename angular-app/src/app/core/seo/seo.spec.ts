@@ -3,6 +3,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Meta, Title } from '@angular/platform-browser';
 import { describe, expect, it } from 'vitest';
+import { calculateExperienceYears } from '../../features/hero/hero';
 import { SITE_URL, SeoService } from './seo';
 
 function apply(localeId: string) {
@@ -19,7 +20,9 @@ describe('SeoService', () => {
   it('sets the page title and description', () => {
     const { title, meta } = apply('pt-BR');
     expect(title.getTitle()).toBe('Johnny Souto | Engenheiro de Software');
-    expect(meta.getTag('name="description"')?.content).toContain('20 anos');
+    expect(meta.getTag('name="description"')?.content).toContain(
+      `Sou um profissional de TI com mais de ${calculateExperienceYears(new Date().getFullYear())} anos de experiência`,
+    );
     expect(meta.getTag('property="og:title"')?.content).toBe(title.getTitle());
   });
 

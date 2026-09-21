@@ -36,6 +36,16 @@ describe('LanguageService', () => {
     expect(create('fr-FR').current.code).toBe('pt-BR');
   });
 
+  it.each([
+    ['pt', 'cv_johnny-souto_pt-br.pdf'],
+    ['en-US', 'cv_johnny-souto_en-us.pdf'],
+    ['es', 'cv_johnny-souto_es-es.pdf'],
+  ])('points the CV download to the %s file', (localeId, fileName) => {
+    const service = create(localeId);
+    expect(service.cvFileName).toBe(fileName);
+    expect(service.cvHref).toBe(`assets/cv/${fileName}`);
+  });
+
   it('keeps the current hash in the link to another locale', () => {
     const service = create('pt-BR');
     window.location.hash = '#about';

@@ -149,8 +149,10 @@
 .header__cta {
   @include typography.body2-medium;
   display: none;
+  align-items: center;
   padding: var(--space-6) var(--space-16);
   border: none;
+  text-decoration: none;
   border-radius: var(--radius-md);
   background-color: var(--color-gray-900);
   color: var(--color-gray-50);
