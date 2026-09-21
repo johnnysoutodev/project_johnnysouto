@@ -107,6 +107,6 @@
     "language.switcher.aria": "Idioma",
     "mobilemenu.language.label": "Idioma",
     "seo.title": "Johnny Souto | Ingeniero de Software",
-    "seo.description": "Ingeniero de Software con más de 20 años de experiencia en TI: front-end, back-end, bases de datos, Cloud y DevOps. Portfolio profesional de Johnny Souto."
+    "seo.description": "Soy un profesional de TI con más de {$years} años de experiencia, con trayectoria en soporte técnico, bases de datos, front-end, back-end y análisis de negocio, e implantando, configurando y prestando consultoría de sistemas a numerosas empresas."
   }
 }

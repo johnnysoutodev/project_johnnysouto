@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { calculateExperienceYears } from '../../features/hero/hero';
 import { LanguageService } from '../i18n/language';
 
 /** Dominio do site (o mesmo do site legado, `og:url` anterior). */
@@ -23,7 +24,9 @@ export class SeoService {
 
   apply(): void {
     const title = $localize`:@@seo.title:Johnny Souto | Engenheiro de Software`;
-    const description = $localize`:@@seo.description:Engenheiro de Software com mais de 20 anos de experiência em TI: front-end, back-end, bancos de dados, Cloud e DevOps. Portfólio profissional de Johnny Souto.`;
+    // Mesmo texto do Hero (anos de experiencia calculados, nao fixos no texto).
+    const years = calculateExperienceYears(new Date().getFullYear());
+    const description = $localize`:@@seo.description:Sou um profissional de TI com mais de ${years}:years: anos de experiência, atuando desde suporte técnico, bancos de dados, front-end, back-end, análise de negócios, implantando, configurando e prestando consultoria de sistemas a diversas empresas.`;
     const { code, path } = this.language.current;
     const url = `${SITE_URL}/${path}/`;
 

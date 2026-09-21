@@ -107,6 +107,6 @@
     "language.switcher.aria": "Language",
     "mobilemenu.language.label": "Language",
     "seo.title": "Johnny Souto | Software Engineer",
-    "seo.description": "Software Engineer with over 20 years of experience in IT: front-end, back-end, databases, Cloud and DevOps. Johnny Souto's professional portfolio."
+    "seo.description": "I'm an IT professional with over {$years} years of experience, working across technical support, databases, front-end, back-end and business analysis, and implementing, configuring and providing systems consulting to a wide range of companies."
   }
 }
