@@ -11,7 +11,10 @@
 .scroll-to-top {
   position: fixed;
   right: var(--space-24);
-  bottom: var(--space-24);
+  // Altura fixa acima do rodape (mobile: 88px de altura + 16px de folga): no fim da
+  // pagina o botao fica sobre a area do rodape sem cobrir o texto, e como a posicao nunca
+  // muda durante o scroll, nao ha "pulo" ao chegar no rodape (QA do Johnny, 20/09/2026).
+  bottom: 104px;
   z-index: 30;
   display: flex;
   align-items: center;
@@ -61,7 +64,12 @@
   }
 
   @include breakpoints.desktop-up {
-    right: var(--space-48);
-    bottom: var(--space-48);
+    // Fora do container de conteudo (1280px, `layout.content-container`): fica a 48px da
+    // borda direita dele, no espaco vazio da margem. `%` em `right` de `fixed` = largura da
+    // viewport sem scrollbar. Onde nao ha margem sobrando (janela ~<= container), cai no
+    // minimo de 48px da borda da janela.
+    right: max(var(--space-48), calc((100% - 1280px) / 2 - var(--space-48) - 44px));
+    // Rodape de 1 linha (68px de altura) + 20px de folga.
+    bottom: 88px;
   }
 }
