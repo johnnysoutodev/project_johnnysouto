@@ -57,7 +57,7 @@ async function fileFor(pathname) {
   return target;
 }
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   const { pathname } = new URL(req.url, `http://${req.headers.host}`);
   const rule = findRedirect(pathname, req);
   if (rule) {
@@ -73,7 +73,20 @@ createServer(async (req, res) => {
     res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
     res.end('Not found');
   }
-}).listen(port, () => {
+});
+
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(
+      `A porta ${port} ja esta em uso (outro serve:i18n ainda rodando?).\n` +
+        `Encerre o processo (lsof -ti :${port} | xargs kill) ou use outra porta: PORT=4310 npm run serve:i18n:only`,
+    );
+    process.exit(1);
+  }
+  throw error;
+});
+
+server.listen(port, () => {
   console.log(
     `i18n local: http://localhost:${port}  (/ redireciona por cookie "lang", Accept-Language ou en-US)`,
   );
