@@ -91,10 +91,9 @@ export class Experience {
           period: 'Março de 2026 | Atual',
           bullets: [
             'Desenvolvimento de software front-end com Angular e IA generativa Claude',
+            'Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes',
             'Integração com APIs e desenvolvimento de componentes reutilizáveis',
             'Deploy com GitHub Actions',
-            'Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes',
-            'Busca constante por melhorias na experiência do usuário e na eficiência do desenvolvimento',
           ],
         },
       ],
@@ -109,11 +108,10 @@ export class Experience {
       },
       positions: [
         {
-          role: 'Analista de Suporte de Sistemas (DevOps)',
+          role: 'Analista de TI (DevOps)',
           period: 'Junho de 2024 | Janeiro de 2026',
           bullets: [
             'Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco',
-            'Garantia de boas práticas de desenvolvimento e segurança',
             'Apoio a times na adoção de esteiras CI/CD com GitHub Actions',
             'Integração de ferramentas de qualidade e segurança de código, como SonarQube e Fortify',
             'Gestão e estruturação de repositórios no GitHub, promovendo padronização de código e governança de pipelines',
@@ -145,9 +143,9 @@ export class Experience {
           role: 'Analista de Suporte de Sistemas (SOC)',
           period: 'Agosto de 2019 | Maio de 2021',
           bullets: [
-            'Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec',
             'Administração de acesso a sistemas',
             'Gestão de acesso aos usuários corporativos',
+            'Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec',
           ],
         },
         {
@@ -173,9 +171,9 @@ export class Experience {
           role: 'Desenvolvedor Front-end',
           period: 'Agosto de 2015 | Julho de 2017',
           bullets: [
-            'HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js',
             'Codificação de treinamentos EaD',
-            'GitLab / GitKraken',
+            'HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js',
+            'Versionamento de código com GitLab / GitKraken',
           ],
         },
       ],
@@ -187,9 +185,9 @@ export class Experience {
           role: 'Desenvolvedor de Sistemas CRM',
           period: 'Maio de 2015 | Julho de 2015',
           bullets: [
-            'Force.com da Salesforce',
-            'Linguagens Apex, Visualforce, Triggers e SOQL',
             'Desenvolvimento de aplicações CRM',
+            'Linguagens Apex, Visualforce, Triggers e SOQL',
+            'Force.com da Salesforce',
           ],
         },
       ],
@@ -202,9 +200,9 @@ export class Experience {
           role: 'Operador de Computador',
           period: 'Janeiro de 2006 | Setembro de 2013',
           bullets: [
-            'Processamento em batch e stored procedure de MS-SQL Server',
-            'Administração e controle de mídias para backups',
             'ARCServe Backup / Retal Índex / Scantrack',
+            'Administração e controle de mídias para backups',
+            'Processamento em batch e stored procedure de MS-SQL Server',
           ],
         },
       ],
