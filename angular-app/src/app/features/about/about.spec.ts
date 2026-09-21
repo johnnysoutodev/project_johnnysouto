@@ -35,7 +35,7 @@ describe('About', () => {
     expect(bio.nativeElement.textContent).toContain(String(component['experienceYears']));
   });
 
-  it('renders exactly 2 checklist columns with 2 real, verifiable quick bits each (no invented data)', () => {
+  it('renders exactly 2 checklist columns with 2 quick bits each, all grounded in the documented career', () => {
     const columns = fixture.debugElement.queryAll(By.css('.about__checklist-column'));
     expect(columns.length).toBe(2);
 
@@ -46,10 +46,9 @@ describe('About', () => {
 
     const fullText = fixture.nativeElement.textContent as string;
     expect(fullText).toContain(String(component['experienceYears']));
-    expect(fullText).toContain('Gestão da Tecnologia da Informação');
-    expect(fullText).toContain('Uninove');
-    expect(fullText).toContain('Inglês intermediário');
-    expect(fullText).toContain('Casado e pai de um menino.');
+    expect(fullText).toContain('Angular, TypeScript, Java e Node.js');
+    expect(fullText).toContain('CI/CD com GitHub Actions');
+    expect(fullText).toContain('Cloud, Dados e IA generativa');
   });
 
   it('renders a neutral (non-portrait) photo inside the picture block, for privacy', () => {
