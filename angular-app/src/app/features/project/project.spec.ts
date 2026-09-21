@@ -45,7 +45,7 @@ describe('Project', () => {
 
     expect(periods).toEqual([
       'Julho de 2021 | Outubro de 2023',
-      'Agosto de 2015 | Agosto de 2017',
+      'Agosto de 2015 | Julho de 2017',
     ]);
   });
 
