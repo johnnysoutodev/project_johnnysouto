@@ -28,20 +28,22 @@
 // vira semi-transparente com blur atras + sombra, dando profundidade sem mudar a
 // aparencia no primeiro paint (sem risco de flash, ja que comeca solido).
 .header {
-  @include layout.bar-section-padding(var(--space-header-padding-y));
+  // Wrapper sticky transparente: so posiciona e da a "folga" ao redor do card (o fundo, o
+  // raio e a sombra ficam em `.header__container`, o card em si). Padding lateral menor que
+  // o das secoes (`bar-section-padding`) porque o card tem padding interno proprio - juntos
+  // (folga + padding do card) dao o mesmo inset do texto das secoes (16/48/80px), entao o
+  // conteudo do navbar segue alinhado ao row, e a borda do card ao container do row.
   position: sticky;
   top: 0;
   z-index: 40;
-  background-color: var(--color-gray-default);
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+  padding: var(--space-8) var(--space-8);
 
-  &--scrolled {
-    background-color: var(--color-header-scrolled-bg);
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+  @include breakpoints.tablet-up {
+    padding-inline: 24px;
+  }
+
+  @include breakpoints.desktop-up {
+    padding-inline: var(--space-section-padding-x);
   }
 }
 
@@ -51,10 +53,31 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-16);
+  // Card: no topo continua solido (mesma cor do Hero, sem risco de flash no primeiro
+  // paint); so depois de rolar (`--scrolled`) fica translucido com blur + sombra.
+  padding-block: var(--space-8);
+  padding-inline: var(--space-8);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-gray-default);
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  @include breakpoints.tablet-up {
+    padding-inline: 24px;
+  }
 
   @include breakpoints.desktop-up {
     gap: var(--space-24);
+    padding-inline: var(--space-32);
   }
+}
+
+.header--scrolled .header__container {
+  background-color: var(--color-header-scrolled-bg);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .header__logo {

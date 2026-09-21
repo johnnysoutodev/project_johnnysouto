@@ -179,7 +179,7 @@
   // (#ffffff), so que semi-transparente pra funcionar com `backdrop-filter: blur()` -
   // mesmo criterio ja usado no scrim do menu mobile acima (valor solto, 1 variavel por
   // tema, nao token formal da secao 3).
-  --color-header-scrolled-bg: rgba(255, 255, 255, 0.8);
+  --color-header-scrolled-bg: rgba(255, 255, 255, 0.75);
 }
 
 // ---------------------------------------------------------------------
@@ -201,5 +201,5 @@
 
   // Fundo do Header "rolado" no Dark - ver nota completa junto da variavel light em
   // `:root` acima. Mesma cor de `--color-gray-dark-default` (#030712), semi-transparente.
-  --color-header-scrolled-bg: rgba(3, 7, 18, 0.8);
+  --color-header-scrolled-bg: rgba(3, 7, 18, 0.75);
 }
