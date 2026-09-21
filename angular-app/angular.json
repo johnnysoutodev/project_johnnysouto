@@ -3,7 +3,9 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -30,9 +32,13 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss"
+            ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": [
+                "src/styles"
+              ]
             },
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -42,7 +48,9 @@
             "ssr": {
               "entry": "src/server.ts"
             },
-            "polyfills": ["@angular/localize/init"],
+            "polyfills": [
+              "@angular/localize/init"
+            ],
             "i18nMissingTranslation": "error"
           },
           "configurations": {
@@ -71,13 +79,17 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "localize": ["en-US"]
+              "localize": [
+                "en-US"
+              ]
             },
             "es-ES": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "localize": ["es-ES"]
+              "localize": [
+                "es-ES"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -106,7 +118,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       },
@@ -117,11 +132,11 @@
         },
         "locales": {
           "en-US": {
-            "translation": "src/locale/messages.en-US.xlf",
+            "translation": "src/locale/messages.en-US.json",
             "subPath": "en-us"
           },
           "es-ES": {
-            "translation": "src/locale/messages.es-ES.xlf",
+            "translation": "src/locale/messages.es-ES.json",
             "subPath": "es-es"
           }
         }
