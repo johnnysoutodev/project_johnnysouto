@@ -24,19 +24,19 @@ describe('Testimonials', () => {
     expect(fixture.nativeElement.id).toBe('testimonials');
   });
 
-  it('renders exactly 2 real cards, side by side (not stacked), in the right order', () => {
+  it('renders exactly 3 real cards, side by side (not stacked), in the right order', () => {
     const cards = fixture.debugElement.queryAll(By.css('.testimonials__card'));
-    expect(cards.length).toBe(2);
+    expect(cards.length).toBe(3);
 
     const names = cards.map((card) =>
       card.query(By.css('.testimonials__name')).nativeElement.textContent.trim(),
     );
-    expect(names).toEqual(['Alexandre Franco', 'Raphaela Simon']);
+    expect(names).toEqual(['Alexandre Franco', 'Raphaela Simon', 'Cesar Sales Lima']);
   });
 
   it('renders each real photo inside the avatar circle (not the generic icon)', () => {
     const avatars = fixture.debugElement.queryAll(By.css('.testimonials__avatar'));
-    expect(avatars.length).toBe(2);
+    expect(avatars.length).toBe(3);
 
     const alexandrePhoto = avatars[0].query(By.css('img'));
     expect(avatars[0].query(By.css('svg'))).toBeNull();
@@ -51,6 +51,13 @@ describe('Testimonials', () => {
       raphaelPhoto.nativeElement.getAttribute('ng-src') ?? raphaelPhoto.nativeElement.src,
     ).toContain('profile_testmonial_02.png');
     expect(raphaelPhoto.nativeElement.getAttribute('alt')).toBe('Raphaela Simon');
+
+    const cesarPhoto = avatars[2].query(By.css('img'));
+    expect(avatars[2].query(By.css('svg'))).toBeNull();
+    expect(
+      cesarPhoto.nativeElement.getAttribute('ng-src') ?? cesarPhoto.nativeElement.src,
+    ).toContain('profile_testmonial_03.jpeg');
+    expect(cesarPhoto.nativeElement.getAttribute('alt')).toBe('Cesar Sales Lima');
   });
 
   it('renders each card with quote + name + role', () => {
@@ -64,7 +71,14 @@ describe('Testimonials', () => {
     );
 
     expect(cards[1].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
-      'Coordenadora da Totvs',
+      'Líder da Totvs',
+    );
+
+    expect(cards[2].query(By.css('.testimonials__quote')).nativeElement.textContent).toContain(
+      'Além da competência profissional',
+    );
+    expect(cards[2].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
+      'Especialista em Observabilidade na IBM',
     );
   });
 });
