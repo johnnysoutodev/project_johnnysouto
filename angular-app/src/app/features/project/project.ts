@@ -93,14 +93,12 @@ export class Project {
       name: 'Pitcher App',
       period: 'Julho de 2021 | Outubro de 2023',
       description:
-        'Para otimização do trabalho diário dos promotores, a Coca-Cola FEMSA decidiu ' +
-        'por substituir o aplicativo MfCoke pelo Pitcher. Nessa mudança, sou o ' +
-        'responsável pelo controle da implantação, os detalhes de integração da base de ' +
-        'dados (MS-SQL Server e SAP) e informação dos clientes por Salesforce - controle ' +
-        'feito por meio de fórmulas e gráficos dinâmicos, incluindo a instalação e ' +
-        'configuração do App Pitcher em todos os dispositivos necessários, dos mais de ' +
-        '3000 colaboradores, onde os dados coletados resultam em relatórios gráficos ' +
-        'para agilizar a tomada de decisão.',
+        'A Coca-Cola FEMSA substituiu o aplicativo MfCoke pelo Pitcher App para agilizar o ' +
+        'trabalho diário dos promotores. Fui responsável pela implantação: integração das ' +
+        'bases de dados (MS-SQL Server e SAP), pela gestão das informações de clientes no ' +
+        'Salesforce com fórmulas e gráficos dinâmicos, e instalação e configuração do app ' +
+        'nos dispositivos de mais de 3.000 colaboradores. Os dados coletados geram ' +
+        'relatórios gráficos que aceleram a tomada de decisão.',
       tags: ['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets'],
       // Sem link publico disponivel no legado (secao 10/comentario acima) - acao omitida.
       logo: { src: '/assets/images/logo_project_coca-cola_femsa.png', width: 280, height: 100 },
@@ -110,13 +108,12 @@ export class Project {
       name: 'ProFuturo',
       period: 'Agosto de 2015 | Dezembro de 2016',
       description:
-        'Neste projeto iniciamos o desenvolvimento com HTML5, CSS3, JavaScript e ' +
-        'jQuery, mas no decorrer notamos que a performance estava sendo prejudicada. ' +
-        'Decidimos então migrar todo o projeto para JavaScript e, juntamente com a ' +
-        'framework PIXI.js, uma API foi desenvolvida com todas as funcionalidades ' +
-        'necessárias, além de estruturar templates para acelerar o processo de produção ' +
-        'e automatizar algumas tarefas utilizando Grunt. Por fim, controlamos as ' +
-        'versões com o GitLab.',
+        'Sistema de ensino pré-escolar e fundamental por tablet, para crianças de todo o ' +
+        'mundo, com telas interativas e disponível em vários idiomas. Desenvolvi o front-end ' +
+        'com HTML5, CSS3 e JavaScript e, para ganhar performance, migramos de jQuery para ' +
+        'JavaScript puro com PIXI.js. Criamos uma API com as funcionalidades do projeto e ' +
+        'templates que aceleraram a produção, automatizamos tarefas com Grunt e ' +
+        'versionamos o código no GitLab.',
       tags: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'PIXI.js', 'Grunt', 'GitLab'],
       actionHref: 'https://fundacaotelefonicavivo.org.br/profuturo/',
       actionAriaLabel: 'Leia mais sobre o projeto ProFuturo (abre em nova aba)',

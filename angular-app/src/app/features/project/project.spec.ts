@@ -89,7 +89,7 @@ describe('Project', () => {
     const pitcherLogo = cards[0].query(By.css('.project__image img'));
     expect(
       pitcherLogo.nativeElement.getAttribute('ng-src') ?? pitcherLogo.nativeElement.src,
-    ).toContain('logo_pitcher_black.png');
+    ).toContain('logo_project_coca-cola_femsa.png');
     expect(pitcherLogo.nativeElement.getAttribute('alt')).toBe('Logo do projeto Pitcher App');
 
     const profuturoLogo = cards[1].query(By.css('.project__image img'));
