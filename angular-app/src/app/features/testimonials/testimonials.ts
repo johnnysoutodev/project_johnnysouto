@@ -59,7 +59,7 @@ export class Testimonials {
     },
     {
       name: 'Raphaela Simon',
-      role: 'Líder da Totvs',
+      role: 'Líder da TOTVS',
       photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
       quote:
         '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +

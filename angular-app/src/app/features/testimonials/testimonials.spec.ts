@@ -71,7 +71,7 @@ describe('Testimonials', () => {
     );
 
     expect(cards[1].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
-      'Líder da Totvs',
+      'Líder da TOTVS',
     );
 
     expect(cards[2].query(By.css('.testimonials__quote')).nativeElement.textContent).toContain(
