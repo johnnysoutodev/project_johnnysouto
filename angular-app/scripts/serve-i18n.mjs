@@ -11,7 +11,9 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const distDir = join(root, 'dist', 'project_johnnysouto', 'browser');
 const port = Number(process.env.PORT ?? 4300);
-const { redirects = [] } = JSON.parse(await readFile(join(root, 'vercel.json'), 'utf8'));
+const { redirects = [], rewrites = [] } = JSON.parse(
+  await readFile(join(root, 'vercel.json'), 'utf8'),
+);
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -64,8 +66,10 @@ const server = createServer(async (req, res) => {
     res.writeHead(rule.permanent ? 301 : 307, { location: rule.destination });
     return res.end();
   }
+  // `rewrites` do vercel.json (arquivos de raiz - robots.txt etc. - servidos de uma pasta de idioma).
+  const rewrite = rewrites.find((item) => item.source === pathname);
   try {
-    const file = await fileFor(pathname);
+    const file = await fileFor(rewrite ? rewrite.destination : pathname);
     const body = await readFile(file);
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' });
     res.end(body);
