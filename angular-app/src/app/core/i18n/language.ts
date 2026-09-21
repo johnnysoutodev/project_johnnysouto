@@ -48,6 +48,19 @@ export class LanguageService {
       (locale) => locale.localeId === this.localeId || locale.code === this.localeId,
     ) ?? APP_LOCALES[0];
 
+  /**
+   * CV para download do idioma atual: `cv_johnny-souto_<sufixo>.pdf` (`pt-br`, `en-us` ou
+   * `es-es`, o mesmo segmento da URL) em `public/assets/cv/`. Caminho relativo ao `base href`
+   * do build, entao cada idioma entrega o seu proprio arquivo.
+   */
+  get cvFileName(): string {
+    return `cv_johnny-souto_${this.current.path}.pdf`;
+  }
+
+  get cvHref(): string {
+    return `assets/cv/${this.cvFileName}`;
+  }
+
   /** Destino de um idioma, com o hash atual (`#about`) quando houver. */
   hrefFor(locale: AppLocale): string {
     const hash = this.isBrowser ? window.location.hash : '';

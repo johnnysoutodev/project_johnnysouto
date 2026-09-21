@@ -25,6 +25,16 @@ describe('Header', () => {
     document.body.style.overflow = '';
   });
 
+  it('renders the CV download as a link to the current language file', () => {
+    fixture.detectChanges();
+    const cta = fixture.debugElement.query(By.css('a.header__cta'))
+      .nativeElement as HTMLAnchorElement;
+    expect(cta.getAttribute('href')).toMatch(
+      /^assets\/cv\/cv_johnny-souto_[a-z]{2}-[a-z]{2}\.pdf$/,
+    );
+    expect(cta.getAttribute('download')).toMatch(/^cv_johnny-souto_.+\.pdf$/);
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -138,7 +148,6 @@ describe('Header', () => {
       );
     });
   });
-
 });
 
 describe('Header - sticky + blur ao rolar - SSR', () => {

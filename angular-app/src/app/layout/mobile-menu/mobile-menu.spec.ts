@@ -27,6 +27,15 @@ describe('MobileMenu', () => {
     document.documentElement.removeAttribute('data-theme');
   });
 
+  it('renders the CV download as a link to the current language file', () => {
+    const cta = fixture.debugElement.query(By.css('a.mobile-menu__cta'))
+      .nativeElement as HTMLAnchorElement;
+    expect(cta.getAttribute('href')).toMatch(
+      /^assets\/cv\/cv_johnny-souto_[a-z]{2}-[a-z]{2}\.pdf$/,
+    );
+    expect(cta.hasAttribute('download')).toBe(true);
+  });
+
   function panel(): HTMLElement {
     return fixture.debugElement.query(By.css('.mobile-menu__panel')).nativeElement;
   }

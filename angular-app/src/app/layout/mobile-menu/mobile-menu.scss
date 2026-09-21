@@ -177,9 +177,13 @@
 
 .mobile-menu__cta {
   @include typography.body2-medium;
+  display: block;
+  box-sizing: border-box;
   width: 100%;
   padding: var(--space-6) var(--space-16);
   border: none;
+  text-align: center;
+  text-decoration: none;
   border-radius: var(--radius-md);
   background-color: var(--color-gray-900);
   color: var(--color-gray-50);

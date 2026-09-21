@@ -7,6 +7,7 @@ import { MobileMenu } from '../mobile-menu/mobile-menu';
 import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
 import { NAV_LINKS } from '../nav-links';
 import { menuToggleLabel, themeToggleLabel } from '../../core/i18n/labels';
+import { LanguageService } from '../../core/i18n/language';
 
 /** A partir de quantos pixels de scroll o Header entra no estado "rolado" (ver `isScrolled`). */
 const SCROLL_THRESHOLD_PX = 8;
@@ -32,6 +33,7 @@ const SCROLL_THRESHOLD_PX = 8;
 })
 export class Header {
   protected readonly themeService = inject(ThemeService);
+  protected readonly language = inject(LanguageService);
   protected readonly anchorScroll = inject(AnchorScrollService);
 
   // `window`/eventos de scroll nao existem no SSR/prerender deste projeto - mesma

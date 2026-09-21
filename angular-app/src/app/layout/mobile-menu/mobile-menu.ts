@@ -4,6 +4,7 @@ import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
 import { themeToggleLabel } from '../../core/i18n/labels';
+import { LanguageService } from '../../core/i18n/language';
 import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
 
 /** Elementos considerados "focaveis" dentro do painel, pro focus trap (ver `trapFocus`). */
@@ -57,6 +58,7 @@ export class MobileMenu {
   private shouldRestoreFocus = true;
 
   protected readonly themeService = inject(ThemeService);
+  protected readonly language = inject(LanguageService);
   protected readonly anchorScroll = inject(AnchorScrollService);
   protected readonly navLinks = NAV_LINKS;
 
