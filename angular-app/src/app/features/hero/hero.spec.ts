@@ -40,7 +40,7 @@ describe('Hero', () => {
     expect(title.nativeElement.textContent).toContain('Johnny');
 
     const bio = fixture.debugElement.query(By.css('.hero__bio'));
-    expect(bio.nativeElement.textContent).toContain('Analista Desenvolvedor de Sistemas');
+    expect(bio.nativeElement.textContent).toContain('Engenheiro de Software');
     expect(bio.nativeElement.textContent).toContain(String(component['experienceYears']));
   });
 
