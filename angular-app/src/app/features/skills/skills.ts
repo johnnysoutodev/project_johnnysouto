@@ -54,24 +54,24 @@ interface SkillItem {
 })
 export class Skills {
   protected readonly items: readonly SkillItem[] = [
-    { label: 'Spring', icon: '/assets/icons/icon-spring.svg' }, // Back-End
-    { label: 'MySQL', icon: '/assets/icons/icon-mysql.svg' }, // Banco de Dados
-    { label: 'HTML5', icon: '/assets/icons/icon-html5.svg' }, // Front-End
-    { label: 'Git', icon: '/assets/icons/icon-git.svg' }, // Versionamento
-    { label: 'AWS', icon: '/assets/icons/icon-aws.svg' }, // Cloud
-    { label: 'VS Code', icon: '/assets/icons/icon-vscode.svg' }, // Ferramentas
-    { label: 'CSS3', icon: '/assets/icons/icon-css3.svg' }, // Front-End
-    { label: 'Node.js', icon: '/assets/icons/icon-nodejs.svg', iconWidth: 57 }, // Back-End
-    { label: 'PostgreSQL', icon: '/assets/icons/icon-postgresql.svg' }, // Banco de Dados
-    { label: 'Angular', icon: '/assets/icons/icon-angularjs.svg' }, // Front-End
-    { label: 'GitHub', icon: '/assets/icons/icon-github.svg', invertOnDark: true }, // Versionamento
-    { label: 'Azure', icon: '/assets/icons/icon-azure.svg' }, // Cloud
-    { label: 'JavaScript', icon: '/assets/icons/icon-javascript.svg' }, // Front-End
-    { label: 'Java', icon: '/assets/icons/icon-java.svg' }, // Back-End
-    { label: 'MongoDB', icon: '/assets/icons/icon-mongodb.svg', iconWidth: 30 }, // Banco de Dados
-    { label: 'Sass/Scss', icon: '/assets/icons/icon-sass.svg' }, // Front-End
-    { label: 'TypeScript', icon: '/assets/icons/icon-typescript.svg' }, // Back-End
-    { label: 'DynamoDB', icon: '/assets/icons/icon-dynamodb.svg' }, // Banco de Dados
-    { label: 'Grunt', icon: '/assets/icons/icon-grunt.svg' }, // Front-End
+    { label: 'Spring', icon: 'assets/icons/icon-spring.svg' }, // Back-End
+    { label: 'MySQL', icon: 'assets/icons/icon-mysql.svg' }, // Banco de Dados
+    { label: 'HTML5', icon: 'assets/icons/icon-html5.svg' }, // Front-End
+    { label: 'Git', icon: 'assets/icons/icon-git.svg' }, // Versionamento
+    { label: 'AWS', icon: 'assets/icons/icon-aws.svg' }, // Cloud
+    { label: 'VS Code', icon: 'assets/icons/icon-vscode.svg' }, // Ferramentas
+    { label: 'CSS3', icon: 'assets/icons/icon-css3.svg' }, // Front-End
+    { label: 'Node.js', icon: 'assets/icons/icon-nodejs.svg', iconWidth: 57 }, // Back-End
+    { label: 'PostgreSQL', icon: 'assets/icons/icon-postgresql.svg' }, // Banco de Dados
+    { label: 'Angular', icon: 'assets/icons/icon-angularjs.svg' }, // Front-End
+    { label: 'GitHub', icon: 'assets/icons/icon-github.svg', invertOnDark: true }, // Versionamento
+    { label: 'Azure', icon: 'assets/icons/icon-azure.svg' }, // Cloud
+    { label: 'JavaScript', icon: 'assets/icons/icon-javascript.svg' }, // Front-End
+    { label: 'Java', icon: 'assets/icons/icon-java.svg' }, // Back-End
+    { label: 'MongoDB', icon: 'assets/icons/icon-mongodb.svg', iconWidth: 30 }, // Banco de Dados
+    { label: 'Sass/Scss', icon: 'assets/icons/icon-sass.svg' }, // Front-End
+    { label: 'TypeScript', icon: 'assets/icons/icon-typescript.svg' }, // Back-End
+    { label: 'DynamoDB', icon: 'assets/icons/icon-dynamodb.svg' }, // Banco de Dados
+    { label: 'Grunt', icon: 'assets/icons/icon-grunt.svg' }, // Front-End
   ];
 }

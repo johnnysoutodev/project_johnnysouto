@@ -79,7 +79,7 @@ export class Experience {
     {
       company: 'Totvs',
       logo: {
-        src: '/assets/images/logo_totvs.jpg',
+        src: 'assets/images/logo_totvs.jpg',
         width: 200,
         height: 112,
         displayHeight: 56,
@@ -101,7 +101,7 @@ export class Experience {
     {
       company: 'Santander',
       logo: {
-        src: '/assets/images/logo_santander.png',
+        src: 'assets/images/logo_santander.png',
         width: 229,
         height: 40,
         displayHeight: 20,
@@ -121,7 +121,7 @@ export class Experience {
     },
     {
       company: 'Capgemini',
-      logo: { src: '/assets/images/logo_capgemini.png', width: 200, height: 59 },
+      logo: { src: 'assets/images/logo_capgemini.png', width: 200, height: 59 },
       positions: [
         {
           role: $localize`:@@exp.capgemini.0.role:Consultor de Sistemas`,
@@ -137,7 +137,7 @@ export class Experience {
     },
     {
       company: 'Vivo',
-      logo: { src: '/assets/images/logo_vivo.svg', width: 321, height: 100 },
+      logo: { src: 'assets/images/logo_vivo.svg', width: 321, height: 100 },
       positions: [
         {
           role: $localize`:@@exp.vivo.0.role:Analista de Suporte de Sistemas (SOC)`,
@@ -162,7 +162,7 @@ export class Experience {
     {
       company: 'Telefônica Educação Digital',
       logo: {
-        src: '/assets/images/logo_telefonica_educacion_digital.png',
+        src: 'assets/images/logo_telefonica_educacion_digital.png',
         width: 187,
         height: 56,
       },
@@ -194,7 +194,7 @@ export class Experience {
     },
     {
       company: 'Nielsen',
-      logo: { src: '/assets/images/logo_nielsen.jpg', width: 240, height: 40 },
+      logo: { src: 'assets/images/logo_nielsen.jpg', width: 240, height: 40 },
       positions: [
         {
           role: $localize`:@@exp.nielsen.0.role:Operador de Computador`,
