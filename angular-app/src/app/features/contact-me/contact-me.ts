@@ -55,7 +55,7 @@ export class ContactMe {
    * `encodeURIComponent` no assunto (nao concatenacao direta no template) pra escapar
    * o espaco/acentos corretamente na query string do `mailto:`.
    */
-  protected readonly mailtoHref = `mailto:${this.email}?subject=${encodeURIComponent('Vamos bater um papo?')}`;
+  protected readonly mailtoHref = `mailto:${this.email}?subject=${encodeURIComponent($localize`:@@contact.mailto.subject:Vamos bater um papo?`)}`;
   protected readonly phoneDisplay = '+55 11 99703-7799';
   protected readonly phoneHref = 'tel:+5511997037799';
   protected readonly githubUrl = 'https://github.com/johnnysoutodev';
@@ -66,6 +66,19 @@ export class ContactMe {
    * mudam enquanto nao-null) - `null` fora desse intervalo, inclusive no estado inicial.
    */
   protected readonly copiedField = signal<CopyField | null>(null);
+
+  /** aria-label do botao "copiar" (traduzido via `$localize`; ternario nao cabe em `i18n-*`). */
+  protected copyLabel(field: CopyField): string {
+    const copied = this.copiedField() === field;
+    if (field === 'email') {
+      return copied
+        ? $localize`:@@contact.copy.email.done.aria:Email copiado!`
+        : $localize`:@@contact.copy.email.aria:Copiar email`;
+    }
+    return copied
+      ? $localize`:@@contact.copy.phone.done.aria:Telefone copiado!`
+      : $localize`:@@contact.copy.phone.aria:Copiar telefone`;
+  }
 
   constructor() {
     this.destroyRef.onDestroy(() => this.clearResetTimeout());

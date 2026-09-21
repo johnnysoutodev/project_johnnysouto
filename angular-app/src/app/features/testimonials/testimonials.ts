@@ -50,30 +50,21 @@ export class Testimonials {
   protected readonly testimonials: readonly Testimonial[] = [
     {
       name: 'Alexandre Franco',
-      role: 'DBA da Capgemini',
+      role: $localize`:@@testimonial.alexandre.role:DBA da Capgemini`,
       photo: { src: '/assets/images/profile_testmonial_01.jpeg', alt: 'Alexandre Franco' },
-      quote:
-        '"Excelente profissional, sempre empenhado e focado em seus desafios. ' +
-        'Coordenou uma migração de projeto com 22 pessoas com postura ' +
-        'firme e competência."',
+      quote: $localize`:@@testimonial.alexandre.quote:"Excelente profissional, sempre empenhado e focado em seus desafios. Coordenou uma migração de projeto com 22 pessoas com postura firme e competência."`,
     },
     {
       name: 'Raphaela Simon',
-      role: 'Líder da TOTVS',
+      role: $localize`:@@testimonial.raphaela.role:Líder da TOTVS`,
       photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
-      quote:
-        '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +
-        'competência técnica, postura colaborativa e senso de responsabilidade ' +
-        'fazem muita diferença nas nossas entregas."',
+      quote: $localize`:@@testimonial.raphaela.quote:"Johnny é um profissional em quem sei que posso confiar e contar. Sua competência técnica, postura colaborativa e senso de responsabilidade fazem muita diferença nas nossas entregas."`,
     },
     {
       name: 'Cesar Sales Lima',
-      role: 'Especialista em Observabilidade na IBM',
+      role: $localize`:@@testimonial.cesar.role:Especialista em Observabilidade na IBM`,
       photo: { src: '/assets/images/profile_testmonial_03.jpeg', alt: 'Cesar Sales Lima' },
-      quote:
-        '"Além da competência profissional, destaca-se pelo trabalho em equipe, ' +
-        'postura colaborativa e disposição para apoiar colegas nos desafios do dia a ' +
-        'dia. Recomendo fortemente seu trabalho."',
+      quote: $localize`:@@testimonial.cesar.quote:"Além da competência profissional, destaca-se pelo trabalho em equipe, postura colaborativa e disposição para apoiar colegas nos desafios do dia a dia. Recomendo fortemente seu trabalho."`,
     },
   ];
 }

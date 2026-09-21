@@ -18,7 +18,7 @@
         <a class="contact-me__row-value" [href]="mailtoHref">{{ email }}</a>
         <app-icon-button
           size="large"
-          [ariaLabel]="copiedField() === 'email' ? 'Email copiado!' : 'Copiar email'"
+          [ariaLabel]="copyLabel('email')"
           (click)="copy('email', email)"
         >
           @if (copiedField() === 'email') {
@@ -62,7 +62,7 @@
         </a>
         <app-icon-button
           size="large"
-          [ariaLabel]="copiedField() === 'phone' ? 'Telefone copiado!' : 'Copiar telefone'"
+          [ariaLabel]="copyLabel('phone')"
           (click)="copy('phone', phoneDisplay)"
         >
           @if (copiedField() === 'phone') {
