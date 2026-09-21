@@ -1,10 +1,11 @@
-import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/core';
+import { Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { MobileMenu } from '../mobile-menu/mobile-menu';
 import { NAV_LINKS } from '../nav-links';
+import { menuToggleLabel, themeToggleLabel } from '../../core/i18n/labels';
 
 /** A partir de quantos pixels de scroll o Header entra no estado "rolado" (ver `isScrolled`). */
 const SCROLL_THRESHOLD_PX = 8;
@@ -70,6 +71,10 @@ export class Header {
    * verdade do estado.
    */
   protected readonly isMobileMenuOpen = signal(false);
+
+  // aria-labels dependentes de estado (traduzidos via `$localize`, ver core/i18n/labels.ts).
+  protected readonly themeLabel = computed(() => themeToggleLabel(this.themeService.theme()));
+  protected readonly menuLabel = computed(() => menuToggleLabel(this.isMobileMenuOpen()));
 
   protected toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((open) => !open);

@@ -4,6 +4,7 @@
   [class.scroll-to-top--visible]="isVisible()"
   href="#top"
   aria-label="Voltar ao topo"
+  i18n-aria-label="@@scrolltop.aria"
   [attr.tabindex]="isVisible() ? null : -1"
   [attr.aria-hidden]="!isVisible()"
   (click)="onClick($event)"

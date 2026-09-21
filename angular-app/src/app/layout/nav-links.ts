@@ -12,8 +12,8 @@ export interface NavLink {
  * desktop) - evita duplicar a lista em dois componentes que precisam ficar em sincronia.
  */
 export const NAV_LINKS: readonly NavLink[] = [
-  { label: 'Sobre', href: '#about' },
-  { label: 'Projetos', href: '#project' },
-  { label: 'Depoimentos', href: '#testimonials' },
-  { label: 'Contato', href: '#contact' },
+  { label: $localize`:@@nav.about:Sobre`, href: '#about' },
+  { label: $localize`:@@nav.projects:Projetos`, href: '#project' },
+  { label: $localize`:@@nav.testimonials:Depoimentos`, href: '#testimonials' },
+  { label: $localize`:@@nav.contact:Contato`, href: '#contact' },
 ];

@@ -1,8 +1,9 @@
-import { Component, PLATFORM_ID, effect, inject, input, output } from '@angular/core';
+import { Component, PLATFORM_ID, computed, effect, inject, input, output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
+import { themeToggleLabel } from '../../core/i18n/labels';
 
 /** Elementos considerados "focaveis" dentro do painel, pro focus trap (ver `trapFocus`). */
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
@@ -57,6 +58,8 @@ export class MobileMenu {
   protected readonly themeService = inject(ThemeService);
   protected readonly anchorScroll = inject(AnchorScrollService);
   protected readonly navLinks = NAV_LINKS;
+
+  protected readonly themeLabel = computed(() => themeToggleLabel(this.themeService.theme()));
   protected readonly panelId = PANEL_ID;
 
   readonly open = input<boolean>(false);
