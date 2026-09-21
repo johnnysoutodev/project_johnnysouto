@@ -43,9 +43,14 @@
 
 .mobile-menu__panel {
   position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
+  // Painel "card" flutuante (21/09/2026, a pedido do Johnny), no mesmo estilo do navbar do
+  // Header (`header.scss`): 8px de folga nas bordas e raio de 8px, em vez de gaveta
+  // colada nas bordas da tela.
+  top: var(--space-8);
+  right: var(--space-8);
+  height: calc(100% - var(--space-8) * 2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
   // Figma mediu só o frame mobile de 375px: painel de 320px (~85% da largura total,
   // "left: 55px, width: 320px" — design-system.md 8.13). Reproduzido de forma
   // proporcional/responsiva (nao um px fixo) com `min(85%, 320px)`: bate exatamente com
@@ -58,7 +63,8 @@
   flex-direction: column;
   background-color: var(--color-gray-default);
   box-shadow: var(--shadow-2xl-dark);
-  transform: translateX(100%);
+  // `+ 8px`: a folga da direita tambem precisa sair da tela quando fechado.
+  transform: translateX(calc(100% + var(--space-8)));
   transition: transform 0.25s ease;
 
   @include breakpoints.tablet-only {

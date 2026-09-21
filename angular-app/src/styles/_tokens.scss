@@ -142,7 +142,8 @@
   --space-icon-button-padding: var(--space-6);
   --space-tag-padding-x: var(--space-20);
   --space-tag-padding-y: 4px; // so aparece neste uso (padding vertical do Tag); nao cadastrado na escala acima
-  --space-card-padding: var(--space-48);
+  --space-card-padding: var(--space-48); // card grande (Project)
+  --space-card-compact-padding: var(--space-24); // card compacto (Testimonials)
   --space-timeline-item-padding: var(--space-32);
   --space-skills-icon-slot: var(--space-64); // altura da caixa do icone do item "Tech" (secao 8.10)
 
@@ -178,7 +179,7 @@
   // (#ffffff), so que semi-transparente pra funcionar com `backdrop-filter: blur()` -
   // mesmo criterio ja usado no scrim do menu mobile acima (valor solto, 1 variavel por
   // tema, nao token formal da secao 3).
-  --color-header-scrolled-bg: rgba(255, 255, 255, 0.8);
+  --color-header-scrolled-bg: rgba(255, 255, 255, 0.75);
 }
 
 // ---------------------------------------------------------------------
@@ -200,5 +201,5 @@
 
   // Fundo do Header "rolado" no Dark - ver nota completa junto da variavel light em
   // `:root` acima. Mesma cor de `--color-gray-dark-default` (#030712), semi-transparente.
-  --color-header-scrolled-bg: rgba(3, 7, 18, 0.8);
+  --color-header-scrolled-bg: rgba(3, 7, 18, 0.75);
 }

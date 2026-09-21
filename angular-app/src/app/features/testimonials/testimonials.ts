@@ -35,7 +35,7 @@ interface Testimonial {
  * navegacao do Header.
  *
  * CONTEUDO REAL (08/09/2026, a pedido do Johnny - substitui a decisao original da
- * secao 10, que previa 3 depoimentos ficticios por falta de equivalente real): 2
+ * secao 10, que previa 3 depoimentos ficticios por falta de equivalente real): 3
  * depoimentos reais, com foto (`photo`, ver `TestimonialPhoto`) fornecida pelo Johnny em
  * `public/assets/images/`.
  */
@@ -59,12 +59,21 @@ export class Testimonials {
     },
     {
       name: 'Raphaela Simon',
-      role: 'Líder da Totvs',
+      role: 'Líder da TOTVS',
       photo: { src: '/assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
       quote:
         '"Johnny é um profissional em quem sei que posso confiar e contar. Sua ' +
         'competência técnica, postura colaborativa e senso de responsabilidade ' +
         'fazem muita diferença nas nossas entregas."',
+    },
+    {
+      name: 'Cesar Sales Lima',
+      role: 'Especialista em Observabilidade na IBM',
+      photo: { src: '/assets/images/profile_testmonial_03.jpeg', alt: 'Cesar Sales Lima' },
+      quote:
+        '"Além da competência profissional, destaca-se pelo trabalho em equipe, ' +
+        'postura colaborativa e disposição para apoiar colegas nos desafios do dia a ' +
+        'dia. Recomendo fortemente seu trabalho."',
     },
   ];
 }
