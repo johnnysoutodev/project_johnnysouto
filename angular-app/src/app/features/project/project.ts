@@ -100,7 +100,7 @@ export class Project {
     },
     {
       name: 'ProFuturo',
-      period: $localize`:@@project.profuturo.period:Agosto de 2015 | Dezembro de 2016`,
+      period: $localize`:@@project.profuturo.period:Agosto de 2015 | Agosto de 2017`,
       description: $localize`:@@project.profuturo.description:Sistema de ensino pré-escolar e fundamental por tablet, para crianças de todo o mundo, com telas interativas e disponível em vários idiomas. Desenvolvi o front-end com HTML5, CSS3 e JavaScript e, para ganhar performance, migramos de jQuery para JavaScript puro com PIXI.js. Criamos uma API com as funcionalidades do projeto e templates que aceleraram a produção, automatizamos tarefas com Grunt e versionamos o código no GitLab.`,
       tags: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'PIXI.js', 'Grunt', 'GitLab'],
       actionHref: 'https://fundacaotelefonicavivo.org.br/profuturo/',

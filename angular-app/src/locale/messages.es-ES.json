@@ -79,7 +79,7 @@
     "project.subtitle": "Algunos de los proyectos en los que he participado",
     "project.pitcher.period": "Julio de 2021 | Octubre de 2023",
     "project.pitcher.description": "Coca-Cola FEMSA sustituyó la aplicación MfCoke por Pitcher App para agilizar el trabajo diario de sus promotores. Fui responsable de la implantación: integración de las bases de datos (MS-SQL Server y SAP), gestión de la información de clientes en Salesforce con fórmulas y gráficos dinámicos, e instalación y configuración de la app en los dispositivos de más de 3.000 empleados. Los datos recopilados generan informes gráficos que aceleran la toma de decisiones.",
-    "project.profuturo.period": "Agosto de 2015 | Diciembre de 2016",
+    "project.profuturo.period": "Agosto de 2015 | Agosto de 2017",
     "project.profuturo.description": "Un sistema de enseñanza preescolar y primaria mediante tabletas para niños de todo el mundo, con pantallas interactivas y disponible en varios idiomas. Desarrollé el front-end con HTML5, CSS3 y JavaScript y, para ganar rendimiento, migramos de jQuery a JavaScript puro con PIXI.js. Creamos una API con las funcionalidades del proyecto y plantillas que aceleraron la producción, automatizamos tareas con Grunt y versionamos el código en GitLab.",
     "project.profuturo.action.aria": "Más información sobre el proyecto ProFuturo (se abre en una pestaña nueva)",
     "project.logo.alt": "Logotipo del proyecto {$name}",
