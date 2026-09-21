@@ -9,13 +9,13 @@
     "about.photo.alt": "Ipê amarillo en flor",
     "about.heading": "Más de 20 años construyendo tecnología",
     "about.bio.p1": "Soy un profesional de TI con más de {$INTERPOLATION} años de experiencia, con una trayectoria que pasa por operaciones, soporte de sistemas, bases de datos, front-end, back-end, análisis de negocio y consultoría, en empresas como Nielsen, Vivo, Coca-Cola, Santander y TOTVS.",
-    "about.bio.p2": "He vivido de cerca distintas fases de la tecnología, desde el procesamiento por lotes y la administración de datos hasta las aplicaciones web y los flujos de trabajo DevOps. Hoy, en TOTVS, desarrollo el front-end con Angular e IA generativa y vivo con entusiasmo la era de la Nube, los Datos y la IA.",
+    "about.bio.p2": "He vivido de cerca distintas fases de la tecnología, desde el procesamiento por lotes y la administración de datos hasta las aplicaciones web y los flujos de trabajo DevOps. Hoy, en TOTVS, desarrollo el front-end con Angular e IA generativa y vivo con entusiasmo la era del Cloud, los Datos y la IA.",
     "about.bio.p3": "Me apasiona lo que hago y sigo aprendiendo de forma continua, buscando siempre entender el problema de negocio antes de escribir la primera línea de código.",
     "about.summary.lead": "En resumen:",
     "about.fact.experience": "Más de {$INTERPOLATION} años de experiencia en TI",
     "about.fact.stack": "Front-end y back-end: Angular, TypeScript, Java y Node.js",
-    "about.fact.cloud": "Nube y DevOps: CI/CD con GitHub Actions",
-    "about.fact.focus": "Enfoque actual: Nube, Datos e IA generativa",
+    "about.fact.cloud": "Cloud y DevOps: CI/CD con GitHub Actions",
+    "about.fact.focus": "Enfoque actual: Cloud, Datos e IA generativa",
     "about.closing": "¿Quieres hablar sobre alguna oportunidad o proyecto? No dudes en ponerte en contacto.",
     "contact.tag": "Ponte en contacto",
     "contact.subtitle": "No dudes en ponerte en contacto",
@@ -32,7 +32,7 @@
     "exp.totvs.0.role": "Desarrollador Front-end",
     "exp.totvs.0.period": "Marzo de 2026 | Actualidad",
     "exp.totvs.0.b1": "Desarrollo de software front-end con Angular e IA generativa Claude",
-    "exp.totvs.0.b2": "Trabajo en T-Cloud, la plataforma de nube de TOTVS que simplifica el uso de la nube por parte de los clientes",
+    "exp.totvs.0.b2": "Trabajo en T-Cloud, la plataforma de Cloud de TOTVS que simplifica el uso de Cloud por parte de los clientes",
     "exp.totvs.0.b3": "Integración con APIs y desarrollo de componentes reutilizables",
     "exp.totvs.0.b4": "Despliegue con GitHub Actions",
     "exp.santander.0.role": "Analista de TI (DevOps)",
@@ -107,6 +107,6 @@
     "language.switcher.aria": "Idioma",
     "mobilemenu.language.label": "Idioma",
     "seo.title": "Johnny Souto | Ingeniero de Software",
-    "seo.description": "Ingeniero de Software con más de 20 años de experiencia en TI: front-end, back-end, bases de datos, Nube y DevOps. Portfolio profesional de Johnny Souto."
+    "seo.description": "Ingeniero de Software con más de 20 años de experiencia en TI: front-end, back-end, bases de datos, Cloud y DevOps. Portfolio profesional de Johnny Souto."
   }
 }
