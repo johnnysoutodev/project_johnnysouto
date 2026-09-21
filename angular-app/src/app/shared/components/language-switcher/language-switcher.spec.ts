@@ -12,7 +12,7 @@ describe('LanguageSwitcher', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LanguageSwitcher],
-      providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }],
+      providers: [{ provide: LOCALE_ID, useValue: 'pt' }],
     }).compileComponents();
 
     service = TestBed.inject(LanguageService);
@@ -22,46 +22,71 @@ describe('LanguageSwitcher', () => {
 
   afterEach(() => vi.restoreAllMocks());
 
-  const links = () => fixture.debugElement.queryAll(By.css('.language-switcher__link'));
+  const select = () =>
+    fixture.debugElement.query(By.css('.language-switcher__select'))
+      .nativeElement as HTMLSelectElement;
 
-  it('renders one real link per locale (PT, EN, ES) with lang/hreflang and the native name', () => {
-    expect(links().map((link) => link.nativeElement.textContent.trim())).toEqual([
-      'PT',
-      'EN',
-      'ES',
+  it('renders a labelled select with the 3 languages by their native names', () => {
+    expect(select().getAttribute('aria-label')).toBe('Idioma');
+    const options = Array.from(select().options);
+    expect(options.map((option) => option.textContent?.trim())).toEqual([
+      'Português',
+      'English',
+      'Español',
     ]);
-    const english = links()[1].nativeElement as HTMLAnchorElement;
-    expect(english.getAttribute('href')).toBe('/en-us/');
-    expect(english.getAttribute('hreflang')).toBe('en-US');
-    expect(english.getAttribute('lang')).toBe('en-US');
-    expect(english.getAttribute('aria-label')).toBe('English');
-  });
-
-  it('marks only the current locale with aria-current', () => {
-    expect(links().map((link) => link.nativeElement.getAttribute('aria-current'))).toEqual([
-      'true',
-      null,
-      null,
+    expect(options.map((option) => option.value)).toEqual(['pt-BR', 'en-US', 'es-ES']);
+    expect(options.map((option) => option.getAttribute('lang'))).toEqual([
+      'pt-BR',
+      'en-US',
+      'es-ES',
     ]);
   });
 
-  it('selects another locale on click, preventing the default navigation', () => {
-    const select = vi.spyOn(service, 'select').mockImplementation(() => undefined);
-    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
-
-    links()[2].nativeElement.dispatchEvent(event);
-
-    expect(event.defaultPrevented).toBe(true);
-    expect(select).toHaveBeenCalledWith(APP_LOCALES[2]);
+  it('pre-selects the current language', () => {
+    expect(select().value).toBe('pt-BR');
   });
 
-  it('lets the browser handle modified clicks (e.g. open in a new tab)', () => {
-    const select = vi.spyOn(service, 'select').mockImplementation(() => undefined);
-    const event = new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey: true });
+  it('selects the chosen language when the value changes', () => {
+    const selectLocale = vi.spyOn(service, 'select').mockImplementation(() => undefined);
 
-    links()[1].nativeElement.dispatchEvent(event);
+    select().value = 'es-ES';
+    select().dispatchEvent(new Event('change'));
 
-    expect(event.defaultPrevented).toBe(false);
-    expect(select).not.toHaveBeenCalled();
+    expect(selectLocale).toHaveBeenCalledWith(APP_LOCALES[2]);
+  });
+
+  describe('inline layout (mobile menu)', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(LanguageSwitcher);
+      fixture.componentRef.setInput('layout', 'inline');
+      fixture.detectChanges();
+    });
+
+    const options = () => fixture.debugElement.queryAll(By.css('.language-switcher__option'));
+
+    it('renders the 3 languages as buttons instead of a select', () => {
+      expect(fixture.debugElement.query(By.css('select'))).toBeNull();
+      expect(options().map((option) => option.nativeElement.textContent.trim())).toEqual([
+        'Português',
+        'English',
+        'Español',
+      ]);
+    });
+
+    it('marks only the current language as pressed', () => {
+      expect(options().map((option) => option.nativeElement.getAttribute('aria-pressed'))).toEqual([
+        'true',
+        'false',
+        'false',
+      ]);
+    });
+
+    it('selects the clicked language', () => {
+      const selectLocale = vi.spyOn(service, 'select').mockImplementation(() => undefined);
+
+      options()[1].nativeElement.click();
+
+      expect(selectLocale).toHaveBeenCalledWith(APP_LOCALES[1]);
+    });
   });
 });

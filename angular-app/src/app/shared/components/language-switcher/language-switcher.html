@@ -1,15 +1,53 @@
-<nav class="language-switcher" aria-label="Idioma" i18n-aria-label="@@language.switcher.aria">
-  @for (locale of language.locales; track locale.code) {
-    <a
-      class="language-switcher__link"
-      [class.language-switcher__link--current]="locale.code === language.current.code"
-      [href]="language.hrefFor(locale)"
-      [attr.lang]="locale.code"
-      [attr.hreflang]="locale.code"
-      [attr.aria-label]="locale.name"
-      [attr.aria-current]="locale.code === language.current.code ? 'true' : null"
-      (click)="onSelect($event, locale)"
-      >{{ locale.short }}</a
+@if (layout() === 'inline') {
+  <div
+    class="language-switcher language-switcher--inline"
+    role="group"
+    aria-label="Idioma"
+    i18n-aria-label="@@language.switcher.aria"
+  >
+    @for (locale of language.locales; track locale.code) {
+      <button
+        type="button"
+        class="language-switcher__option"
+        [attr.lang]="locale.code"
+        [attr.aria-pressed]="locale.code === language.current.code"
+        (click)="choose(locale)"
+      >
+        {{ locale.name }}
+      </button>
+    }
+  </div>
+} @else {
+  <div class="language-switcher">
+    <select
+      class="language-switcher__select"
+      aria-label="Idioma"
+      i18n-aria-label="@@language.switcher.aria"
+      (change)="onChange($event)"
     >
-  }
-</nav>
+      @for (locale of language.locales; track locale.code) {
+        <option
+          [value]="locale.code"
+          [attr.lang]="locale.code"
+          [selected]="locale.code === language.current.code"
+        >
+          {{ locale.name }}
+        </option>
+      }
+    </select>
+    <svg
+      class="language-switcher__chevron"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  </div>
+}

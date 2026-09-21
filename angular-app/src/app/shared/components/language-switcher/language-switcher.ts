@@ -1,11 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AppLocale, LanguageService } from '../../../core/i18n/language';
 
 /**
- * Seletor de idioma (PT | EN | ES). Cada opcao e um link real (`href`, `hreflang`) para o
- * build do idioma - funciona sem JS e e rastreavel; o clique so grava o cookie `lang` e
- * preserva o `#secao` (`LanguageService.select`). O idioma atual fica marcado com
- * `aria-current` e nao navega.
+ * Seletor de idioma: `<select>` nativo (Português / English / Español) - acessivel por
+ * padrao (teclado, leitor de tela) e com a UI nativa em celulares. Escolher outro idioma
+ * grava o cookie `lang` e navega para o build daquele idioma preservando o `#secao`
+ * (`LanguageService.select`); o idioma atual fica pre-selecionado.
+ *
+ * `layout="inline"` (menu mobile): em vez do `<select>`, mostra os 3 idiomas como botoes lado
+ * a lado. O popup nativo do `<select>` e desenhado pelo navegador (posicao/estilo fora do
+ * nosso controle, ainda mais dentro do painel do menu), entao no mobile a escolha fica
+ * direto na tela.
  */
 @Component({
   selector: 'app-language-switcher',
@@ -15,12 +20,17 @@ import { AppLocale, LanguageService } from '../../../core/i18n/language';
 export class LanguageSwitcher {
   protected readonly language = inject(LanguageService);
 
-  protected onSelect(event: MouseEvent, locale: AppLocale): void {
-    // Deixa o navegador tratar cliques com modificador (abrir em nova aba etc.).
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
-      return;
-    }
-    event.preventDefault();
+  readonly layout = input<'select' | 'inline'>('select');
+
+  protected choose(locale: AppLocale): void {
     this.language.select(locale);
+  }
+
+  protected onChange(event: Event): void {
+    const code = (event.target as HTMLSelectElement).value;
+    const locale = this.language.locales.find((item) => item.code === code);
+    if (locale) {
+      this.language.select(locale);
+    }
   }
 }
