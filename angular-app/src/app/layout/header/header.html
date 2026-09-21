@@ -1,12 +1,16 @@
 <header class="header" [class.header--scrolled]="isScrolled()">
   <div class="header__container">
-    <a class="header__logo" href="#top" aria-label="Início">
+    <a class="header__logo" href="#top" aria-label="Início" i18n-aria-label="@@header.logo.aria">
       <span class="header__logo-short">JS</span>
       <span class="header__logo-full">JohnnySouto</span>
     </a>
 
     <div class="header__right">
-      <nav class="header__nav" aria-label="Navegação principal">
+      <nav
+        class="header__nav"
+        aria-label="Navegação principal"
+        i18n-aria-label="@@nav.main.aria"
+      >
         @for (link of navLinks; track link.href) {
           <a
             class="header__nav-link"
@@ -29,9 +33,11 @@
           exportado pelo agente `designer`. Logica de alternancia ja ligada (ThemeService,
           core/theme/theme.ts) - so o icone em si segue placeholder.
         -->
+        <app-language-switcher class="header__language" />
+
         <app-icon-button
           class="header__theme-toggle"
-          [ariaLabel]="themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
+          [ariaLabel]="themeLabel()"
           [pressed]="themeService.theme() === 'dark'"
           (click)="themeService.toggle()"
         >
@@ -72,7 +78,7 @@
         </app-icon-button>
 
         <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
-        <button type="button" class="header__cta">Download CV</button>
+        <button type="button" class="header__cta" i18n="@@cta.download-cv">Download CV</button>
 
         <!--
           Botao de hamburguer: distinto do Icon Button de tema acima, visivel so abaixo do
@@ -86,7 +92,7 @@
           class="header__menu-toggle"
           [attr.aria-expanded]="isMobileMenuOpen()"
           aria-controls="mobile-menu"
-          [attr.aria-label]="isMobileMenuOpen() ? 'Fechar menu' : 'Abrir menu'"
+          [attr.aria-label]="menuLabel()"
           (click)="toggleMobileMenu()"
         >
           @if (isMobileMenuOpen()) {

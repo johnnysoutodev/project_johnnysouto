@@ -8,6 +8,7 @@
     role="dialog"
     aria-modal="true"
     aria-label="Menu de navegação"
+    i18n-aria-label="@@mobilemenu.dialog.aria"
     [attr.inert]="open() ? null : ''"
     (keydown)="onPanelKeydown($event)"
   >
@@ -20,7 +21,13 @@
         (ícone real de fechar segue pendente de exportacao isolada, design-system.md
         secoes 6/8.3) — SVG generico inline.
       -->
-      <button type="button" class="mobile-menu__close" aria-label="Fechar menu" (click)="close()">
+      <button
+        type="button"
+        class="mobile-menu__close"
+        aria-label="Fechar menu"
+        i18n-aria-label="@@menu.close.aria"
+        (click)="close()"
+      >
         <svg
           width="24"
           height="24"
@@ -38,7 +45,11 @@
     </div>
 
     <!-- Bloco 2: Links de navegacao (design-system.md 8.13, mesmos 4 links do Header) -->
-    <nav class="mobile-menu__links" aria-label="Navegação principal">
+    <nav
+      class="mobile-menu__links"
+      aria-label="Navegação principal"
+      i18n-aria-label="@@nav.main.aria"
+    >
       @for (link of navLinks; track link.href) {
         <a
           class="mobile-menu__link"
@@ -52,8 +63,13 @@
 
     <!-- Bloco 3: Switch Theme + Download CV (design-system.md 8.13, bloco "Actions") -->
     <div class="mobile-menu__actions">
+      <div class="mobile-menu__language-row">
+        <span class="mobile-menu__theme-label" i18n="@@mobilemenu.language.label">Idioma</span>
+        <app-language-switcher layout="inline" />
+      </div>
+
       <div class="mobile-menu__theme-row">
-        <span class="mobile-menu__theme-label">Trocar Tema</span>
+        <span class="mobile-menu__theme-label" i18n="@@mobilemenu.theme.label">Trocar Tema</span>
 
         <!--
           Icone sol/lua trocando conforme o tema atual — confirmado na spec (8.13: "o
@@ -68,9 +84,7 @@
           type="button"
           class="mobile-menu__theme-toggle"
           [attr.aria-pressed]="themeService.theme() === 'dark'"
-          [attr.aria-label]="
-            themeService.theme() === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
-          "
+          [attr.aria-label]="themeLabel()"
           (click)="themeService.toggle()"
         >
           @if (themeService.theme() === 'light') {
@@ -109,7 +123,7 @@
       </div>
 
       <!-- Download do CV: logica real (arquivo por idioma) e escopo da Fase 4 do plano. -->
-      <button type="button" class="mobile-menu__cta">Download CV</button>
+      <button type="button" class="mobile-menu__cta" i18n="@@cta.download-cv">Download CV</button>
     </div>
   </div>
 </div>

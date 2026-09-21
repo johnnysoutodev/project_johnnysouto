@@ -1,0 +1,86 @@
+@use 'typography';
+
+:host {
+  display: block;
+}
+
+.language-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.language-switcher__select {
+  @include typography.body2-medium;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: var(--space-6) var(--space-32) var(--space-6) var(--space-16);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gray-900);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-gray-600);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  // Lista aberta: mesmo fundo/cor do tema (navegadores que respeitam estilo em `<option>`).
+  option {
+    background-color: var(--color-gray-default);
+    color: var(--color-gray-900);
+  }
+}
+
+// Seta desenhada a parte (o `appearance: none` remove a nativa); nao captura cliques.
+.language-switcher__chevron {
+  position: absolute;
+  right: var(--space-8);
+  color: var(--color-gray-600);
+  pointer-events: none;
+}
+
+// Variante `inline` (menu mobile): 3 botoes lado a lado, largura total, sem popup nativo.
+.language-switcher--inline {
+  display: flex;
+  width: 100%;
+  gap: var(--space-4);
+}
+
+.language-switcher__option {
+  @include typography.body2-medium;
+  // `auto` + `min-width: 0`: cada botao acompanha o tamanho do texto e encolhe em telas
+  // estreitas (320px) em vez de estourar a largura do painel do menu.
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--space-6) var(--space-4);
+  white-space: nowrap;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  background-color: transparent;
+  color: var(--color-gray-600);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-gray-900);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+
+  // Idioma atual (aria-pressed): destacado.
+  &[aria-pressed='true'] {
+    border-color: var(--color-gray-900);
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-900);
+    cursor: default;
+  }
+}

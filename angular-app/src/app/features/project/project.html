@@ -1,8 +1,8 @@
 <section class="project">
   <div class="project__container">
     <div class="project__heading">
-      <app-tag>Projetos</app-tag>
-      <p class="project__subtitle">Alguns dos projetos dos quais participei</p>
+      <app-tag i18n="@@project.tag">Projetos</app-tag>
+      <p class="project__subtitle" i18n="@@project.subtitle">Alguns dos projetos dos quais participei</p>
     </div>
 
     <div class="project__list">
@@ -34,7 +34,7 @@
                 [ngSrc]="logo.src"
                 [width]="logo.width"
                 [height]="logo.height"
-                [alt]="'Logo do projeto ' + project.name"
+                [alt]="logoAlt(project.name)"
               />
             }
           </div>

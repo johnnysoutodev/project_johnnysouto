@@ -91,38 +91,31 @@ export class Project {
   protected readonly projects: readonly ProjectItem[] = [
     {
       name: 'Pitcher App',
-      period: 'Julho de 2021 | Outubro de 2023',
-      description:
-        'A Coca-Cola FEMSA substituiu o aplicativo MfCoke pelo Pitcher App para agilizar o ' +
-        'trabalho diário dos promotores. Fui responsável pela implantação: integração das ' +
-        'bases de dados (MS-SQL Server e SAP), pela gestão das informações de clientes no ' +
-        'Salesforce com fórmulas e gráficos dinâmicos, e instalação e configuração do app ' +
-        'nos dispositivos de mais de 3.000 colaboradores. Os dados coletados geram ' +
-        'relatórios gráficos que aceleram a tomada de decisão.',
+      period: $localize`:@@project.pitcher.period:Julho de 2021 | Outubro de 2023`,
+      description: $localize`:@@project.pitcher.description:A Coca-Cola FEMSA substituiu o aplicativo MfCoke pelo Pitcher App para agilizar o trabalho diário dos promotores. Fui responsável pela implantação: integração das bases de dados (MS-SQL Server e SAP), pela gestão das informações de clientes no Salesforce com fórmulas e gráficos dinâmicos, e instalação e configuração do app nos dispositivos de mais de 3.000 colaboradores. Os dados coletados geram relatórios gráficos que aceleram a tomada de decisão.`,
       tags: ['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets'],
       // Sem link publico disponivel no legado (secao 10/comentario acima) - acao omitida.
-      logo: { src: '/assets/images/logo_project_coca-cola_femsa.png', width: 280, height: 100 },
+      logo: { src: 'assets/images/logo_project_coca-cola_femsa.png', width: 280, height: 100 },
       imageBackground: '#f9fafb',
     },
     {
       name: 'ProFuturo',
-      period: 'Agosto de 2015 | Dezembro de 2016',
-      description:
-        'Sistema de ensino pré-escolar e fundamental por tablet, para crianças de todo o ' +
-        'mundo, com telas interativas e disponível em vários idiomas. Desenvolvi o front-end ' +
-        'com HTML5, CSS3 e JavaScript e, para ganhar performance, migramos de jQuery para ' +
-        'JavaScript puro com PIXI.js. Criamos uma API com as funcionalidades do projeto e ' +
-        'templates que aceleraram a produção, automatizamos tarefas com Grunt e ' +
-        'versionamos o código no GitLab.',
+      period: $localize`:@@project.profuturo.period:Agosto de 2015 | Dezembro de 2016`,
+      description: $localize`:@@project.profuturo.description:Sistema de ensino pré-escolar e fundamental por tablet, para crianças de todo o mundo, com telas interativas e disponível em vários idiomas. Desenvolvi o front-end com HTML5, CSS3 e JavaScript e, para ganhar performance, migramos de jQuery para JavaScript puro com PIXI.js. Criamos uma API com as funcionalidades do projeto e templates que aceleraram a produção, automatizamos tarefas com Grunt e versionamos o código no GitLab.`,
       tags: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'PIXI.js', 'Grunt', 'GitLab'],
       actionHref: 'https://fundacaotelefonicavivo.org.br/profuturo/',
-      actionAriaLabel: 'Leia mais sobre o projeto ProFuturo (abre em nova aba)',
+      actionAriaLabel: $localize`:@@project.profuturo.action.aria:Leia mais sobre o projeto ProFuturo (abre em nova aba)`,
       logo: {
-        src: '/assets/images/logo_project_profuturo.png',
+        src: 'assets/images/logo_project_profuturo.png',
         width: 480,
         height: 152,
         displayMaxHeight: 96,
       },
     },
   ];
+
+  /** Texto alternativo do logo do projeto (traduzido via `$localize`). */
+  protected logoAlt(name: string): string {
+    return $localize`:@@project.logo.alt:Logo do projeto ${name}:name:`;
+  }
 }

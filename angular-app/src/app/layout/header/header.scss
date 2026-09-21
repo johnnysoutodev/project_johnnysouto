@@ -213,6 +213,14 @@
   }
 }
 
+.header__language {
+  display: none;
+
+  @include breakpoints.desktop-up {
+    display: block;
+  }
+}
+
 .header__theme-toggle {
   display: none;
 

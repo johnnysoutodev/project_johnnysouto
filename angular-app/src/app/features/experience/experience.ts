@@ -79,7 +79,7 @@ export class Experience {
     {
       company: 'Totvs',
       logo: {
-        src: '/assets/images/logo_totvs.jpg',
+        src: 'assets/images/logo_totvs.jpg',
         width: 200,
         height: 112,
         displayHeight: 56,
@@ -87,13 +87,13 @@ export class Experience {
       },
       positions: [
         {
-          role: 'Desenvolvedor Front-end',
-          period: 'Março de 2026 | Atual',
+          role: $localize`:@@exp.totvs.0.role:Desenvolvedor Front-end`,
+          period: $localize`:@@exp.totvs.0.period:Março de 2026 | Atual`,
           bullets: [
-            'Desenvolvimento de software front-end com Angular e IA generativa Claude',
-            'Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes',
-            'Integração com APIs e desenvolvimento de componentes reutilizáveis',
-            'Deploy com GitHub Actions',
+            $localize`:@@exp.totvs.0.b1:Desenvolvimento de software front-end com Angular e IA generativa Claude`,
+            $localize`:@@exp.totvs.0.b2:Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes`,
+            $localize`:@@exp.totvs.0.b3:Integração com APIs e desenvolvimento de componentes reutilizáveis`,
+            $localize`:@@exp.totvs.0.b4:Deploy com GitHub Actions`,
           ],
         },
       ],
@@ -101,60 +101,60 @@ export class Experience {
     {
       company: 'Santander',
       logo: {
-        src: '/assets/images/logo_santander.png',
+        src: 'assets/images/logo_santander.png',
         width: 229,
         height: 40,
         displayHeight: 20,
       },
       positions: [
         {
-          role: 'Analista de TI (DevOps)',
-          period: 'Junho de 2024 | Janeiro de 2026',
+          role: $localize`:@@exp.santander.0.role:Analista de TI (DevOps)`,
+          period: $localize`:@@exp.santander.0.period:Junho de 2024 | Janeiro de 2026`,
           bullets: [
-            'Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco',
-            'Apoio a times na adoção de esteiras CI/CD com GitHub Actions',
-            'Integração de ferramentas de qualidade e segurança de código, como SonarQube e Fortify',
-            'Gestão e estruturação de repositórios no GitHub, promovendo padronização de código e governança de pipelines',
+            $localize`:@@exp.santander.0.b1:Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco`,
+            $localize`:@@exp.santander.0.b2:Apoio a times na adoção de esteiras CI/CD com GitHub Actions`,
+            $localize`:@@exp.santander.0.b3:Integração de ferramentas de qualidade e segurança de código, como SonarQube e Fortify`,
+            $localize`:@@exp.santander.0.b4:Gestão e estruturação de repositórios no GitHub, promovendo padronização de código e governança de pipelines`,
           ],
         },
       ],
     },
     {
       company: 'Capgemini',
-      logo: { src: '/assets/images/logo_capgemini.png', width: 200, height: 59 },
+      logo: { src: 'assets/images/logo_capgemini.png', width: 200, height: 59 },
       positions: [
         {
-          role: 'Consultor de Sistemas',
-          period: 'Julho de 2021 | Janeiro de 2024',
+          role: $localize`:@@exp.capgemini.0.role:Consultor de Sistemas`,
+          period: $localize`:@@exp.capgemini.0.period:Julho de 2021 | Janeiro de 2024`,
           bullets: [
-            'Administração de dados SQL, SAP e Salesforce',
-            'Gestão de dados por fórmulas e gráficos dinâmicos',
-            'Controle de documentação técnica do projeto Pitcher',
-            'Treinamento para colaboradores',
+            $localize`:@@exp.capgemini.0.b1:Administração de dados SQL, SAP e Salesforce`,
+            $localize`:@@exp.capgemini.0.b2:Gestão de dados por fórmulas e gráficos dinâmicos`,
+            $localize`:@@exp.capgemini.0.b3:Controle de documentação técnica do projeto Pitcher`,
+            $localize`:@@exp.capgemini.0.b4:Treinamento para colaboradores`,
           ],
         },
       ],
     },
     {
       company: 'Vivo',
-      logo: { src: '/assets/images/logo_vivo.svg', width: 321, height: 100 },
+      logo: { src: 'assets/images/logo_vivo.svg', width: 321, height: 100 },
       positions: [
         {
-          role: 'Analista de Suporte de Sistemas (SOC)',
-          period: 'Agosto de 2019 | Maio de 2021',
+          role: $localize`:@@exp.vivo.0.role:Analista de Suporte de Sistemas (SOC)`,
+          period: $localize`:@@exp.vivo.0.period:Agosto de 2019 | Maio de 2021`,
           bullets: [
-            'Administração de acesso a sistemas',
-            'Gestão de acesso aos usuários corporativos',
-            'Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec',
+            $localize`:@@exp.vivo.0.b1:Administração de acesso a sistemas`,
+            $localize`:@@exp.vivo.0.b2:Gestão de acesso aos usuários corporativos`,
+            $localize`:@@exp.vivo.0.b3:Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec`,
           ],
         },
         {
-          role: 'Analista Suporte de Sistemas (OSS)',
-          period: 'Agosto de 2017 | Agosto de 2019',
+          role: $localize`:@@exp.vivo.1.role:Analista Suporte de Sistemas (OSS)`,
+          period: $localize`:@@exp.vivo.1.period:Agosto de 2017 | Agosto de 2019`,
           bullets: [
-            'Administração e realização de scripts para Oracle Database',
-            'Monitoração e sustentação de aplicações de desempenho',
-            'CDROne / DBN0 / Altaia / Cricket',
+            $localize`:@@exp.vivo.1.b1:Administração e realização de scripts para Oracle Database`,
+            $localize`:@@exp.vivo.1.b2:Monitoração e sustentação de aplicações de desempenho`,
+            $localize`:@@exp.vivo.1.b3:CDROne / DBN0 / Altaia / Cricket`,
           ],
         },
       ],
@@ -162,18 +162,18 @@ export class Experience {
     {
       company: 'Telefônica Educação Digital',
       logo: {
-        src: '/assets/images/logo_telefonica_educacion_digital.png',
+        src: 'assets/images/logo_telefonica_educacion_digital.png',
         width: 187,
         height: 56,
       },
       positions: [
         {
-          role: 'Desenvolvedor Front-end',
-          period: 'Agosto de 2015 | Julho de 2017',
+          role: $localize`:@@exp.telefonica-educacao-digital.0.role:Desenvolvedor Front-end`,
+          period: $localize`:@@exp.telefonica-educacao-digital.0.period:Agosto de 2015 | Julho de 2017`,
           bullets: [
-            'Codificação de treinamentos EaD',
-            'HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js',
-            'Versionamento de código com GitLab / GitKraken',
+            $localize`:@@exp.telefonica-educacao-digital.0.b1:Codificação de treinamentos EaD`,
+            $localize`:@@exp.telefonica-educacao-digital.0.b2:HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js`,
+            $localize`:@@exp.telefonica-educacao-digital.0.b3:Versionamento de código com GitLab / GitKraken`,
           ],
         },
       ],
@@ -182,27 +182,27 @@ export class Experience {
       company: 'RCS Sistemas',
       positions: [
         {
-          role: 'Desenvolvedor de Sistemas CRM',
-          period: 'Maio de 2015 | Julho de 2015',
+          role: $localize`:@@exp.rcs-sistemas.0.role:Desenvolvedor de Sistemas CRM`,
+          period: $localize`:@@exp.rcs-sistemas.0.period:Maio de 2015 | Julho de 2015`,
           bullets: [
-            'Desenvolvimento de aplicações CRM',
-            'Linguagens Apex, Visualforce, Triggers e SOQL',
-            'Force.com da Salesforce',
+            $localize`:@@exp.rcs-sistemas.0.b1:Desenvolvimento de aplicações CRM`,
+            $localize`:@@exp.rcs-sistemas.0.b2:Linguagens Apex, Visualforce, Triggers e SOQL`,
+            $localize`:@@exp.rcs-sistemas.0.b3:Force.com da Salesforce`,
           ],
         },
       ],
     },
     {
       company: 'Nielsen',
-      logo: { src: '/assets/images/logo_nielsen.jpg', width: 240, height: 40 },
+      logo: { src: 'assets/images/logo_nielsen.jpg', width: 240, height: 40 },
       positions: [
         {
-          role: 'Operador de Computador',
-          period: 'Janeiro de 2006 | Setembro de 2013',
+          role: $localize`:@@exp.nielsen.0.role:Operador de Computador`,
+          period: $localize`:@@exp.nielsen.0.period:Janeiro de 2006 | Setembro de 2013`,
           bullets: [
-            'ARCServe Backup / Retal Índex / Scantrack',
-            'Administração e controle de mídias para backups',
-            'Processamento em batch e stored procedure de MS-SQL Server',
+            $localize`:@@exp.nielsen.0.b1:ARCServe Backup / Retal Índex / Scantrack`,
+            $localize`:@@exp.nielsen.0.b2:Administração e controle de mídias para backups`,
+            $localize`:@@exp.nielsen.0.b3:Processamento em batch e stored procedure de MS-SQL Server`,
           ],
         },
       ],

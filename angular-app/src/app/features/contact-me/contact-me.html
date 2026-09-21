@@ -1,8 +1,8 @@
 <section class="contact-me">
   <div class="contact-me__container">
     <div class="contact-me__heading">
-      <app-tag>Entre em contato</app-tag>
-      <p class="contact-me__subtitle">Fique à vontade para entrar em contato</p>
+      <app-tag i18n="@@contact.tag">Entre em contato</app-tag>
+      <p class="contact-me__subtitle" i18n="@@contact.subtitle">Fique à vontade para entrar em contato</p>
     </div>
 
     <!-- Coluna central (design-system.md secao 8.12): email + telefone empilhados, nao lado a lado. -->
@@ -10,7 +10,7 @@
       <div class="contact-me__row contact-me__row--email">
         <img
           class="contact-me__row-icon"
-          ngSrc="/assets/icons/icon-mail.svg"
+          ngSrc="assets/icons/icon-mail.svg"
           width="32"
           height="32"
           alt=""
@@ -18,7 +18,7 @@
         <a class="contact-me__row-value" [href]="mailtoHref">{{ email }}</a>
         <app-icon-button
           size="large"
-          [ariaLabel]="copiedField() === 'email' ? 'Email copiado!' : 'Copiar email'"
+          [ariaLabel]="copyLabel('email')"
           (click)="copy('email', email)"
         >
           @if (copiedField() === 'email') {
@@ -39,7 +39,7 @@
               <path d="M20 6 9 17l-5-5" />
             </svg>
           } @else {
-            <img ngSrc="/assets/icons/icon-copy.svg" width="32" height="32" alt="" />
+            <img ngSrc="assets/icons/icon-copy.svg" width="32" height="32" alt="" />
           }
         </app-icon-button>
       </div>
@@ -47,7 +47,7 @@
       <div class="contact-me__row contact-me__row--phone">
         <img
           class="contact-me__row-icon"
-          ngSrc="/assets/icons/icon-phone.svg"
+          ngSrc="assets/icons/icon-phone.svg"
           width="32"
           height="32"
           alt=""
@@ -62,7 +62,7 @@
         </a>
         <app-icon-button
           size="large"
-          [ariaLabel]="copiedField() === 'phone' ? 'Telefone copiado!' : 'Copiar telefone'"
+          [ariaLabel]="copyLabel('phone')"
           (click)="copy('phone', phoneDisplay)"
         >
           @if (copiedField() === 'phone') {
@@ -80,14 +80,14 @@
               <path d="M20 6 9 17l-5-5" />
             </svg>
           } @else {
-            <img ngSrc="/assets/icons/icon-copy.svg" width="32" height="32" alt="" />
+            <img ngSrc="assets/icons/icon-copy.svg" width="32" height="32" alt="" />
           }
         </app-icon-button>
       </div>
     </div>
 
     <div class="contact-me__social">
-      <p class="contact-me__social-text">Você também pode me encontrar por aqui:</p>
+      <p class="contact-me__social-text" i18n="@@contact.social.lead">Você também pode me encontrar por aqui:</p>
 
       <!--
         Icon Button so-icone pros 2 links, mesmo padrao do Hero (08/09/2026, a pedido do
@@ -96,15 +96,20 @@
         ambiguidade que motivava o texto visivel antes de o LinkedIn ganhar icone).
       -->
       <div class="contact-me__links">
-        <app-icon-button [href]="githubUrl" ariaLabel="GitHub de Johnny Souto (abre em nova aba)">
-          <img ngSrc="/assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+        <app-icon-button
+          [href]="githubUrl"
+          ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
+          i18n-ariaLabel="@@social.github.aria"
+        >
+          <img ngSrc="assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
         </app-icon-button>
 
         <app-icon-button
           [href]="linkedinUrl"
           ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
+          i18n-ariaLabel="@@social.linkedin.aria"
         >
-          <img ngSrc="/assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+          <img ngSrc="assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
         </app-icon-button>
       </div>
     </div>

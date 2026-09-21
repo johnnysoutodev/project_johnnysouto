@@ -35,13 +35,12 @@
               "includePaths": ["src/styles"]
             },
             "server": "src/main.server.ts",
-            "outputMode": "server",
+            "outputMode": "static",
             "security": {
               "allowedHosts": []
             },
-            "ssr": {
-              "entry": "src/server.ts"
-            }
+            "polyfills": ["@angular/localize/init"],
+            "i18nMissingTranslation": "error"
           },
           "configurations": {
             "production": {
@@ -57,12 +56,25 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "localize": true
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "en-US": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["en-US"]
+            },
+            "es": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": ["es"]
             }
           },
           "defaultConfiguration": "production"
@@ -75,6 +87,12 @@
             },
             "development": {
               "buildTarget": "project_johnnysouto:build:development"
+            },
+            "en-US": {
+              "buildTarget": "project_johnnysouto:build:en-US"
+            },
+            "es": {
+              "buildTarget": "project_johnnysouto:build:es"
             }
           },
           "defaultConfiguration": "development"
@@ -86,6 +104,22 @@
           "builder": "@angular-eslint/builder:lint",
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": {
+          "code": "pt",
+          "subPath": "pt-br"
+        },
+        "locales": {
+          "en-US": {
+            "translation": "src/locale/messages.en-US.json",
+            "subPath": "en-us"
+          },
+          "es": {
+            "translation": "src/locale/messages.es-ES.json",
+            "subPath": "es-es"
           }
         }
       }

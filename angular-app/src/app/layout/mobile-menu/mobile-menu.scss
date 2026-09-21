@@ -158,6 +158,12 @@
   gap: var(--space-16);
 }
 
+.mobile-menu__language-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
 .mobile-menu__theme-row {
   display: flex;
   align-items: center;

@@ -50,5 +50,5 @@ Minimize o consumo de tokens em todas as interações, sem sacrificar corretude:
 
 ## Convenções gerais
 
-- Conteúdo do site é em português (com versões em `src/pt/` e `src/en/`) — mantenha esse idioma ao editar textos visíveis no site.
+- O site Angular (`angular-app/`) é multilíngue: pt-BR (idioma-fonte), en-US e es-ES, via i18n nativo do Angular. Ao editar ou criar textos visíveis, escreva em português e marque com `i18n`/`i18n-aria-label`/`i18n-alt` (templates) ou `$localize` com ID `@@...` (TS); depois rode `npm run extract-i18n` e adicione a tradução nas 3 pastas de `angular-app/src/locale/` (`messages.json`, `messages.en-US.json`, `messages.es-ES.json`) — o build falha se faltar. O site legado (`src/pt/` e `src/en/`) segue apenas em português/inglês, sem mudanças.
 - O projeto é intencionalmente HTML/CSS/JS vanilla + Materialize, sem framework de front-end reativo. Não introduza um novo framework (React, Vue, Angular etc.) sem alinhar com o Johnny antes — já houve um experimento não finalizado (`app/`, removido) que confundiu esse ponto.
