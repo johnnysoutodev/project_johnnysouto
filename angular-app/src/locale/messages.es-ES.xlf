@@ -1,5 +1,949 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="pt-BR" trgLang="es-ES">
   <file id="ngi18n" original="ng.template">
+    <unit id="theme.toggle.light.aria">
+      <notes>
+        <note category="location">src/app/core/i18n/labels.ts:11</note>
+      </notes>
+      <segment>
+        <source>Ativar tema claro</source>
+        <target>Activar tema claro</target>
+      </segment>
+    </unit>
+    <unit id="theme.toggle.dark.aria">
+      <notes>
+        <note category="location">src/app/core/i18n/labels.ts:12</note>
+      </notes>
+      <segment>
+        <source>Ativar tema escuro</source>
+        <target>Activar tema oscuro</target>
+      </segment>
+    </unit>
+    <unit id="menu.close.aria">
+      <notes>
+        <note category="location">src/app/core/i18n/labels.ts:16</note>
+        <note category="location">src/app/layout/mobile-menu/mobile-menu.html:27,28</note>
+      </notes>
+      <segment>
+        <source>Fechar menu</source>
+        <target>Cerrar menú</target>
+      </segment>
+    </unit>
+    <unit id="menu.open.aria">
+      <notes>
+        <note category="location">src/app/core/i18n/labels.ts:16</note>
+      </notes>
+      <segment>
+        <source>Abrir menu</source>
+        <target>Abrir menú</target>
+      </segment>
+    </unit>
+    <unit id="about.tag">
+      <notes>
+        <note category="location">src/app/features/about/about.html:4,7</note>
+      </notes>
+      <segment>
+        <source>Sobre mim</source>
+        <target>Sobre mí</target>
+      </segment>
+    </unit>
+    <unit id="about.photo.alt">
+      <notes>
+        <note category="location">src/app/features/about/about.html:21,22</note>
+      </notes>
+      <segment>
+        <source>Ipê-amarelo florido</source>
+        <target>Ipê amarillo en flor</target>
+      </segment>
+    </unit>
+    <unit id="about.heading">
+      <notes>
+        <note category="location">src/app/features/about/about.html:29,31</note>
+      </notes>
+      <segment>
+        <source>Mais de 20 anos construindo tecnologia</source>
+        <target>Más de 20 años construyendo tecnología</target>
+      </segment>
+    </unit>
+    <unit id="about.bio.p1">
+      <notes>
+        <note category="location">src/app/features/about/about.html:40,43</note>
+      </notes>
+      <segment>
+        <source> Sou um profissional de TI com mais de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> anos de experiência, com uma trajetória que passa por operações, suporte de sistemas, bancos de dados, front-end, back-end, análise de negócios e consultoria, em empresas como Nielsen, Vivo, Coca-Cola, Santander e TOTVS. </source>
+        <target>Soy un profesional de TI con más de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> años de experiencia, con una trayectoria que pasa por operaciones, soporte de sistemas, bases de datos, front-end, back-end, análisis de negocio y consultoría, en empresas como Nielsen, Vivo, Coca-Cola, Santander y TOTVS.</target>
+      </segment>
+    </unit>
+    <unit id="about.bio.p2">
+      <notes>
+        <note category="location">src/app/features/about/about.html:46,49</note>
+      </notes>
+      <segment>
+        <source> Vivi de perto diferentes fases da tecnologia, do processamento em batch e da administração de dados às aplicações web e às esteiras DevOps. Hoje, na TOTVS, desenvolvo o Front-end com Angular e IA generativa e vivencio com entusiasmo a era da Cloud, dos Dados e da IA. </source>
+        <target>He vivido de cerca distintas fases de la tecnología, desde el procesamiento por lotes y la administración de datos hasta las aplicaciones web y los flujos de trabajo DevOps. Hoy, en TOTVS, desarrollo el front-end con Angular e IA generativa y vivo con entusiasmo la era de la Nube, los Datos y la IA.</target>
+      </segment>
+    </unit>
+    <unit id="about.bio.p3">
+      <notes>
+        <note category="location">src/app/features/about/about.html:52,54</note>
+      </notes>
+      <segment>
+        <source> Sou apaixonado pelo que faço e sigo aprendendo continuamente, sempre buscando entender o problema de negócio antes de escrever a primeira linha de código. </source>
+        <target>Me apasiona lo que hago y sigo aprendiendo de forma continua, buscando siempre entender el problema de negocio antes de escribir la primera línea de código.</target>
+      </segment>
+    </unit>
+    <unit id="about.summary.lead">
+      <notes>
+        <note category="location">src/app/features/about/about.html:57,59</note>
+      </notes>
+      <segment>
+        <source>Em resumo:</source>
+        <target>En resumen:</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.experience">
+      <notes>
+        <note category="location">src/app/features/about/about.html:61,62</note>
+      </notes>
+      <segment>
+        <source>Mais de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> anos de experiência em TI</source>
+        <target>Más de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> años de experiencia en TI</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.stack">
+      <notes>
+        <note category="location">src/app/features/about/about.html:62,64</note>
+      </notes>
+      <segment>
+        <source>Front-end e back-end: Angular, TypeScript, Java e Node.js</source>
+        <target>Front-end y back-end: Angular, TypeScript, Java y Node.js</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.cloud">
+      <notes>
+        <note category="location">src/app/features/about/about.html:65,66</note>
+      </notes>
+      <segment>
+        <source>Cloud e DevOps: CI/CD com GitHub Actions</source>
+        <target>Nube y DevOps: CI/CD con GitHub Actions</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.focus">
+      <notes>
+        <note category="location">src/app/features/about/about.html:66,68</note>
+      </notes>
+      <segment>
+        <source>Foco atual: Cloud, Dados e IA generativa</source>
+        <target>Enfoque actual: Nube, Datos e IA generativa</target>
+      </segment>
+    </unit>
+    <unit id="about.closing">
+      <notes>
+        <note category="location">src/app/features/about/about.html:71,73</note>
+      </notes>
+      <segment>
+        <source> Quer bater um papo sobre alguma oportunidade ou projeto? Fique à vontade para entrar em contato. </source>
+        <target>¿Quieres hablar sobre alguna oportunidad o proyecto? No dudes en ponerte en contacto.</target>
+      </segment>
+    </unit>
+    <unit id="contact.tag">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Entre em contato</source>
+        <target>Ponte en contacto</target>
+      </segment>
+    </unit>
+    <unit id="contact.subtitle">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.html:5,8</note>
+      </notes>
+      <segment>
+        <source>Fique à vontade para entrar em contato</source>
+        <target>No dudes en ponerte en contacto</target>
+      </segment>
+    </unit>
+    <unit id="contact.social.lead">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.html:90,93</note>
+      </notes>
+      <segment>
+        <source>Você também pode me encontrar por aqui:</source>
+        <target>También puedes encontrarme aquí:</target>
+      </segment>
+    </unit>
+    <unit id="social.github.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.html:101,102</note>
+        <note category="location">src/app/features/hero/hero.html:25,26</note>
+      </notes>
+      <segment>
+        <source>GitHub de Johnny Souto (abre em nova aba)</source>
+        <target>GitHub de Johnny Souto (se abre en una pestaña nueva)</target>
+      </segment>
+    </unit>
+    <unit id="social.linkedin.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.html:109,110</note>
+        <note category="location">src/app/features/hero/hero.html:39,40</note>
+      </notes>
+      <segment>
+        <source>LinkedIn de Johnny Souto (abre em nova aba)</source>
+        <target>LinkedIn de Johnny Souto (se abre en una pestaña nueva)</target>
+      </segment>
+    </unit>
+    <unit id="contact.mailto.subject">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.ts:58</note>
+      </notes>
+      <segment>
+        <source>Vamos bater um papo?</source>
+        <target>¿Hablamos?</target>
+      </segment>
+    </unit>
+    <unit id="contact.copy.email.done.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.ts:75</note>
+      </notes>
+      <segment>
+        <source>Email copiado!</source>
+        <target>¡Correo copiado!</target>
+      </segment>
+    </unit>
+    <unit id="contact.copy.email.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.ts:76</note>
+      </notes>
+      <segment>
+        <source>Copiar email</source>
+        <target>Copiar correo</target>
+      </segment>
+    </unit>
+    <unit id="contact.copy.phone.done.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.ts:79</note>
+      </notes>
+      <segment>
+        <source>Telefone copiado!</source>
+        <target>¡Teléfono copiado!</target>
+      </segment>
+    </unit>
+    <unit id="contact.copy.phone.aria">
+      <notes>
+        <note category="location">src/app/features/contact-me/contact-me.ts:80</note>
+      </notes>
+      <segment>
+        <source>Copiar telefone</source>
+        <target>Copiar teléfono</target>
+      </segment>
+    </unit>
+    <unit id="experience.tag">
+      <notes>
+        <note category="location">src/app/features/experience/experience.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Experiência profissional</source>
+        <target>Experiencia profesional</target>
+      </segment>
+    </unit>
+    <unit id="experience.subtitle">
+      <notes>
+        <note category="location">src/app/features/experience/experience.html:6,10</note>
+      </notes>
+      <segment>
+        <source> Um breve resumo das minhas experiências profissionais </source>
+        <target>Un breve resumen de mi experiencia profesional</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:90</note>
+      </notes>
+      <segment>
+        <source>Desenvolvedor Front-end</source>
+        <target>Desarrollador Front-end</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:91</note>
+      </notes>
+      <segment>
+        <source>Março de 2026 | Atual</source>
+        <target>Marzo de 2026 | Actualidad</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:93</note>
+      </notes>
+      <segment>
+        <source>Desenvolvimento de software front-end com Angular e IA generativa Claude</source>
+        <target>Desarrollo de software front-end con Angular e IA generativa Claude</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:94</note>
+      </notes>
+      <segment>
+        <source>Atuação no T-Cloud, plataforma de Cloud da Totvs para simplificar o uso de Cloud pelos clientes</source>
+        <target>Trabajo en T-Cloud, la plataforma de nube de TOTVS que simplifica el uso de la nube por parte de los clientes</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:95</note>
+      </notes>
+      <segment>
+        <source>Integração com APIs e desenvolvimento de componentes reutilizáveis</source>
+        <target>Integración con APIs y desarrollo de componentes reutilizables</target>
+      </segment>
+    </unit>
+    <unit id="exp.totvs.0.b4">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:96</note>
+      </notes>
+      <segment>
+        <source>Deploy com GitHub Actions</source>
+        <target>Despliegue con GitHub Actions</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:111</note>
+      </notes>
+      <segment>
+        <source>Analista de TI (DevOps)</source>
+        <target>Analista de TI (DevOps)</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:112</note>
+      </notes>
+      <segment>
+        <source>Junho de 2024 | Janeiro de 2026</source>
+        <target>Junio de 2024 | Enero de 2026</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:114</note>
+      </notes>
+      <segment>
+        <source>Suporte à plataforma Gluon, iniciativa global do Santander Group para padronização e modernização das aplicações do banco</source>
+        <target>Soporte a la plataforma Gluon, iniciativa global del Grupo Santander para estandarizar y modernizar las aplicaciones del banco</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:115</note>
+      </notes>
+      <segment>
+        <source>Apoio a times na adoção de esteiras CI/CD com GitHub Actions</source>
+        <target>Apoyo a los equipos en la adopción de pipelines CI/CD con GitHub Actions</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:116</note>
+      </notes>
+      <segment>
+        <source>Integração de ferramentas de qualidade e segurança de código, como SonarQube e Fortify</source>
+        <target>Integración de herramientas de calidad y seguridad de código, como SonarQube y Fortify</target>
+      </segment>
+    </unit>
+    <unit id="exp.santander.0.b4">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:117</note>
+      </notes>
+      <segment>
+        <source>Gestão e estruturação de repositórios no GitHub, promovendo padronização de código e governança de pipelines</source>
+        <target>Gestión y estructuración de repositorios en GitHub, promoviendo la estandarización del código y la gobernanza de los pipelines</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:127</note>
+      </notes>
+      <segment>
+        <source>Consultor de Sistemas</source>
+        <target>Consultor de Sistemas</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:128</note>
+      </notes>
+      <segment>
+        <source>Julho de 2021 | Janeiro de 2024</source>
+        <target>Julio de 2021 | Enero de 2024</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:130</note>
+      </notes>
+      <segment>
+        <source>Administração de dados SQL, SAP e Salesforce</source>
+        <target>Administración de datos SQL, SAP y Salesforce</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:131</note>
+      </notes>
+      <segment>
+        <source>Gestão de dados por fórmulas e gráficos dinâmicos</source>
+        <target>Gestión de datos mediante fórmulas y gráficos dinámicos</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:132</note>
+      </notes>
+      <segment>
+        <source>Controle de documentação técnica do projeto Pitcher</source>
+        <target>Control de la documentación técnica del proyecto Pitcher</target>
+      </segment>
+    </unit>
+    <unit id="exp.capgemini.0.b4">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:133</note>
+      </notes>
+      <segment>
+        <source>Treinamento para colaboradores</source>
+        <target>Formación de empleados</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:143</note>
+      </notes>
+      <segment>
+        <source>Analista de Suporte de Sistemas (SOC)</source>
+        <target>Analista de Soporte de Sistemas (SOC)</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:144</note>
+      </notes>
+      <segment>
+        <source>Agosto de 2019 | Maio de 2021</source>
+        <target>Agosto de 2019 | Mayo de 2021</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:146</note>
+      </notes>
+      <segment>
+        <source>Administração de acesso a sistemas</source>
+        <target>Administración de acceso a sistemas</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:147</note>
+      </notes>
+      <segment>
+        <source>Gestão de acesso aos usuários corporativos</source>
+        <target>Gestión de acceso de los usuarios corporativos</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:148</note>
+      </notes>
+      <segment>
+        <source>Configuração de comandos em sistemas de rede Huawei MBB / Ciena OneControl / Padtec</source>
+        <target>Configuración de comandos en sistemas de red Huawei MBB / Ciena OneControl / Padtec</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.1.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:152</note>
+      </notes>
+      <segment>
+        <source>Analista Suporte de Sistemas (OSS)</source>
+        <target>Analista de Soporte de Sistemas (OSS)</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.1.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:153</note>
+      </notes>
+      <segment>
+        <source>Agosto de 2017 | Agosto de 2019</source>
+        <target>Agosto de 2017 | Agosto de 2019</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.1.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:155</note>
+      </notes>
+      <segment>
+        <source>Administração e realização de scripts para Oracle Database</source>
+        <target>Administración y creación de scripts para Oracle Database</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.1.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:156</note>
+      </notes>
+      <segment>
+        <source>Monitoração e sustentação de aplicações de desempenho</source>
+        <target>Monitorización y mantenimiento de aplicaciones de rendimiento</target>
+      </segment>
+    </unit>
+    <unit id="exp.vivo.1.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:157</note>
+      </notes>
+      <segment>
+        <source>CDROne / DBN0 / Altaia / Cricket</source>
+        <target>CDROne / DBN0 / Altaia / Cricket</target>
+      </segment>
+    </unit>
+    <unit id="exp.telefonica-educacao-digital.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:171</note>
+      </notes>
+      <segment>
+        <source>Desenvolvedor Front-end</source>
+        <target>Desarrollador Front-end</target>
+      </segment>
+    </unit>
+    <unit id="exp.telefonica-educacao-digital.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:172</note>
+      </notes>
+      <segment>
+        <source>Agosto de 2015 | Julho de 2017</source>
+        <target>Agosto de 2015 | Julio de 2017</target>
+      </segment>
+    </unit>
+    <unit id="exp.telefonica-educacao-digital.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:174</note>
+      </notes>
+      <segment>
+        <source>Codificação de treinamentos EaD</source>
+        <target>Codificación de cursos de formación online</target>
+      </segment>
+    </unit>
+    <unit id="exp.telefonica-educacao-digital.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:175</note>
+      </notes>
+      <segment>
+        <source>HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js</source>
+        <target>HTML5 / CSS3 / JavaScript / ActionScript / jQuery / PIXI.js / Node.js</target>
+      </segment>
+    </unit>
+    <unit id="exp.telefonica-educacao-digital.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:176</note>
+      </notes>
+      <segment>
+        <source>Versionamento de código com GitLab / GitKraken</source>
+        <target>Control de versiones con GitLab / GitKraken</target>
+      </segment>
+    </unit>
+    <unit id="exp.rcs-sistemas.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:185</note>
+      </notes>
+      <segment>
+        <source>Desenvolvedor de Sistemas CRM</source>
+        <target>Desarrollador de Sistemas CRM</target>
+      </segment>
+    </unit>
+    <unit id="exp.rcs-sistemas.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:186</note>
+      </notes>
+      <segment>
+        <source>Maio de 2015 | Julho de 2015</source>
+        <target>Mayo de 2015 | Julio de 2015</target>
+      </segment>
+    </unit>
+    <unit id="exp.rcs-sistemas.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:188</note>
+      </notes>
+      <segment>
+        <source>Desenvolvimento de aplicações CRM</source>
+        <target>Desarrollo de aplicaciones CRM</target>
+      </segment>
+    </unit>
+    <unit id="exp.rcs-sistemas.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:189</note>
+      </notes>
+      <segment>
+        <source>Linguagens Apex, Visualforce, Triggers e SOQL</source>
+        <target>Lenguajes Apex, Visualforce, Triggers y SOQL</target>
+      </segment>
+    </unit>
+    <unit id="exp.rcs-sistemas.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:190</note>
+      </notes>
+      <segment>
+        <source>Force.com da Salesforce</source>
+        <target>Force.com de Salesforce</target>
+      </segment>
+    </unit>
+    <unit id="exp.nielsen.0.role">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:200</note>
+      </notes>
+      <segment>
+        <source>Operador de Computador</source>
+        <target>Operador de Informática</target>
+      </segment>
+    </unit>
+    <unit id="exp.nielsen.0.period">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:201</note>
+      </notes>
+      <segment>
+        <source>Janeiro de 2006 | Setembro de 2013</source>
+        <target>Enero de 2006 | Septiembre de 2013</target>
+      </segment>
+    </unit>
+    <unit id="exp.nielsen.0.b1">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:203</note>
+      </notes>
+      <segment>
+        <source>ARCServe Backup / Retal Índex / Scantrack</source>
+        <target>ARCServe Backup / Retail Index / Scantrack</target>
+      </segment>
+    </unit>
+    <unit id="exp.nielsen.0.b2">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:204</note>
+      </notes>
+      <segment>
+        <source>Administração e controle de mídias para backups</source>
+        <target>Administración y control de medios de copia de seguridad</target>
+      </segment>
+    </unit>
+    <unit id="exp.nielsen.0.b3">
+      <notes>
+        <note category="location">src/app/features/experience/experience.ts:205</note>
+      </notes>
+      <segment>
+        <source>Processamento em batch e stored procedure de MS-SQL Server</source>
+        <target>Procesamiento por lotes y procedimientos almacenados de MS-SQL Server</target>
+      </segment>
+    </unit>
+    <unit id="hero.title">
+      <notes>
+        <note category="location">src/app/features/hero/hero.html:8,9</note>
+      </notes>
+      <segment>
+        <source>Olá, eu sou o Johnny 👋</source>
+        <target>Hola, soy Johnny 👋</target>
+      </segment>
+    </unit>
+    <unit id="hero.bio">
+      <notes>
+        <note category="location">src/app/features/hero/hero.html:15,17</note>
+      </notes>
+      <segment>
+        <source> Sou um profissional de TI com mais de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> anos de experiência, atuando desde suporte técnico, bancos de dados, front-end, back-end, análise de negócios, implantando, configurando e prestando consultoria de sistemas a diversas empresas. </source>
+        <target>Soy un profesional de TI con más de <ph id="0" equiv="INTERPOLATION" disp="{{ experienceYears }}"/> años de experiencia, con trayectoria en soporte técnico, bases de datos, front-end, back-end y análisis de negocio, e implantando, configurando y prestando consultoría de sistemas a numerosas empresas.</target>
+      </segment>
+    </unit>
+    <unit id="hero.photo.alt">
+      <notes>
+        <note category="location">src/app/features/hero/hero.html:60,61</note>
+      </notes>
+      <segment>
+        <source>Johnny Souto</source>
+        <target>Johnny Souto</target>
+      </segment>
+    </unit>
+    <unit id="project.tag">
+      <notes>
+        <note category="location">src/app/features/project/project.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Projetos</source>
+        <target>Proyectos</target>
+      </segment>
+    </unit>
+    <unit id="project.subtitle">
+      <notes>
+        <note category="location">src/app/features/project/project.html:5,8</note>
+      </notes>
+      <segment>
+        <source>Alguns dos projetos dos quais participei</source>
+        <target>Algunos de los proyectos en los que he participado</target>
+      </segment>
+    </unit>
+    <unit id="project.pitcher.period">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:94</note>
+      </notes>
+      <segment>
+        <source>Julho de 2021 | Outubro de 2023</source>
+        <target>Julio de 2021 | Octubre de 2023</target>
+      </segment>
+    </unit>
+    <unit id="project.pitcher.description">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:96</note>
+      </notes>
+      <segment>
+        <source>A Coca-Cola FEMSA substituiu o aplicativo MfCoke pelo Pitcher App para agilizar o trabalho diário dos promotores. Fui responsável pela implantação: integração das bases de dados (MS-SQL Server e SAP), pela gestão das informações de clientes no Salesforce com fórmulas e gráficos dinâmicos, e instalação e configuração do app nos dispositivos de mais de 3.000 colaboradores. Os dados coletados geram relatórios gráficos que aceleram a tomada de decisão.</source>
+        <target>Coca-Cola FEMSA sustituyó la aplicación MfCoke por Pitcher App para agilizar el trabajo diario de sus promotores. Fui responsable de la implantación: integración de las bases de datos (MS-SQL Server y SAP), gestión de la información de clientes en Salesforce con fórmulas y gráficos dinámicos, e instalación y configuración de la app en los dispositivos de más de 3.000 empleados. Los datos recopilados generan informes gráficos que aceleran la toma de decisiones.</target>
+      </segment>
+    </unit>
+    <unit id="project.profuturo.period">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:104</note>
+      </notes>
+      <segment>
+        <source>Agosto de 2015 | Dezembro de 2016</source>
+        <target>Agosto de 2015 | Diciembre de 2016</target>
+      </segment>
+    </unit>
+    <unit id="project.profuturo.description">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:106</note>
+      </notes>
+      <segment>
+        <source>Sistema de ensino pré-escolar e fundamental por tablet, para crianças de todo o mundo, com telas interativas e disponível em vários idiomas. Desenvolvi o front-end com HTML5, CSS3 e JavaScript e, para ganhar performance, migramos de jQuery para JavaScript puro com PIXI.js. Criamos uma API com as funcionalidades do projeto e templates que aceleraram a produção, automatizamos tarefas com Grunt e versionamos o código no GitLab.</source>
+        <target>Un sistema de enseñanza preescolar y primaria mediante tabletas para niños de todo el mundo, con pantallas interactivas y disponible en varios idiomas. Desarrollé el front-end con HTML5, CSS3 y JavaScript y, para ganar rendimiento, migramos de jQuery a JavaScript puro con PIXI.js. Creamos una API con las funcionalidades del proyecto y plantillas que aceleraron la producción, automatizamos tareas con Grunt y versionamos el código en GitLab.</target>
+      </segment>
+    </unit>
+    <unit id="project.profuturo.action.aria">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:109</note>
+      </notes>
+      <segment>
+        <source>Leia mais sobre o projeto ProFuturo (abre em nova aba)</source>
+        <target>Más información sobre el proyecto ProFuturo (se abre en una pestaña nueva)</target>
+      </segment>
+    </unit>
+    <unit id="project.logo.alt">
+      <notes>
+        <note category="location">src/app/features/project/project.ts:121</note>
+      </notes>
+      <segment>
+        <source>Logo do projeto <ph id="0" equiv="name" disp="name"/></source>
+        <target>Logotipo del proyecto <ph id="0" equiv="name" disp="name"/></target>
+      </segment>
+    </unit>
+    <unit id="skills.tag">
+      <notes>
+        <note category="location">src/app/features/skills/skills.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Skills</source>
+        <target>Habilidades</target>
+      </segment>
+    </unit>
+    <unit id="skills.subtitle">
+      <notes>
+        <note category="location">src/app/features/skills/skills.html:11,14</note>
+      </notes>
+      <segment>
+        <source> As tecnologias e ferramentas com as quais eu trabalho </source>
+        <target>Las tecnologías y herramientas con las que trabajo</target>
+      </segment>
+    </unit>
+    <unit id="testimonials.tag">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Depoimentos</source>
+        <target>Testimonios</target>
+      </segment>
+    </unit>
+    <unit id="testimonials.subtitle">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.html:12,16</note>
+      </notes>
+      <segment>
+        <source> Depoimentos de colegas de trabalho ou clientes </source>
+        <target>Testimonios de compañeros de trabajo o clientes</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.alexandre.role">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:53</note>
+      </notes>
+      <segment>
+        <source>DBA da Capgemini</source>
+        <target>DBA en Capgemini</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.alexandre.quote">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:56</note>
+      </notes>
+      <segment>
+        <source>&quot;Excelente profissional, sempre empenhado e focado em seus desafios. Coordenou uma migração de projeto com 22 pessoas com postura firme e competência.&quot;</source>
+        <target>"Excelente profesional, siempre comprometido y centrado en sus retos. Coordinó la migración de un proyecto con 22 personas con firmeza y competencia."</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.raphaela.role">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:60</note>
+      </notes>
+      <segment>
+        <source>Líder da TOTVS</source>
+        <target>Líder en TOTVS</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.raphaela.quote">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:63</note>
+      </notes>
+      <segment>
+        <source>&quot;Johnny é um profissional em quem sei que posso confiar e contar. Sua competência técnica, postura colaborativa e senso de responsabilidade fazem muita diferença nas nossas entregas.&quot;</source>
+        <target>"Johnny es un profesional en quien sé que puedo confiar y contar. Su competencia técnica, su actitud colaborativa y su sentido de la responsabilidad marcan una gran diferencia en nuestras entregas."</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.cesar.role">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:67</note>
+      </notes>
+      <segment>
+        <source>Especialista em Observabilidade na IBM</source>
+        <target>Especialista en Observabilidad en IBM</target>
+      </segment>
+    </unit>
+    <unit id="testimonial.cesar.quote">
+      <notes>
+        <note category="location">src/app/features/testimonials/testimonials.ts:70</note>
+      </notes>
+      <segment>
+        <source>&quot;Além da competência profissional, destaca-se pelo trabalho em equipe, postura colaborativa e disposição para apoiar colegas nos desafios do dia a dia. Recomendo fortemente seu trabalho.&quot;</source>
+        <target>"Además de su competencia profesional, destaca por su trabajo en equipo, su actitud colaborativa y su disposición para apoyar a sus compañeros en los retos del día a día. Recomiendo encarecidamente su trabajo."</target>
+      </segment>
+    </unit>
+    <unit id="footer.note">
+      <notes>
+        <note category="location">src/app/layout/footer/footer.html:8,17</note>
+      </notes>
+      <segment>
+        <source>©<ph id="0" equiv="INTERPOLATION" disp="{{ currentYear }}"/>. Todos os direitos reservados. Codificado com <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;footer__heart&quot; aria-hidden=&quot;true&quot;&gt;" dispEnd="&lt;/span&gt;">❤︎</pc> por <pc id="2" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a
+          class=&quot;footer__link&quot;
+          href=&quot;https://www.jsdeveloper.com.br/&quot;
+          target=&quot;_blank&quot;
+          rel=&quot;noopener noreferrer&quot;
+          &gt;" dispEnd="&lt;/a
+        &gt;">JSD Technologies</pc>.</source>
+        <target>©<ph id="0" equiv="INTERPOLATION" disp="{{ currentYear }}"/>. Todos los derechos reservados. Codificado con <pc id="1" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;footer__heart&quot; aria-hidden=&quot;true&quot;&gt;" dispEnd="&lt;/span&gt;">❤︎</pc> por <pc id="2" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a
+          class=&quot;footer__link&quot;
+          href=&quot;https://www.jsdeveloper.com.br/&quot;
+          target=&quot;_blank&quot;
+          rel=&quot;noopener noreferrer&quot;
+          &gt;" dispEnd="&lt;/a
+        &gt;">JSD Technologies</pc>.</target>
+      </segment>
+    </unit>
+    <unit id="header.logo.aria">
+      <notes>
+        <note category="location">src/app/layout/header/header.html:3</note>
+      </notes>
+      <segment>
+        <source>Início</source>
+        <target>Inicio</target>
+      </segment>
+    </unit>
+    <unit id="nav.main.aria">
+      <notes>
+        <note category="location">src/app/layout/header/header.html:11,12</note>
+        <note category="location">src/app/layout/mobile-menu/mobile-menu.html:50,51</note>
+      </notes>
+      <segment>
+        <source>Navegação principal</source>
+        <target>Navegación principal</target>
+      </segment>
+    </unit>
+    <unit id="cta.download-cv">
+      <notes>
+        <note category="location">src/app/layout/header/header.html:79,82</note>
+        <note category="location">src/app/layout/mobile-menu/mobile-menu.html:121,124</note>
+      </notes>
+      <segment>
+        <source>Download CV</source>
+        <target>Descargar CV</target>
+      </segment>
+    </unit>
+    <unit id="mobilemenu.dialog.aria">
+      <notes>
+        <note category="location">src/app/layout/mobile-menu/mobile-menu.html:10,11</note>
+      </notes>
+      <segment>
+        <source>Menu de navegação</source>
+        <target>Menú de navegación</target>
+      </segment>
+    </unit>
+    <unit id="mobilemenu.theme.label">
+      <notes>
+        <note category="location">src/app/layout/mobile-menu/mobile-menu.html:67,70</note>
+      </notes>
+      <segment>
+        <source>Trocar Tema</source>
+        <target>Cambiar tema</target>
+      </segment>
+    </unit>
+    <unit id="nav.about">
+      <notes>
+        <note category="location">src/app/layout/nav-links.ts:15</note>
+      </notes>
+      <segment>
+        <source>Sobre</source>
+        <target>Sobre mí</target>
+      </segment>
+    </unit>
+    <unit id="nav.projects">
+      <notes>
+        <note category="location">src/app/layout/nav-links.ts:16</note>
+      </notes>
+      <segment>
+        <source>Projetos</source>
+        <target>Proyectos</target>
+      </segment>
+    </unit>
+    <unit id="nav.testimonials">
+      <notes>
+        <note category="location">src/app/layout/nav-links.ts:17</note>
+      </notes>
+      <segment>
+        <source>Depoimentos</source>
+        <target>Testimonios</target>
+      </segment>
+    </unit>
+    <unit id="nav.contact">
+      <notes>
+        <note category="location">src/app/layout/nav-links.ts:18</note>
+      </notes>
+      <segment>
+        <source>Contato</source>
+        <target>Contacto</target>
+      </segment>
+    </unit>
+    <unit id="scrolltop.aria">
+      <notes>
+        <note category="location">src/app/layout/scroll-to-top/scroll-to-top.html:6,7</note>
+      </notes>
+      <segment>
+        <source>Voltar ao topo</source>
+        <target>Volver arriba</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
