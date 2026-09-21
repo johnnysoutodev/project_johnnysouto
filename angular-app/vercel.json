@@ -1,3 +1,38 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/pt", "destination": "/pt-br/", "permanent": true },
+    { "source": "/en", "destination": "/en-us/", "permanent": true },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "lang", "value": "pt-br" }],
+      "destination": "/pt-br/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "lang", "value": "en-us" }],
+      "destination": "/en-us/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "lang", "value": "es-es" }],
+      "destination": "/es-es/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "^pt.*" }],
+      "destination": "/pt-br/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "accept-language", "value": "^es.*" }],
+      "destination": "/es-es/",
+      "permanent": false
+    },
+    { "source": "/", "destination": "/en-us/", "permanent": false }
+  ]
 }
