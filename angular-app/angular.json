@@ -3,9 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -32,13 +30,9 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles"
-              ]
+              "includePaths": ["src/styles"]
             },
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -48,9 +42,7 @@
             "ssr": {
               "entry": "src/server.ts"
             },
-            "polyfills": [
-              "@angular/localize/init"
-            ],
+            "polyfills": ["@angular/localize/init"],
             "i18nMissingTranslation": "error"
           },
           "configurations": {
@@ -79,17 +71,13 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "localize": [
-                "en-US"
-              ]
+              "localize": ["en-US"]
             },
-            "es-ES": {
+            "es": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "localize": [
-                "es-ES"
-              ]
+              "localize": ["es"]
             }
           },
           "defaultConfiguration": "production"
@@ -106,8 +94,8 @@
             "en-US": {
               "buildTarget": "project_johnnysouto:build:en-US"
             },
-            "es-ES": {
-              "buildTarget": "project_johnnysouto:build:es-ES"
+            "es": {
+              "buildTarget": "project_johnnysouto:build:es"
             }
           },
           "defaultConfiguration": "development"
@@ -118,16 +106,13 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       },
       "i18n": {
         "sourceLocale": {
-          "code": "pt-BR",
+          "code": "pt",
           "subPath": "pt-br"
         },
         "locales": {
@@ -135,7 +120,7 @@
             "translation": "src/locale/messages.en-US.json",
             "subPath": "en-us"
           },
-          "es-ES": {
+          "es": {
             "translation": "src/locale/messages.es-ES.json",
             "subPath": "es-es"
           }

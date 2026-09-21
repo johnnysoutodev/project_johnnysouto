@@ -35,6 +35,15 @@ describe('SeoService', () => {
     expect(meta.getTag('property="og:locale"')?.content).toBe(ogLocale);
   });
 
+  it.each([
+    ['pt', 'pt-BR'],
+    ['en-US', 'en-US'],
+    ['es', 'es-ES'],
+  ])('sets <html lang> to the full BCP 47 code for the %s build', (localeId, lang) => {
+    const { document } = apply(localeId);
+    expect(document.documentElement.lang).toBe(lang);
+  });
+
   it('reuses the canonical link instead of adding a second one', () => {
     const { document } = apply('en-US');
     TestBed.inject(SeoService).apply();

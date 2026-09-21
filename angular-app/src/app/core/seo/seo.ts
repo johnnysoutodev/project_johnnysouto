@@ -27,6 +27,9 @@ export class SeoService {
     const { code, path } = this.language.current;
     const url = `${SITE_URL}/${path}/`;
 
+    // O build define `<html lang>` com o locale do Angular (`pt`/`es`); o BCP 47 completo
+    // (`pt-BR`/`es-ES`) e o que buscadores e leitores de tela esperam.
+    this.document.documentElement.lang = code;
     this.titleService.setTitle(title);
     this.meta.updateTag({ name: 'description', content: description });
     this.meta.updateTag({ property: 'og:title', content: title });

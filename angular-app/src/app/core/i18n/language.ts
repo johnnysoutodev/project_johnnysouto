@@ -3,7 +3,14 @@ import { isPlatformBrowser } from '@angular/common';
 
 /** Idioma suportado pelo site: um build por idioma (i18n nativo do Angular), cada um em `/<path>/`. */
 export interface AppLocale {
+  /** Codigo BCP 47 completo: `<html lang>`, `hreflang` e `og:locale`. */
   readonly code: 'pt-BR' | 'en-US' | 'es-ES';
+  /**
+   * Valor de `LOCALE_ID` no build (codigo de locale do Angular, `angular.json`). `pt` e `es`
+   * em vez de `pt-BR`/`es-ES` porque o Angular so tem dados de locale para `pt` (= pt-BR) e
+   * `es`; com `pt-BR`/`es-ES` o build emite avisos "Locale data ... cannot be found".
+   */
+  readonly localeId: string;
   /** Segmento de URL do build (`subPath` em `angular.json`) e valor do cookie `lang`. */
   readonly path: string;
   /** Rotulo curto do seletor. */
@@ -13,9 +20,9 @@ export interface AppLocale {
 }
 
 export const APP_LOCALES: readonly AppLocale[] = [
-  { code: 'pt-BR', path: 'pt-br', short: 'PT', name: 'Português' },
-  { code: 'en-US', path: 'en-us', short: 'EN', name: 'English' },
-  { code: 'es-ES', path: 'es-es', short: 'ES', name: 'Español' },
+  { code: 'pt-BR', localeId: 'pt', path: 'pt-br', short: 'PT', name: 'Português' },
+  { code: 'en-US', localeId: 'en-US', path: 'en-us', short: 'EN', name: 'English' },
+  { code: 'es-ES', localeId: 'es', path: 'es-es', short: 'ES', name: 'Español' },
 ];
 
 const COOKIE_NAME = 'lang';
@@ -35,9 +42,11 @@ export class LanguageService {
 
   readonly locales = APP_LOCALES;
 
-  /** Idioma do build atual (cai em pt-BR se o `LOCALE_ID` nao for um dos suportados, ex.: testes). */
+  /** Idioma do build atual (cai em pt-BR se o `LOCALE_ID` nao for um dos suportados). */
   readonly current: AppLocale =
-    APP_LOCALES.find((locale) => locale.code === this.localeId) ?? APP_LOCALES[0];
+    APP_LOCALES.find(
+      (locale) => locale.localeId === this.localeId || locale.code === this.localeId,
+    ) ?? APP_LOCALES[0];
 
   /** Destino de um idioma, com o hash atual (`#about`) quando houver. */
   hrefFor(locale: AppLocale): string {

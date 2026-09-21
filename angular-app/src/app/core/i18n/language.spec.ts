@@ -24,6 +24,14 @@ describe('LanguageService', () => {
     expect(create('es-ES').current.code).toBe('es-ES');
   });
 
+  it('resolves the Angular locale ids used by the builds (pt, es)', () => {
+    expect(create('pt').current.code).toBe('pt-BR');
+  });
+
+  it('resolves es to es-ES', () => {
+    expect(create('es').current.code).toBe('es-ES');
+  });
+
   it('falls back to pt-BR when LOCALE_ID is not a supported locale', () => {
     expect(create('fr-FR').current.code).toBe('pt-BR');
   });

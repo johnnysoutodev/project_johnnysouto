@@ -1,5 +1,5 @@
 {
-  "locale": "es-ES",
+  "locale": "es",
   "translations": {
     "theme.toggle.light.aria": "Activar tema claro",
     "theme.toggle.dark.aria": "Activar tema oscuro",
