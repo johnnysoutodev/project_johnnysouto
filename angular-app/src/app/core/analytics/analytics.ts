@@ -5,6 +5,7 @@ import { SITE_URL } from '../seo/seo';
 declare global {
   interface Window {
     dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -82,10 +83,18 @@ export class AnalyticsService {
     document.head.appendChild(script);
   }
 
-  /** Boilerplate padrao do gtag.js (https://developers.google.com/analytics/devguides/collection/ga4). */
+  /**
+   * Boilerplate padrao do gtag.js (https://developers.google.com/analytics/devguides/collection/ga4).
+   * `window.gtag` precisa ficar exposto globalmente, nao so como funcao local deste
+   * metodo (achado em QA no navegador, 22/09/2026: sem isso, `window.gtag(...)` chamado
+   * de fora deste servico - ex.: rastrear um evento futuro - falha silenciosamente,
+   * `window.gtag` fica `undefined`). Mesmo formato do snippet oficial do Google, que
+   * declara `function gtag(){...}` no escopo global do script.
+   */
   private configure(): void {
     window.dataLayer = window.dataLayer ?? [];
     const gtag = (...args: unknown[]) => window.dataLayer?.push(args);
+    window.gtag = gtag;
 
     gtag('js', new Date());
     gtag('config', MEASUREMENT_ID, {

@@ -36,6 +36,7 @@ describe('AnalyticsService', () => {
   afterEach(() => {
     document.head.querySelectorAll(GTAG_SELECTOR).forEach((script) => script.remove());
     window.dataLayer = undefined;
+    window.gtag = undefined;
     Object.defineProperty(window, 'location', ORIGINAL_LOCATION);
   });
 
@@ -59,6 +60,10 @@ describe('AnalyticsService', () => {
       const script = document.head.querySelector<HTMLScriptElement>(GTAG_SELECTOR);
       expect(script?.src).toBe('https://www.googletagmanager.com/gtag/js?id=G-YYR4SND80L');
       expect(script?.async).toBe(true);
+      // `window.gtag` precisa existir globalmente (nao só como função local do serviço) -
+      // é o que o próprio gtag.js e qualquer chamada futura (`gtag('event', ...)`) esperam
+      // encontrar, igual ao snippet oficial do Google.
+      expect(typeof window.gtag).toBe('function');
       expect(window.dataLayer?.length).toBeGreaterThan(0);
       expect(window.dataLayer).toContainEqual(['js', expect.any(Date)]);
       expect(window.dataLayer).toContainEqual([
