@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { AnalyticsService } from './analytics';
 
 const GTAG_SELECTOR = 'script[data-analytics="ga4"]';
+const GA_DISABLE_KEY = 'ga-disable-G-YYR4SND80L';
 
 // `window.location` original (antes de qualquer teste mexer nele) - restaurado no
 // `afterEach` abaixo. Sem isso, o `Object.defineProperty` de `setHostname` (substitui
@@ -37,6 +38,7 @@ describe('AnalyticsService', () => {
     document.head.querySelectorAll(GTAG_SELECTOR).forEach((script) => script.remove());
     window.dataLayer = undefined;
     window.gtag = undefined;
+    delete (window as unknown as Record<string, unknown>)[GA_DISABLE_KEY];
     Object.defineProperty(window, 'location', ORIGINAL_LOCATION);
   });
 
@@ -64,6 +66,11 @@ describe('AnalyticsService', () => {
       // é o que o próprio gtag.js e qualquer chamada futura (`gtag('event', ...)`) esperam
       // encontrar, igual ao snippet oficial do Google.
       expect(typeof window.gtag).toBe('function');
+      // A flag oficial de opt-out do gtag.js precisa ficar explicitamente `false` (nao
+      // so `undefined`) - achado comparando com o site legado (`acceptGA()`, `src/js/
+      // analytics.js`): foi essa diferença específica que fez o hit de pageview ser
+      // enviado de verdade num teste ao vivo em produção.
+      expect((window as unknown as Record<string, unknown>)[GA_DISABLE_KEY]).toBe(false);
       expect(window.dataLayer?.length).toBeGreaterThan(0);
       expect(window.dataLayer).toContainEqual(['js', expect.any(Date)]);
       expect(window.dataLayer).toContainEqual([
