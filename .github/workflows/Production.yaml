@@ -107,15 +107,22 @@ jobs:
     needs: security-check
     # Roda APENAS após merge (push em main) ou workflow_dispatch
     # Durante PR apenas valida — nunca faz deploy
-    # A aprovação manual do environment ocorre aqui, antes do deploy efetivo
-    # IMPORTANTE: condição precisa ficar numa linha só - `if: |` (bloco multi-linha)
-    # faz o GitHub Actions pular o job silenciosamente (achado em produção, 22/09/2026:
-    # "Deploy to Production" nunca rodou, em nenhum push pra main até hoje, sempre
-    # marcado como "skipped" sem nenhum erro visível - reproduzido em pelo menos 2 runs
-    # reais, incluindo um de meses atrás). `security-check`, a única condição já numa
-    # linha só neste arquivo, sempre rodou normalmente - mesmo padrão de correção
-    # aplicado aqui e nos outros 3 jobs abaixo que tinham o mesmo problema.
-    if: needs.security-check.result == 'success' && ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+    #
+    # Condição simplificada pra uma unica comparacao (22/09/2026, achado em producao: o
+    # job "Deploy to Production" nunca rodava, sempre "skipped" sem nenhum erro visivel,
+    # mesmo depois de corrigir o `if: |` multi-linha pra uma linha so - a condicao
+    # anterior, mais longa, continuava falhando por um motivo que nao foi possivel
+    # confirmar com certeza via log, ja que job pulado nao deixa rastro nenhum pra
+    # depurar). `github.ref == 'refs/heads/main'` sozinho ja basta: pra evento `push`,
+    # o gatilho `on.push.branches: [main]` no topo deste arquivo ja garante que so main
+    # aciona o workflow (reconferir aqui e redundante); pra `pull_request`, `github.ref`
+    # e sempre `refs/pull/<N>/merge`, nunca bate; pra `workflow_dispatch` manual, isso
+    # continua restringindo a deploy so a partir de main. `needs: security-check` acima
+    # ja exige (por padrao do GitHub Actions, sem precisar repetir aqui) que o job
+    # anterior tenha tido sucesso. Ambiente "Production" conferido via API
+    # (repos/.../environments/Production) sem nenhuma protection_rule configurada -
+    # descartado como causa.
+    if: github.ref == 'refs/heads/main'
     environment:
       name: Production
       url: https://www.johnnysouto.com.br
@@ -130,8 +137,6 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "Base ref: ${{ github.base_ref }}"
           echo "Should deploy: TRUE (job is running)"
-          echo ""
-          echo "⚠️  ENVIRONMENT DESABILITADO PARA DEBUG"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -168,11 +173,10 @@ jobs:
     name: Post-Deploy Smoke Tests
     runs-on: ubuntu-latest
     needs: deploy-production
-    # Só roda após deploy REAL (push), não em PRs
-    # IMPORTANTE: always() força avaliação da condição mesmo com dependências; condição
-    # numa linha só - ver nota completa em "deploy-production" acima (`if: |` fazia o
-    # job ser pulado sempre).
-    if: always() && needs.deploy-production.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Sem `if:` proprio (simplificado em 22/09/2026, ver nota em "deploy-production"
+    # acima): `needs: deploy-production` sozinho ja e suficiente - por padrao, o GitHub
+    # Actions so roda este job se `deploy-production` tiver tido sucesso, o que so
+    # acontece em main (branch ja garantida pelo `if:` daquele job).
 
     steps:
       - name: Checkout code
@@ -236,10 +240,8 @@ jobs:
     name: Create Version Tag
     runs-on: ubuntu-latest
     needs: [deploy-production, post-deploy-validation]
-    # IMPORTANTE: always() força avaliação da condição mesmo com dependências; condição
-    # numa linha só - ver nota completa em "deploy-production" acima (`if: |` fazia o
-    # job ser pulado sempre).
-    if: always() && needs.deploy-production.result == 'success' && needs.post-deploy-validation.result == 'success' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Sem `if:` proprio - mesmo raciocinio de "post-deploy-validation" acima: o GitHub
+    # Actions so roda este job se os 2 jobs de `needs` tiverem tido sucesso.
 
     steps:
       - name: Checkout code
