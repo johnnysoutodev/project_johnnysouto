@@ -77,5 +77,44 @@
   </head>
   <body>
     <app-root></app-root>
+    <!--
+      Google Analytics (GA4) - movido pra cá, no `index.html`, central e fora do Angular
+      (22/09/2026, a pedido do Johnny). Antes vivia num `AnalyticsService` injetado no
+      construtor do componente `App` - rodava dentro do ciclo de vida e da zona do
+      Angular (zone.js), separadamente em cada build de idioma, e mesmo com o código
+      idêntico ao `acceptGA()` do site legado (measurement ID certo, `window.gtag`
+      global, `window['ga-disable-<ID>'] = false`), o hit de pageview nunca era
+      enviado de verdade - confirmado com visitas reais, não só em teste. Igual ao
+      script anti-FOUC do tema logo acima (a mesma ideia: algo que precisa rodar de
+      forma central e previsível, sem depender do bootstrap do Angular), e igual ao
+      site legado (`src/js/analytics.js`/`acceptGA()`, script no fim do body de cada
+      página) - roda direto aqui, antes/independente da hidratação do Angular, e é
+      idêntico nas 3 pastas de idioma (não é gerado por `i18n`, é o mesmo HTML puro
+      nas 3), então não "segue o idioma" da forma errada que o serviço antigo seguia.
+    -->
+    <script>
+      (function () {
+        var host = location.hostname;
+        if (host !== 'www.johnnysouto.com.br' && host !== 'johnnysouto.com.br') {
+          return; // preview da Vercel, localhost etc. - nunca manda dado real
+        }
+        window['ga-disable-G-YYR4SND80L'] = false;
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-YYR4SND80L', {
+          cookie_domain: 'johnnysouto.com.br',
+          cookie_expires: 60 * 60 * 24 * 90,
+          cookie_update: false,
+        });
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-YYR4SND80L';
+        document.head.appendChild(script);
+      })();
+    </script>
   </body>
 </html>
