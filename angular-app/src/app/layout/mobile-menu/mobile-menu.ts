@@ -1,9 +1,8 @@
-import { Component, PLATFORM_ID, computed, effect, inject, input, output } from '@angular/core';
+import { Component, PLATFORM_ID, effect, inject, input, output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
-import { themeToggleLabel } from '../../core/i18n/labels';
 import { LanguageService } from '../../core/i18n/language';
 import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
 
@@ -62,7 +61,6 @@ export class MobileMenu {
   protected readonly anchorScroll = inject(AnchorScrollService);
   protected readonly navLinks = NAV_LINKS;
 
-  protected readonly themeLabel = computed(() => themeToggleLabel(this.themeService.theme()));
   protected readonly panelId = PANEL_ID;
 
   readonly open = input<boolean>(false);
