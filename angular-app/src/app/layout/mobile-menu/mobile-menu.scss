@@ -100,8 +100,7 @@
   color: var(--color-gray-900);
 }
 
-.mobile-menu__close,
-.mobile-menu__theme-toggle {
+.mobile-menu__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -164,10 +163,36 @@
   gap: var(--space-8);
 }
 
+// Linha inteira do toggle de tema, agora um `<button>` (nao mais so o icone) - reset dos
+// estilos nativos de botao e padding vertical extra pra aumentar a area de toque (achado
+// do Johnny em QA mobile, 22/09/2026), mesma convencao de hover/active/focus ja usada em
+// `.mobile-menu__close`.
 .mobile-menu__theme-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  padding: var(--space-8) 0;
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  &:active {
+    opacity: 0.56;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
 }
 
 .mobile-menu__theme-label {

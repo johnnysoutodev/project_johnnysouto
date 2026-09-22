@@ -214,7 +214,7 @@ describe('MobileMenu', () => {
   it('mostra lua no tema claro e sol no tema escuro conforme a acao disponivel', async () => {
     await open();
 
-    const themeToggle = fixture.debugElement.query(By.css('.mobile-menu__theme-toggle'));
+    const themeToggle = fixture.debugElement.query(By.css('.mobile-menu__theme-row'));
     expect(themeToggle.query(By.css('circle'))).toBeNull();
     expect(themeToggle.attributes['aria-pressed']).toBe('false');
 
@@ -223,6 +223,22 @@ describe('MobileMenu', () => {
 
     expect(themeToggle.query(By.css('circle'))).toBeTruthy();
     expect(themeToggle.attributes['aria-pressed']).toBe('true');
+  });
+
+  it('a linha inteira do tema e um unico botao clicavel, com "Trocar Tema" como texto visivel', async () => {
+    await open();
+
+    const themeRow = fixture.debugElement.query(By.css('.mobile-menu__theme-row'));
+    expect(themeRow.nativeElement.tagName).toBe('BUTTON');
+    expect(themeRow.nativeElement.textContent).toContain('Trocar Tema');
+    // Nao deve mais existir um botao separado so pro icone (a linha toda e o alvo de
+    // toque agora, achado do Johnny em QA mobile, 22/09/2026).
+    expect(fixture.debugElement.query(By.css('.mobile-menu__theme-toggle'))).toBeNull();
+
+    themeRow.nativeElement.click();
+    fixture.detectChanges();
+
+    expect(themeRow.attributes['aria-pressed']).toBe('true');
   });
 });
 

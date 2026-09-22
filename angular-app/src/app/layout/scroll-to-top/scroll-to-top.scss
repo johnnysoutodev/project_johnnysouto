@@ -22,7 +22,13 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: var(--color-gray-default);
+  // Fundo sempre claro, nos dois temas (nao `--color-gray-default`, que no dark mode e
+  // quase preto - #030712 - e o circulo somem contra o fundo escuro da pagina, ficando so
+  // o icone visivel; achado do Johnny em QA, 22/09/2026). Cor fixa (nao um token - mesmo
+  // criterio ja usado em `.footer__heart`, footer.scss), igual ao branco do `--color-gray-
+  // default` do tema claro (sem regressao visual la): o circulo precisa se destacar nos
+  // dois temas, nao acompanhar a superficie.
+  background-color: #ffffff;
   color: var(--color-gray-900);
   box-shadow: var(--shadow-lg);
   cursor: pointer;
