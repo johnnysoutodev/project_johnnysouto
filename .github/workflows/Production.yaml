@@ -131,7 +131,14 @@ jobs:
         working-directory: angular-app
 
     steps:
+      # `working-directory: .` sobrescreve o `defaults.run.working-directory: angular-app`
+      # do job (22/09/2026, erro real em produção: "No such file or directory" - este
+      # step roda ANTES do checkout abaixo, então `angular-app/` ainda não existe no
+      # runner nesse ponto; como o step só imprime contexto do GitHub, sem tocar em
+      # nenhum arquivo do projeto, rodar na raiz do workspace resolve sem precisar
+      # reordenar nada).
       - name: Debug - Show GitHub Context
+        working-directory: .
         run: |
           echo "Event name: ${{ github.event_name }}"
           echo "Ref: ${{ github.ref }}"
