@@ -101,6 +101,32 @@ jobs:
           echo ""
           echo "ℹ️  Testes já foram validados em develop"
 
+  # JOB TEMPORARIO DE DIAGNOSTICO (22/09/2026) - remover depois de confirmar por que
+  # "Deploy to Production" fica "skipped" mesmo com `if: github.ref == 'refs/heads/main'`
+  # (ja simplificado, ainda assim pulado em pelo menos 3 runs reais). Sem `if:` e sem
+  # `needs:` - roda sempre, imprime o contexto `github.*` inteiro, sem nenhuma condicao
+  # no meio pra esconder o valor real.
+  debug-context:
+    name: DEBUG - Print GitHub Context
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print context
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "ref: '${{ github.ref }}'"
+          echo "ref_name: '${{ github.ref_name }}'"
+          echo "ref_type: '${{ github.ref_type }}'"
+          echo "base_ref: '${{ github.base_ref }}'"
+          echo "head_ref: '${{ github.head_ref }}'"
+          echo "---- github.ref == 'refs/heads/main' ? ----"
+          echo "${{ github.ref == 'refs/heads/main' }}"
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+      - name: Print full context (JSON)
+        run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
