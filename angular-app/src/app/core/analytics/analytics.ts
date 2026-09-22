@@ -90,8 +90,24 @@ export class AnalyticsService {
    * de fora deste servico - ex.: rastrear um evento futuro - falha silenciosamente,
    * `window.gtag` fica `undefined`). Mesmo formato do snippet oficial do Google, que
    * declara `function gtag(){...}` no escopo global do script.
+   *
+   * `window['ga-disable-<ID>'] = false` (achado comparando com o site legado,
+   * `src/js/analytics.js`, a pedido do Johnny, 22/09/2026): essa e a flag OFICIAL de
+   * opt-out do gtag.js (`= true` desativa a coleta pra aquele ID). O servico nunca
+   * definia essa flag, entao ficava `undefined` - deveria equivaler a "nao desativado",
+   * mas foi essa exata diferenca (`false` explicito vs `undefined`) que fez a diferenca
+   * num teste ao vivo em producao: reproduzindo o `acceptGA()` do site legado (que
+   * seta essa flag) o hit de pageview foi enviado e apareceu no Realtime do GA4;
+   * sem ela (o comportamento anterior deste servico), nenhuma tentativa de envio
+   * acontecia. Setado aqui explicitamente por continuidade/seguranca, ainda que o
+   * mecanismo exato pelo qual isso afeta o `gtag.js` nao esteja 100% documentado
+   * publicamente pelo Google.
    */
   private configure(): void {
+    // `window['ga-disable-<ID>']` e um nome de propriedade dinamico (`Window` nao declara
+    // um indice pra ele, so as 2 propriedades acima) - cast local, restrito a essa unica
+    // atribuicao, em vez de abrir um indice generico na interface `Window` inteira.
+    (window as unknown as Record<string, boolean>)[`ga-disable-${MEASUREMENT_ID}`] = false;
     window.dataLayer = window.dataLayer ?? [];
     const gtag = (...args: unknown[]) => window.dataLayer?.push(args);
     window.gtag = gtag;
