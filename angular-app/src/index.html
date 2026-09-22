@@ -5,6 +5,16 @@
     <title>Johnny Souto | Engenheiro de Software</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Favicon: monograma "JS" (mesmo texto curto do logo do Header, layout/header/header.html)
+      sobre fundo escuro fixo (--color-gray-900 do tema claro) - nao acompanha o dark mode do
+      SITE (isso e sobre o conteudo da pagina; o favicon fica na aba do navegador, que tem seu
+      proprio chrome claro/escuro independente) - a pedido do Johnny (22/09/2026), substitui o
+      favicon padrao do Angular CLI (o escudo rosa/roxo do `ng new`, nunca trocado ate aqui). SVG
+      primeiro (nitido em qualquer tamanho); `.ico` como fallback pra navegadores sem suporte a
+      `image/svg+xml` em `rel="icon"`.
+    -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <!--
       SEO por idioma: title/description/canonical/og:* sao definidos por idioma em
