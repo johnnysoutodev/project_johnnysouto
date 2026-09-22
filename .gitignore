@@ -167,5 +167,8 @@ yarn-error.log*
 # Arquivos temporários
 .tmp/
 
-# VS Code Config Local
-.vscode
+# VS Code Config Local (raiz do repo; site legado). Escopo restrito à raiz
+# (/.vscode, não .vscode) para não silenciar o .vscode/ do angular-app/,
+# que é intencionalmente versionado (tasks/launch/extensions/mcp.json
+# gerados pelo `ng new` como parte da config de IA do Angular CLI).
+/.vscode

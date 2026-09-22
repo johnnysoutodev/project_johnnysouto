@@ -1,0 +1,22 @@
+<!--
+  Marcador real pro botao "voltar ao topo" (`ScrollToTop`, 08/09/2026) animar via
+  `AnchorScrollService` - o mesmo servico dos links de nav (`nav-links.ts`), que precisa
+  de um elemento de verdade (`document.getElementById`) pra calcular o destino do scroll.
+  O logo do Header ja usava `href="#top"` sem JS (funciona por comportamento nativo do
+  navegador: "top" e um fragmento magico que sempre rola pro inicio do documento, mesmo
+  sem elemento com esse id) - esse marcador nao muda esse comportamento nativo, so da ao
+  `AnchorScrollService` um alvo real pra poder animar o scroll (em vez do salto instantaneo
+  nativo) quando ELE for usado (botao novo abaixo).
+-->
+<div id="top" aria-hidden="true"></div>
+
+<app-header />
+
+<main>
+  <!-- Rota '' renderiza `Home` (pages/home/), que compoe as 7 secoes de conteudo -->
+  <router-outlet />
+</main>
+
+<app-footer />
+
+<app-scroll-to-top />

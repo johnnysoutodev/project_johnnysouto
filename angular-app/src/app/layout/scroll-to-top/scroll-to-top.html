@@ -1,0 +1,13 @@
+<a
+  #scrollLink
+  class="scroll-to-top"
+  [class.scroll-to-top--visible]="isVisible()"
+  href="#top"
+  aria-label="Voltar ao topo"
+  i18n-aria-label="@@scrolltop.aria"
+  [attr.tabindex]="isVisible() ? null : -1"
+  [attr.aria-hidden]="!isVisible()"
+  (click)="onClick($event)"
+>
+  <img ngSrc="assets/icons/icon-scroll-top.svg" width="24" height="24" alt="" />
+</a>

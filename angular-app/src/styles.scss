@@ -1,0 +1,32 @@
+// Estilos globais do projeto. Tokens de tema (cores light/dark, tipografia, sombras,
+// espacamento, border-radius) vivem em `src/styles/_tokens.scss`, migrados de
+// `docs/design-tokens.css` (ver esse arquivo/`docs/design-system.md` secoes 2-5 para a
+// origem de cada valor). Dark mode ja preparado via `[data-theme="dark"]` — o toggle
+// (Icon Button do Header) ainda nao liga esse atributo nesta fatia da Fase 2.
+@use 'tokens';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-gray-default);
+  color: var(--color-gray-900);
+}
+
+// Elemento custom desconhecido pelo navegador = `display: inline` por padrao (mesmo
+// tratamento de um `<span>`) - sem isso, `app-root` quebra a "containing block" de
+// qualquer filho com `position: sticky` (achado ao implementar o Header sticky,
+// 08/09/2026: o header simplesmente rolava junto com a pagina em vez de grudar no
+// topo). `block` e o valor esperado pra um elemento que hospeda o layout inteiro da
+// aplicacao.
+app-root {
+  display: block;
+}

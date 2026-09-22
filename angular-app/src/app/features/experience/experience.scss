@@ -1,0 +1,176 @@
+// Experience — design-system.md secoes 8.6 (item de timeline) e 8.11 (raiz da secao).
+// Heading (Tag + Subtitle/Normal) e itens compartilham o mesmo `gap: 48px` do Container
+// (8.11); os itens sao cards empilhados sem conector visual (confirmado ausente em 8.6).
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.experience {
+  @include layout.section-padding;
+  background-color: var(--color-gray-50);
+}
+
+.experience__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+}
+
+.experience__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.experience__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.experience__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-48);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // O `<li>` so existe pela semantica de lista ordenada (ordem cronologica importa);
+  // o card visual em si e o `.experience__item` (`<article>`) dentro dele.
+  > li {
+    display: contents;
+  }
+}
+
+.experience__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  width: 100%;
+  max-width: 896px;
+  margin-inline: auto;
+  padding: var(--space-timeline-item-padding);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-default);
+  box-shadow: var(--shadow-md);
+
+  @include breakpoints.tablet-up {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-48);
+  }
+}
+
+// Slot da empresa (design-system.md secao 8.6: logo 102x28) - largura E ALTURA MINIMA
+// fixas (nao so a largura), pra que a coluna de conteudo comece sempre na mesma posicao
+// X/Y em todos os cards, seja o slot preenchido por um logo (aspect ratio variavel: de
+// quase quadrado a bem alongado) ou pelo nome em texto (RCS, sem logo disponivel).
+// `align-items/justify-content: center` centraliza cada logo dentro do mesmo box,
+// independente da proporcao real do arquivo - mesmo tratamento visual pros dois casos.
+.experience__logo-slot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 32px;
+
+  @include breakpoints.tablet-up {
+    width: 120px;
+  }
+}
+
+.experience__company {
+  @include typography.body2-medium;
+  color: var(--color-gray-900);
+}
+
+// Logo real. `width`/`height` no template sao o aspect ratio real do arquivo (exigido
+// pelo `NgOptimizedImage`); aqui o tamanho final e limitado via `max-width`/`max-height`
+// com `width`/`height: auto`, preservando a proporcao de cada logo dentro do mesmo slot.
+.experience__logo {
+  width: auto;
+  height: auto;
+  max-width: 96px;
+  max-height: 28px;
+  object-fit: contain;
+
+  @include breakpoints.tablet-up {
+    max-width: 120px;
+  }
+}
+
+// Coluna de conteudo: 1 ou mais `.experience__position` empilhados (mesma empresa/logo,
+// cargos diferentes - ex. Vivo SOC + OSS, decisao a pedido do Johnny em 08/09/2026: antes
+// eram 2 cards com o mesmo logo duplicado, agora 1 card so). `gap: 24px` entre posicoes
+// (maior que o `gap: 16px` interno de cada posicao, mas mais compacto que o `gap: 32px`
+// inicial - ajustado a pedido do Johnny, ficava alto demais) pra deixar visualmente clara
+// a separacao entre um cargo e outro dentro da mesma empresa sem exagerar no espaco.
+.experience__positions {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-width: 0;
+}
+
+.experience__position {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+
+  // Divisor sutil entre cargos da mesma empresa (nao existe no Figma, que so cobre 1
+  // cargo por item - decisao de implementacao pro caso de multiplos cargos).
+  & + & {
+    padding-top: var(--space-24);
+    border-top: 1px solid var(--color-gray-100);
+  }
+}
+
+// Cargo + periodo empilhados (Figma original tinha o periodo como coluna separada, a
+// direita do card inteiro - nao cabe mais com multiplos cargos por empresa). Empilhado
+// (nao lado a lado) de proposito: lado a lado quebrava de forma inconsistente entre
+// cards - cargos curtos ("Desenvolvedor Front-end") cabiam na mesma linha do periodo,
+// cargos longos ("Analista de Suporte de Sistemas (DevOps)") empurravam o periodo pra
+// baixo - alinhamento inconsistente reportado pelo Johnny (08/09/2026). Empilhado e
+// sempre igual, independente do tamanho do cargo.
+.experience__position-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.experience__role {
+  @include typography.subtitle-semibold;
+  margin: 0;
+  color: var(--color-gray-900);
+}
+
+.experience__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin: 0;
+  padding-left: var(--space-24);
+  list-style: disc;
+
+  li {
+    @include typography.body2-normal;
+    color: var(--color-gray-600);
+  }
+}
+
+.experience__period {
+  @include typography.body3-normal;
+  color: var(--color-gray-700);
+}

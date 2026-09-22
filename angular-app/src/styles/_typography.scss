@@ -1,0 +1,93 @@
+// Mixins de tipografia — um por estilo nomeado em `docs/design-system.md` (secao 4).
+// So aplicam as CSS custom properties definidas em `_tokens.scss`; nenhum valor literal
+// novo e introduzido aqui, para manter rastreabilidade 1:1 ate o token de origem.
+
+@mixin heading-h1 {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-heading-h1-weight);
+  font-size: var(--font-heading-h1-size);
+  line-height: var(--font-heading-h1-line-height);
+  letter-spacing: var(--font-heading-h1-letter-spacing);
+}
+
+@mixin heading-h2-semibold {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-heading-h2-semibold-weight);
+  font-size: var(--font-heading-h2-semibold-size);
+  line-height: var(--font-heading-h2-semibold-line-height);
+  letter-spacing: var(--font-heading-h2-semibold-letter-spacing);
+}
+
+@mixin heading-h3-semibold {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-heading-h3-semibold-weight);
+  font-size: var(--font-heading-h3-semibold-size);
+  line-height: var(--font-heading-h3-semibold-line-height);
+  letter-spacing: var(--font-heading-h3-semibold-letter-spacing);
+}
+
+@mixin subtitle-semibold {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-subtitle-semibold-weight);
+  font-size: var(--font-subtitle-semibold-size);
+  line-height: var(--font-subtitle-semibold-line-height);
+  letter-spacing: var(--font-subtitle-semibold-letter-spacing);
+}
+
+@mixin subtitle-normal {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-subtitle-normal-weight);
+  font-size: var(--font-subtitle-normal-size);
+  line-height: var(--font-subtitle-normal-line-height);
+  letter-spacing: var(--font-subtitle-normal-letter-spacing);
+}
+
+@mixin body1-normal {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-body1-normal-weight);
+  font-size: var(--font-body1-normal-size);
+  line-height: var(--font-body1-normal-line-height);
+  letter-spacing: var(--font-body1-normal-letter-spacing);
+}
+
+@mixin body2-medium {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-body2-medium-weight);
+  font-size: var(--font-body2-medium-size);
+  line-height: var(--font-body2-medium-line-height);
+  letter-spacing: var(--font-body2-medium-letter-spacing);
+}
+
+@mixin body2-normal {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-body2-normal-weight);
+  font-size: var(--font-body2-normal-size);
+  line-height: var(--font-body2-normal-line-height);
+  letter-spacing: var(--font-body2-normal-letter-spacing);
+}
+
+@mixin body3-medium {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-body3-medium-weight);
+  font-size: var(--font-body3-medium-size);
+  line-height: var(--font-body3-medium-line-height);
+  letter-spacing: var(--font-body3-medium-letter-spacing);
+}
+
+@mixin body3-normal {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-body3-normal-weight);
+  font-size: var(--font-body3-normal-size);
+  line-height: var(--font-body3-normal-line-height);
+  letter-spacing: var(--font-body3-normal-letter-spacing);
+}
+
+// Heading/H3/Bold - Tablet & Mobile (design-system.md secao 8.13) — token novo, fora da
+// tabela da secao 4 (ver comentario junto da variavel em `_tokens.scss`).
+@mixin heading-h3-bold-mobile {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-heading-h3-bold-mobile-weight);
+  font-size: var(--font-heading-h3-bold-mobile-size);
+  line-height: var(--font-heading-h3-bold-mobile-line-height);
+  letter-spacing: var(--font-heading-h3-bold-mobile-letter-spacing);
+}

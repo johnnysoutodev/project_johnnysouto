@@ -1,8 +1,12 @@
 name: Develop CI/CD
 
-# Roda APENAS em push direto para develop (após merge de PR aprovado)
-# Testes já foram executados no PR (feature-tests.yml)
-# Aqui apenas faz deploy do código já validado no ambiente Develop
+# Roda APENAS em push direto para develop (após merge de PR de feature/* -> develop)
+# Deploy de preview do angular-app/ (Angular, SSR/prerender) na Vercel, ambiente Develop.
+# Diretório de trabalho da Vercel CLI é angular-app/ - é lá que fica o vercel.json e onde
+# a Vercel detecta o framework Angular e roda o próprio build (ng build), sem precisar
+# de npm ci/build local aqui. Antes da migração o site vinha pronto em public/ (Grunt);
+# agora o Root Directory do projeto na Vercel também precisa apontar pra angular-app/
+# (configuração feita direto no dashboard da Vercel, fora do escopo deste arquivo).
 on:
   push:
     branches: [develop]
@@ -13,20 +17,22 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Develop
-    
+    defaults:
+      run:
+        working-directory: angular-app
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      
+          node-version-file: 'angular-app/.nvmrc'
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
-      
+
       - name: Deploy to Vercel Preview
         id: deploy
         run: |
@@ -36,12 +42,11 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      
+
       - name: Notify deployment success
         run: |
           echo "✅ Deployed to Develop"
           echo "🔗 URL: ${{ steps.deploy.outputs.url }}"
           echo "📦 Environment: Develop"
           echo "🌿 Branch: develop"
-          echo ""
-          echo "ℹ️  Testes já foram validados no PR (feature-tests.yml)"
+          echo "📁 App: angular-app/"

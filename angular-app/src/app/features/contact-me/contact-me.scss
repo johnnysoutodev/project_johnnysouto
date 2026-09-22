@@ -1,0 +1,117 @@
+// Contact me — design-system.md secao 8.12. Tudo empilhado numa unica coluna central,
+// alinhamento centralizado em todos os niveis - sem colunas lado a lado.
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+:host {
+  display: block;
+}
+
+.contact-me {
+  @include layout.section-padding;
+  background-color: var(--color-gray-default);
+}
+
+.contact-me__container {
+  @include layout.content-container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-48);
+}
+
+.contact-me__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  text-align: center;
+}
+
+.contact-me__subtitle {
+  @include typography.subtitle-normal;
+  max-width: 576px;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+.contact-me__central {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+}
+
+// `gap: 8px` no mobile (em vez do `--space-20` do desktop) - achado do Johnny
+// (08/09/2026): icone + email/telefone + botao de copiar nao cabiam numa linha so num
+// viewport de 375px com o texto no tamanho Heading/H2 do Figma (36px) - ver tambem a
+// reducao de fonte do `.contact-me__row-value` abaixo. `flex-wrap: wrap` continua como
+// rede de seguranca (nao deve mais disparar pro conteudo real atual, mas nao ha spec de
+// mobile no Figma pra garantir isso pra qualquer valor futuro).
+.contact-me__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  max-width: 100%;
+
+  @include breakpoints.tablet-up {
+    gap: var(--space-20);
+  }
+}
+
+.contact-me__row-icon {
+  flex-shrink: 0;
+}
+
+// Heading/H2/Semi Bold (secao 8.12/4) e o tamanho documentado, mas o Figma nao tem
+// frame de mobile pra essa secao (design-system.md secao 9.4) - no desktop (36px) o
+// texto nao cabia numa linha so com o icone+botao de copiar num viewport de 375px
+// (achado do Johnny, 08/09/2026). Reduzido no mobile pra `subtitle-semibold` (20px/28px,
+// mesmo token ja usado noutras secoes, nao um valor novo) - mesma convencao de
+// engenharia ja usada no H1 do Hero (`hero.scss`) para o mesmo tipo de problema; volta
+// pro tamanho cheio do Figma a partir do tablet, onde ja sobra largura real.
+.contact-me__row-value {
+  @include typography.subtitle-semibold;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  color: var(--color-gray-900);
+  text-decoration: none;
+
+  @include breakpoints.tablet-up {
+    @include typography.heading-h2-semibold;
+  }
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+}
+
+.contact-me__social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.contact-me__social-text {
+  @include typography.body2-normal;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+// Icon Button so-icone (08/09/2026: antes icone+texto/URL visivel - com os 2 links
+// tendo icone proprio agora, o texto da URL virou redundante, removido a pedido do
+// Johnny). `--space-4` (gap entre icones sociais, design-system.md secao 2), mesmo
+// valor ja usado no `.hero__links` equivalente.
+.contact-me__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}

@@ -1,0 +1,36 @@
+// Breakpoints responsivos — CONVENCAO DE ENGENHARIA, nao extracao do Figma.
+//
+// O arquivo Figma so tem duas larguras de frame: Mobile/iPhone 8 (375px) e Desktop
+// (1440px) — nenhum frame de tablet existe (confirmado em `docs/design-system.md`,
+// secao 7). Johnny decidiu que tablet entra no escopo mesmo assim; o breakpoint abaixo
+// (~768–1023px, desktop a partir de 1024px) e o mesmo ja registrado como proposta em
+// `docs/design-system.md` (secao 7) e `docs/PLANO-MIGRACAO-ANGULAR.md` (secao 2) —
+// padrao comum de mercado (ex.: breakpoints `md`/`lg` do Tailwind CSS), nao um dado do
+// arquivo Figma.
+
+$breakpoint-tablet-min: 768px;
+$breakpoint-desktop-min: 1024px;
+
+@mixin mobile-only {
+  @media (max-width: $breakpoint-tablet-min - 1) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $breakpoint-tablet-min) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-tablet-min) and (max-width: $breakpoint-desktop-min - 1) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: $breakpoint-desktop-min) {
+    @content;
+  }
+}
