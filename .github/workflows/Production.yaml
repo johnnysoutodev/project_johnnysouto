@@ -101,32 +101,6 @@ jobs:
           echo ""
           echo "ℹ️  Testes já foram validados em develop"
 
-  # JOB TEMPORARIO DE DIAGNOSTICO (22/09/2026) - remover depois de confirmar por que
-  # "Deploy to Production" fica "skipped" mesmo com `if: github.ref == 'refs/heads/main'`
-  # (ja simplificado, ainda assim pulado em pelo menos 3 runs reais). Sem `if:` e sem
-  # `needs:` - roda sempre, imprime o contexto `github.*` inteiro, sem nenhuma condicao
-  # no meio pra esconder o valor real.
-  debug-context:
-    name: DEBUG - Print GitHub Context
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print context
-        run: |
-          echo "event_name: ${{ github.event_name }}"
-          echo "ref: '${{ github.ref }}'"
-          echo "ref_name: '${{ github.ref_name }}'"
-          echo "ref_type: '${{ github.ref_type }}'"
-          echo "base_ref: '${{ github.base_ref }}'"
-          echo "head_ref: '${{ github.head_ref }}'"
-          echo "---- github.ref == 'refs/heads/main' ? ----"
-          echo "${{ github.ref == 'refs/heads/main' }}"
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-      - name: Print full context (JSON)
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJSON(github) }}
-
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
@@ -134,21 +108,21 @@ jobs:
     # Roda APENAS após merge (push em main) ou workflow_dispatch
     # Durante PR apenas valida — nunca faz deploy
     #
-    # Condição simplificada pra uma unica comparacao (22/09/2026, achado em producao: o
-    # job "Deploy to Production" nunca rodava, sempre "skipped" sem nenhum erro visivel,
-    # mesmo depois de corrigir o `if: |` multi-linha pra uma linha so - a condicao
-    # anterior, mais longa, continuava falhando por um motivo que nao foi possivel
-    # confirmar com certeza via log, ja que job pulado nao deixa rastro nenhum pra
-    # depurar). `github.ref == 'refs/heads/main'` sozinho ja basta: pra evento `push`,
-    # o gatilho `on.push.branches: [main]` no topo deste arquivo ja garante que so main
-    # aciona o workflow (reconferir aqui e redundante); pra `pull_request`, `github.ref`
-    # e sempre `refs/pull/<N>/merge`, nunca bate; pra `workflow_dispatch` manual, isso
-    # continua restringindo a deploy so a partir de main. `needs: security-check` acima
-    # ja exige (por padrao do GitHub Actions, sem precisar repetir aqui) que o job
-    # anterior tenha tido sucesso. Ambiente "Production" conferido via API
-    # (repos/.../environments/Production) sem nenhuma protection_rule configurada -
-    # descartado como causa.
-    if: github.ref == 'refs/heads/main'
+    # CAUSA REAL, finalmente confirmada com prova (22/09/2026, via um job de diagnostico
+    # temporario que imprimiu o contexto `github.*` cru): quando um job tem `needs:` e o
+    # `if:` NAO comeca com `always()`, o GitHub Actions acrescenta, escondido, um
+    # `success()` na frente da condicao - e esse `success()` olha pra CADEIA INTEIRA de
+    # dependencias, nao so pro job listado direto em `needs:`. A cadeia aqui e
+    # deploy-production -> security-check -> validate-source; `validate-source` fica
+    # "skipped" em todo push pra main (so roda em pull_request), e "skipped" NAO conta
+    # como sucesso pra esse `success()` implicito - ele envenena a cadeia toda, mesmo
+    # com security-check tendo realmente dado certo. Por isso a condicao (mesmo depois
+    # de corrigida de bloco multi-linha pra uma linha so, e depois simplificada) sempre
+    # pulava o job: faltava `always()` no inicio, exatamente como `security-check` ja
+    # tinha (pelo mesmo motivo, um nivel acima). Confirmado com um job sem `if`/`needs`
+    # que imprimiu `github.ref == 'refs/heads/main'` = `true` isolado, provando que o
+    # valor em si sempre esteve certo - o problema era so a cadeia implicita de needs.
+    if: always() && needs.security-check.result == 'success' && github.ref == 'refs/heads/main'
     environment:
       name: Production
       url: https://www.johnnysouto.com.br
@@ -199,10 +173,11 @@ jobs:
     name: Post-Deploy Smoke Tests
     runs-on: ubuntu-latest
     needs: deploy-production
-    # Sem `if:` proprio (simplificado em 22/09/2026, ver nota em "deploy-production"
-    # acima): `needs: deploy-production` sozinho ja e suficiente - por padrao, o GitHub
-    # Actions so roda este job se `deploy-production` tiver tido sucesso, o que so
-    # acontece em main (branch ja garantida pelo `if:` daquele job).
+    # `always()` necessario pelo mesmo motivo de "deploy-production" acima: sem ele, o
+    # `success()` implicito olharia pra cadeia inteira (incluindo `validate-source`,
+    # sempre "skipped" em push pra main) e pularia este job mesmo com deploy-production
+    # tendo dado certo.
+    if: always() && needs.deploy-production.result == 'success'
 
     steps:
       - name: Checkout code
@@ -266,8 +241,8 @@ jobs:
     name: Create Version Tag
     runs-on: ubuntu-latest
     needs: [deploy-production, post-deploy-validation]
-    # Sem `if:` proprio - mesmo raciocinio de "post-deploy-validation" acima: o GitHub
-    # Actions so roda este job se os 2 jobs de `needs` tiverem tido sucesso.
+    # `always()` necessario pelo mesmo motivo dos 2 jobs acima.
+    if: always() && needs.deploy-production.result == 'success' && needs.post-deploy-validation.result == 'success'
 
     steps:
       - name: Checkout code
