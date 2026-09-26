@@ -4,8 +4,10 @@
 // colaterais - grava arquivo - assim que o modulo `optimize-images.mjs` e importado).
 //
 // Tamanho-alvo = ~2x o maior tamanho exibido em tela (retina-ready), a mesma recomendacao do
-// Chrome/web.dev pra imagens responsivas. `quality` e o parametro do encoder (JPEG/WebP;
-// ignorado pra PNG, que usa paleta de cores). `output` pode trocar a extensao (ex.: PNG de
+// Chrome/web.dev pra imagens responsivas. `quality` e o parametro do encoder (JPEG/WebP/PNG) -
+// quanto MENOR o numero, MAIS compressao (arquivo menor, mais perda visual); pra PNG especifi-
+// camente controla a fidelidade da paleta de cores, nao a mesma escala exata de JPEG/WebP.
+// `output` pode trocar a extensao (ex.: PNG de
 // foto -> JPEG/WebP). `fit` (26/09/2026, corrige bug achado pelo Johnny - os logos da Totvs e
 // da Coca-Cola FEMSA saiam cortados, nao redimensionados): 'cover' (padrao, cropa pra preencher
 // o quadro exato - certo pra fotos que usam `object-fit: cover` no CSS, tipo Hero/About/avatar
@@ -44,7 +46,7 @@ export const TARGETS = [
     height: 60,
     fit: 'inside',
     format: 'jpeg',
-    quality: 82,
+    quality: 80,
   },
   {
     // Testimonials (testimonials.html) - avatar exibido a 64x64. Era PNG (foto sem
@@ -54,7 +56,7 @@ export const TARGETS = [
     width: 128,
     height: 128,
     format: 'jpeg',
-    quality: 82,
+    quality: 80,
   },
   {
     source: 'profile_testmonial_03.jpeg',
@@ -62,7 +64,7 @@ export const TARGETS = [
     width: 128,
     height: 128,
     format: 'jpeg',
-    quality: 82,
+    quality: 80,
   },
   {
     source: 'profile_testmonial_04.jpeg',
@@ -70,7 +72,7 @@ export const TARGETS = [
     width: 128,
     height: 128,
     format: 'jpeg',
-    quality: 82,
+    quality: 80,
   },
   {
     // Project (project.ts) - `object-fit: contain` (project.scss), mesmo motivo do Totvs
@@ -82,6 +84,7 @@ export const TARGETS = [
     height: 320,
     fit: 'inside',
     format: 'png',
+    quality: 80,
   },
 ];
 
@@ -98,7 +101,7 @@ export const OG_COPIES = [
     width: 1064,
     height: 1064,
     format: 'jpeg',
-    quality: 85,
+    quality: 80,
   },
 ];
 
