@@ -6,7 +6,13 @@
 // Tamanho-alvo = ~2x o maior tamanho exibido em tela (retina-ready), a mesma recomendacao do
 // Chrome/web.dev pra imagens responsivas. `quality` e o parametro do encoder (JPEG/WebP;
 // ignorado pra PNG, que usa paleta de cores). `output` pode trocar a extensao (ex.: PNG de
-// foto -> JPEG/WebP).
+// foto -> JPEG/WebP). `fit` (26/09/2026, corrige bug achado pelo Johnny - os logos da Totvs e
+// da Coca-Cola FEMSA saiam cortados, nao redimensionados): 'cover' (padrao, cropa pra preencher
+// o quadro exato - certo pra fotos que usam `object-fit: cover` no CSS, tipo Hero/About/avatar
+// de depoimento) ou 'inside' (encolhe preservando a imagem INTEIRA, sem cortar nada - certo pra
+// logos que usam `object-fit: contain` no CSS, tipo Totvs/Coca-Cola FEMSA - um logo cortado
+// perde conteudo real, ao contrario de uma foto que aguenta perder borda).
+
 export const TARGETS = [
   {
     // Hero (hero.html) - e a propria imagem LCP do site.
@@ -27,11 +33,16 @@ export const TARGETS = [
     quality: 72,
   },
   {
-    // Experience (experience.ts) - width/height declarados la sao 200x112 (2x de 100x56).
+    // Experience (experience.ts) - `object-fit: contain` (experience.scss), logo com aspect
+    // ratio bem largo (3020x915 no original) - 'inside' preserva a proporcao real, sem cortar
+    // texto/marca nas bordas. Com `fit: 'inside'` numa caixa 200x60, a proporcao real do
+    // logo (3020x915) fecha a altura primeiro - resultado real e 198x60, nao 200x60. Numeros
+    // abaixo refletem a saida de verdade (`npm run optimize-images` imprime pra conferir).
     source: 'logo_totvs.jpg',
     output: 'logo_totvs.jpg',
-    width: 200,
-    height: 112,
+    width: 198,
+    height: 60,
+    fit: 'inside',
     format: 'jpeg',
     quality: 82,
   },
@@ -62,11 +73,14 @@ export const TARGETS = [
     quality: 82,
   },
   {
-    // Project (project.ts) - width/height declarados la sao 280x100; alvo em 2x.
+    // Project (project.ts) - `object-fit: contain` (project.scss), mesmo motivo do Totvs
+    // acima: 'inside' preserva a proporcao real do logo (600x343 no original), sem cortar.
+    // width/height la ajustados pra bater com essa proporcao (560x320).
     source: 'logo_project_coca-cola_femsa.png',
     output: 'logo_project_coca-cola_femsa.png',
     width: 560,
-    height: 200,
+    height: 320,
+    fit: 'inside',
     format: 'png',
   },
 ];

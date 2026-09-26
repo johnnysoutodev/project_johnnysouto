@@ -5,6 +5,7 @@ export interface ImageTarget {
   readonly output: string;
   readonly width: number;
   readonly height: number;
+  readonly fit?: 'cover' | 'inside';
   readonly format: 'webp' | 'jpeg' | 'png';
   readonly quality?: number;
 }
