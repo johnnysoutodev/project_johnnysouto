@@ -45,7 +45,7 @@ async function process({ source, output, width, height, fit = 'cover', format, q
   } else if (format === 'jpeg') {
     pipeline = pipeline.jpeg({ quality, progressive: true, mozjpeg: true });
   } else if (format === 'png') {
-    pipeline = pipeline.png({ palette: true, quality: 90 });
+    pipeline = pipeline.png({ palette: true, quality });
   }
   await pipeline.toFile(dst);
 
