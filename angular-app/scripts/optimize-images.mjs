@@ -7,108 +7,26 @@
 // descobriram o mesmo problema duas vezes, cada vez reprocessando arquivos que ja tinham
 // perda (JPEG/WebP re-recomprimido perde qualidade a cada rodada - "generation loss"). Este
 // script parte sempre do arquivo original (alta resolucao, sem perda anterior) e centraliza
-// numa unica tabela (`TARGETS`) o tamanho-alvo de cada imagem, que hoje esta espalhado pelos
-// componentes (hero.html, about.html, experience.ts, testimonials.html).
+// numa unica tabela (`image-targets.mjs`) o tamanho-alvo de cada imagem, que hoje esta
+// espalhado pelos componentes (hero.html, about.html, experience.ts, testimonials.html).
 //
 // Uso: adiciona/atualiza o arquivo original em `src/assets/images/`, ajusta ou adiciona uma
-// entrada em `TARGETS` abaixo, roda `npm run optimize-images`. Nao roda automaticamente no
-// build (as saidas ficam commitadas no git, revisaveis num diff comum).
+// entrada em `image-targets.mjs`. Roda sozinho (26/09/2026) como parte do `npm run build`
+// ("build": "node scripts/optimize-images.mjs && ng build") - garante que o `public/` que vai
+// pro deploy da Vercel esteja sempre em sincronia com `src/assets/images/`, mesmo se alguem
+// esquecer de rodar manualmente (o CI/CD deste projeto nao roda `ng test` antes do deploy, ver
+// Production.yaml/Develop.yaml - so validacao de branch, auditoria de seguranca e deploy).
+// `asset-sizes.spec.ts` complementa com visibilidade no `ng test` local.
 import sharp from 'sharp';
 import { existsSync, statSync } from 'node:fs';
 import { unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { OG_COPIES, TARGETS } from './image-targets.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SOURCE_DIR = resolve(root, 'src/assets/images');
 const OUTPUT_DIR = resolve(root, 'public/assets/images');
-
-/**
- * Tamanho-alvo = ~2x o maior tamanho exibido em tela (retina-ready), a mesma recomendacao do
- * Chrome/web.dev pra imagens responsivas. `quality` e o parametro do encoder (JPEG/WebP;
- * ignorado pra PNG, que usa paleta de cores via `pngQuality`). `output` pode trocar a
- * extensao (ex.: PNG de foto -> JPEG/WebP).
- */
-const TARGETS = [
-  {
-    // Hero (hero.html) - e a propria imagem LCP do site.
-    source: 'profile_johnnysouto.jpeg',
-    output: 'profile_johnnysouto.webp',
-    width: 1064,
-    height: 1064,
-    format: 'webp',
-    quality: 75,
-  },
-  {
-    // About (about.html).
-    source: 'photo_about_02.jpeg',
-    output: 'photo_about_02.webp',
-    width: 784,
-    height: 1394,
-    format: 'webp',
-    quality: 72,
-  },
-  {
-    // Experience (experience.ts) - width/height declarados la sao 200x112 (2x de 100x56).
-    source: 'logo_totvs.jpg',
-    output: 'logo_totvs.jpg',
-    width: 200,
-    height: 112,
-    format: 'jpeg',
-    quality: 82,
-  },
-  {
-    // Testimonials (testimonials.html) - avatar exibido a 64x64. Era PNG (foto sem
-    // transparencia real salva por engano); vira JPEG.
-    source: 'profile_testmonial_02.png',
-    output: 'profile_testmonial_02.jpg',
-    width: 128,
-    height: 128,
-    format: 'jpeg',
-    quality: 82,
-  },
-  {
-    source: 'profile_testmonial_03.jpeg',
-    output: 'profile_testmonial_03.jpeg',
-    width: 128,
-    height: 128,
-    format: 'jpeg',
-    quality: 82,
-  },
-  {
-    source: 'profile_testmonial_04.jpeg',
-    output: 'profile_testmonial_04.jpeg',
-    width: 128,
-    height: 128,
-    format: 'jpeg',
-    quality: 82,
-  },
-  {
-    // Project (project.ts) - width/height declarados la sao 280x100; alvo em 2x.
-    source: 'logo_project_coca-cola_femsa.png',
-    output: 'logo_project_coca-cola_femsa.png',
-    width: 560,
-    height: 200,
-    format: 'png',
-  },
-];
-
-/**
- * Copia extra: og:image (index.html) usa uma copia JPEG dedicada da foto da Hero, nao o
- * `.webp` da pagina - crawlers de preview social (WhatsApp, LinkedIn, Facebook) tem suporte
- * inconsistente a WebP nesse contexto. Gerada a partir do mesmo original em alta resolucao,
- * no mesmo tamanho da versao usada na pagina.
- */
-const OG_COPIES = [
-  {
-    source: 'profile_johnnysouto.jpeg',
-    output: 'profile_johnnysouto_og.jpeg',
-    width: 1064,
-    height: 1064,
-    format: 'jpeg',
-    quality: 85,
-  },
-];
 
 async function process({ source, output, width, height, format, quality }) {
   const src = resolve(SOURCE_DIR, source);

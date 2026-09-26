@@ -10,7 +10,7 @@
     "serve:i18n:only": "node scripts/serve-i18n.mjs",
     "extract-i18n": "ng extract-i18n --format json --output-path src/locale",
     "optimize-images": "node scripts/optimize-images.mjs",
-    "build": "ng build",
+    "build": "node scripts/optimize-images.mjs && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
