@@ -180,6 +180,16 @@
   // mesmo criterio ja usado no scrim do menu mobile acima (valor solto, 1 variavel por
   // tema, nao token formal da secao 3).
   --color-header-scrolled-bg: rgba(255, 255, 255, 0.35);
+
+  // Coracao do footer (footer.html/footer.scss) - 26/09/2026, achado do PageSpeed
+  // (auditoria de contraste): era uma cor fixa (#e11d48, "rose-600") nos dois temas,
+  // sem corresponder a nenhum token cinza da secao 3 (mesmo criterio dos valores soltos
+  // acima) - so que #e11d48 falha WCAG AA contra os dois fundos (4,49:1 no light, precisa
+  // 4,5; 3,78:1 no dark). Precisa de UMA variavel por tema (troca abaixo, em
+  // `[data-theme='dark']`), com tons de vermelho diferentes: mais escuro no light (fundo
+  // claro), mais claro no dark (fundo escuro) - mesma logica de --color-gray-*, so que
+  // pra um vermelho sem token formal.
+  --color-footer-heart: #be123c; // "rose-700" - 6,01:1 contra --color-gray-50 (#f9fafb)
 }
 
 // ---------------------------------------------------------------------
@@ -202,4 +212,9 @@
   // Fundo do Header "rolado" no Dark - ver nota completa junto da variavel light em
   // `:root` acima. Mesma cor de `--color-gray-dark-default` (#030712), semi-transparente.
   --color-header-scrolled-bg: rgba(3, 7, 18, 0.35);
+
+  // Coracao do footer no Dark - ver nota completa junto da variavel light em `:root`
+  // acima. Precisa de um vermelho mais CLARO aqui (fundo escuro, --color-gray-50 dark
+  // = #111827) - o mesmo tom do light (#be123c) so daria 2,82:1, reprovado.
+  --color-footer-heart: #fb7185; // "rose-400" - 6,59:1 contra --color-gray-50 (#111827)
 }

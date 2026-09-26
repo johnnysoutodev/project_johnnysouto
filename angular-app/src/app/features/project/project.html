@@ -2,7 +2,13 @@
   <div class="project__container">
     <div class="project__heading">
       <app-tag i18n="@@project.tag">Projetos</app-tag>
-      <p class="project__subtitle" i18n="@@project.subtitle">Alguns dos projetos dos quais participei</p>
+      <!--
+        `<h2>`, nao `<p>` (26/09/2026, achado do PageSpeed - ordem de headings): fecha a
+        hierarquia H1 (Hero) -> H2 (aqui) -> H3 (`.project__title` de cada card, abaixo).
+      -->
+      <h2 class="project__subtitle" i18n="@@project.subtitle">
+        Alguns dos projetos dos quais participei
+      </h2>
     </div>
 
     <div class="project__list">
