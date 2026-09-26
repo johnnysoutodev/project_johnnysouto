@@ -2,11 +2,32 @@
   Ordem da pagina (design-system.md secao 1): Hero, About, Skills, Experience, Project,
   Testimonials, Contact me. As 7 secoes (T6-T12 do plano de implementacao) ja saíram do
   esqueleto - cada `<app-*>` abaixo vive em `features/<secao>/`.
+
+  `@defer (hydrate on viewport)` nas 6 secoes abaixo da dobra (26/09/2026, achado do
+  PageSpeed - 34 KiB de JS "nao usado" no bundle inicial): com hidratacao incremental
+  habilitada por padrao no Angular 22 (`provideClientHydration()`, ver app.config.ts), o
+  conteudo real de cada secao CONTINUA indo pro HTML pre-renderizado (SEO/crawler enxergam
+  tudo igual - nada fica escondido atras de JS), so a hidratacao (interatividade, listeners
+  do Angular) de cada bloco espera a secao chegar perto da tela, em vez de tudo hidratar de
+  uma vez so no carregamento inicial. Hero fica de fora (e a imagem LCP, precisa ficar
+  imediata) - so os 6 que vem depois dela na dobra.
 -->
 <app-hero />
-<app-about />
-<app-skills />
-<app-experience />
-<app-project />
-<app-testimonials />
-<app-contact-me />
+@defer (hydrate on viewport) {
+  <app-about />
+}
+@defer (hydrate on viewport) {
+  <app-skills />
+}
+@defer (hydrate on viewport) {
+  <app-experience />
+}
+@defer (hydrate on viewport) {
+  <app-project />
+}
+@defer (hydrate on viewport) {
+  <app-testimonials />
+}
+@defer (hydrate on viewport) {
+  <app-contact-me />
+}
