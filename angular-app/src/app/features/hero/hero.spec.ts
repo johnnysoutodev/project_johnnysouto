@@ -46,9 +46,7 @@ describe('Hero', () => {
 
   it('renders the GitHub icon button as a real external link', () => {
     const githubLink = fixture.debugElement.query(By.css('a.icon-button'));
-    expect(githubLink.nativeElement.getAttribute('href')).toBe(
-      'https://github.com/johnnysoutodev',
-    );
+    expect(githubLink.nativeElement.getAttribute('href')).toBe('https://github.com/johnnysoutodev');
     expect(githubLink.nativeElement.getAttribute('target')).toBe('_blank');
   });
 
@@ -70,7 +68,7 @@ describe('Hero', () => {
   it('renders the profile photo as a priority image inside the picture block', () => {
     const photo = fixture.debugElement.query(By.css('.hero__pic img'));
     expect(photo.nativeElement.getAttribute('ng-src') ?? photo.nativeElement.src).toContain(
-      'profile_johnnysouto.jpeg',
+      'profile_johnnysouto.webp',
     );
     expect(photo.nativeElement.getAttribute('alt')).toBe('Johnny Souto');
   });
