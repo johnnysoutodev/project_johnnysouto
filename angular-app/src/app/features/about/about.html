@@ -14,8 +14,21 @@
         <div class="about__pic-container">
           <div class="about__pic-background" aria-hidden="true"></div>
           <div class="about__pic">
+            <!--
+              Imagem responsiva de verdade (26/09/2026, achado do PageSpeed + pergunta do
+              Johnny): o container muda de tamanho por breakpoint (about.scss - 264x312
+              mobile / 352x416 tablet / 440x520 desktop), entao um arquivo so dimensionado
+              pro maior (desktop) desperdicava banda em quem acessa pelo celular. `sizes`
+              abaixo espelha esses breakpoints (nao e 100vw - o `fill` nao ocupa a tela
+              toda, so o container fixo); `ngSrcset` + o loader customizado (app.config.ts,
+              core/images/responsive-image-loader.ts) mapeia cada largura pro arquivo real
+              certo (sem loader, ngSrcset sozinho so anexaria "?w=N" na mesma URL - inutil
+              num site 100% estatico).
+            -->
             <img
-              ngSrc="assets/images/photo_about_02.jpeg"
+              ngSrc="assets/images/photo_about_02.webp"
+              ngSrcset="528w, 704w, 880w"
+              sizes="(min-width: 1024px) 440px, (min-width: 768px) 352px, 264px"
               fill
               priority
               alt="Ipê-amarelo florido"
@@ -26,7 +39,15 @@
       </div>
 
       <div class="about__content">
-        <h3 class="about__heading" i18n="@@about.heading">Mais de 20 anos construindo tecnologia</h3>
+        <!--
+          `<h2>`, nao `<h3>` (26/09/2026, achado do PageSpeed - ordem de headings):
+          pulava do H1 (Hero) direto pro H3 aqui. Classe/mixin de tipografia
+          (`heading-h3-semibold`) mantidos - o tamanho visual do design nao muda, so o
+          nivel semantico do heading.
+        -->
+        <h2 class="about__heading" i18n="@@about.heading">
+          Mais de 20 anos construindo tecnologia
+        </h2>
 
         <div class="about__bio">
           <!--
@@ -38,19 +59,19 @@
           -->
           <p i18n="@@about.bio.p1">
             Sou um profissional de TI com mais de {{ experienceYears }} anos de experiência, com uma
-            trajetória que passa por operações, suporte de sistemas, bancos de dados,
-            front-end, back-end, análise de negócios e consultoria, em empresas como
-            Nielsen, Vivo, Coca-Cola, Santander e TOTVS.
+            trajetória que passa por operações, suporte de sistemas, bancos de dados, front-end,
+            back-end, análise de negócios e consultoria, em empresas como Nielsen, Vivo, Coca-Cola,
+            Santander e TOTVS.
           </p>
           <p i18n="@@about.bio.p2">
             Vivi de perto diferentes fases da tecnologia, do processamento em batch e da
             administração de dados às aplicações web e às esteiras DevOps. Hoje, na TOTVS,
-            desenvolvo o Front-end com Angular e IA generativa e vivencio com entusiasmo a era da Cloud,
-            dos Dados e da IA Generativa.
+            desenvolvo o Front-end com Angular e IA generativa e vivencio com entusiasmo a era da
+            Cloud, dos Dados e da IA Generativa.
           </p>
           <p i18n="@@about.bio.p3">
-            Sou apaixonado pelo que faço e sigo aprendendo continuamente, sempre buscando
-            entender o problema de negócio antes de escrever a primeira linha de código.
+            Sou apaixonado pelo que faço e sigo aprendendo continuamente, sempre buscando entender o
+            problema de negócio antes de escrever a primeira linha de código.
           </p>
         </div>
 
@@ -58,8 +79,12 @@
 
         <div class="about__checklist">
           <ul class="about__checklist-column">
-            <li i18n="@@about.fact.experience">Mais de {{ experienceYears }} anos de experiência em TI</li>
-            <li i18n="@@about.fact.stack">Front-end e back-end: Angular, TypeScript, Java e Node.js</li>
+            <li i18n="@@about.fact.experience">
+              Mais de {{ experienceYears }} anos de experiência em TI
+            </li>
+            <li i18n="@@about.fact.stack">
+              Front-end e back-end: Angular, TypeScript, Java e Node.js
+            </li>
           </ul>
           <ul class="about__checklist-column">
             <li i18n="@@about.fact.cloud">Cloud e DevOps: CI/CD com GitHub Actions</li>
@@ -68,8 +93,8 @@
         </div>
 
         <p class="about__closing" i18n="@@about.closing">
-          Quer bater um papo sobre alguma oportunidade ou projeto? Fique à vontade para
-          entrar em contato.
+          Quer bater um papo sobre alguma oportunidade ou projeto? Fique à vontade para entrar em
+          contato.
         </p>
       </div>
     </div>

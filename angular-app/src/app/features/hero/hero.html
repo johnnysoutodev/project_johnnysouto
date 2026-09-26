@@ -12,20 +12,27 @@
             TI multidisciplinar, com o tempo de experiencia calculado a partir da primeira
             experiencia real documentada (Nielsen do Brasil, Jan/2006).
           -->
-          Sou um profissional de TI com mais de {{ experienceYears }} anos de experiência, atuando desde suporte técnico,
-          bancos de dados, front-end, back-end, análise de negócios, implantando, configurando e prestando consultoria de
-          sistemas a diversas empresas.
+          Sou um profissional de TI com mais de {{ experienceYears }} anos de experiência, atuando
+          desde suporte técnico, bancos de dados, front-end, back-end, análise de negócios,
+          implantando, configurando e prestando consultoria de sistemas a diversas empresas.
         </p>
       </div>
 
       <div class="hero__actions">
         <div class="hero__links">
+          <!--
+            size="large" (26/09/2026, a pedido do Johnny - icones pequenos demais no Hero
+            e no Contact me): variante ja existente no design system (icon-button.ts,
+            design-system.md secao 8.3), so nao estava sendo usada aqui - icone 32x32,
+            botao 44x44 (area de toque maior tambem).
+          -->
           <app-icon-button
+            size="large"
             [href]="githubUrl"
             ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
             i18n-ariaLabel="@@social.github.aria"
           >
-            <img ngSrc="assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+            <img ngSrc="assets/icons/icon-social-github.svg" width="32" height="32" alt="" />
           </app-icon-button>
 
           <!--
@@ -35,11 +42,12 @@
             lado a lado como Icon Button (08/09/2026, a pedido do Johnny).
           -->
           <app-icon-button
+            size="large"
             [href]="linkedinUrl"
             ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
             i18n-ariaLabel="@@social.linkedin.aria"
           >
-            <img ngSrc="assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+            <img ngSrc="assets/icons/icon-social-linkedin.svg" width="32" height="32" alt="" />
           </app-icon-button>
         </div>
       </div>
@@ -54,7 +62,7 @@
         <div class="hero__pic-background" aria-hidden="true"></div>
         <div class="hero__pic">
           <img
-            ngSrc="assets/images/profile_johnnysouto.jpeg"
+            ngSrc="assets/images/profile_johnnysouto.webp"
             fill
             priority
             alt="Johnny Souto"

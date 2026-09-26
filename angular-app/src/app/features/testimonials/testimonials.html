@@ -2,15 +2,14 @@
   <div class="testimonials__container">
     <div class="testimonials__heading">
       <app-tag i18n="@@testimonials.tag">Depoimentos</app-tag>
-      <p class="testimonials__subtitle" i18n="@@testimonials.subtitle">
-        <!--
-          Nota de placeholder VISIVEL na pagina renderizada (design-system.md secao 10),
-          alem dos nomes ja ficticios abaixo e do comentario em testimonials.ts - qualquer
-          revisor olhando a secao (nao so o codigo-fonte) percebe que os 3 depoimentos
-          sao de exemplo.
-        -->
+      <!--
+        `<h2>`, nao `<p>` (26/09/2026, achado do PageSpeed - ordem de headings): fecha a
+        hierarquia H1 (Hero) -> H2 (aqui), sem H3 abaixo (cada card de depoimento nao tem
+        heading proprio - so nome/cargo em texto normal, ver testimonials.ts).
+      -->
+      <h2 class="testimonials__subtitle" i18n="@@testimonials.subtitle">
         Depoimentos de colegas de trabalho ou clientes
-      </p>
+      </h2>
     </div>
 
     <div class="testimonials__list">

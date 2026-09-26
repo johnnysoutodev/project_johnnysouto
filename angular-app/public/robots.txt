@@ -1,4 +1,8 @@
-User-agent: *
+User-agent: Googlebot
 Allow: /
+
+# For Others
+User-agent: *
+Disallow: /
 
 Sitemap: https://www.johnnysouto.com.br/sitemap.xml

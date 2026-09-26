@@ -95,7 +95,7 @@ export class Project {
       description: $localize`:@@project.pitcher.description:A Coca-Cola FEMSA substituiu o aplicativo MfCoke pelo Pitcher App para agilizar o trabalho diário dos promotores. Fui responsável pela implantação: integração das bases de dados (MS-SQL Server e SAP), pela gestão das informações de clientes no Salesforce com fórmulas e gráficos dinâmicos, e instalação e configuração do app nos dispositivos de mais de 3.000 colaboradores. Os dados coletados geram relatórios gráficos que aceleram a tomada de decisão.`,
       tags: ['Salesforce', 'Azure', 'MS-SQL Server', 'SAP', 'Google Sheets'],
       // Sem link publico disponivel no legado (secao 10/comentario acima) - acao omitida.
-      logo: { src: 'assets/images/logo_project_coca-cola_femsa.png', width: 280, height: 100 },
+      logo: { src: 'assets/images/logo_project_coca-cola_femsa.png', width: 560, height: 320 },
       imageBackground: '#f9fafb',
     },
     {
