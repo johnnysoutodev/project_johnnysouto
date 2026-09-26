@@ -57,7 +57,7 @@ export class Testimonials {
     {
       name: 'Raphaela Simon',
       role: $localize`:@@testimonial.raphaela.role:Líder na TOTVS`,
-      photo: { src: 'assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
+      photo: { src: 'assets/images/profile_testmonial_02.jpg', alt: 'Raphaela Simon' },
       quote: $localize`:@@testimonial.raphaela.quote:"Johnny é um profissional em quem sei que posso confiar e contar. Sua competência técnica, postura colaborativa e senso de responsabilidade fazem muita diferença nas nossas entregas."`,
     },
     {
