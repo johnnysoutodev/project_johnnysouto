@@ -97,7 +97,7 @@ describe('Testimonials', () => {
       'Tive o prazer de trabalhar com o Johnny',
     );
     expect(cards[3].query(By.css('.testimonials__role')).nativeElement.textContent.trim()).toBe(
-      'Coordenador na Nielsen',
+      'Supervisor na Nielsen',
     );
   });
 });

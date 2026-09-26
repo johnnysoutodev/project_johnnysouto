@@ -68,7 +68,7 @@ export class Testimonials {
     },
     {
       name: 'Marion Almeida',
-      role: $localize`:@@testimonial.marion.role:Coordenador na Nielsen`,
+      role: $localize`:@@testimonial.marion.role:Supervisor na Nielsen`,
       photo: { src: 'assets/images/profile_testmonial_04.jpeg', alt: 'Marion Almeida' },
       quote: $localize`:@@testimonial.marion.quote:"Tive o prazer de trabalhar com o Johnny e posso dizer que foi uma experiência muito positiva. É um profissional extremamente organizado, empático e fácil de lidar, além de ter uma excelente capacidade de ensinar e compartilhar conhecimento."`,
     },

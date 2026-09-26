@@ -93,7 +93,7 @@
     "testimonial.raphaela.quote": "\"Johnny es un profesional en quien sé que puedo confiar y contar. Su competencia técnica, su actitud colaborativa y su sentido de la responsabilidad marcan una gran diferencia en nuestras entregas.\"",
     "testimonial.cesar.role": "Especialista en Observabilidad en IBM",
     "testimonial.cesar.quote": "\"Además de su competencia profesional, destaca por su trabajo en equipo, su actitud colaborativa y su disposición para apoyar a sus compañeros en los retos del día a día. Recomiendo encarecidamente su trabajo.\"",
-    "testimonial.marion.role": "Coordinador en Nielsen",
+    "testimonial.marion.role": "Supervisor en Nielsen",
     "testimonial.marion.quote": "\"Tuve el placer de trabajar con Johnny y puedo decir que fue una experiencia muy positiva. Es un profesional extremadamente organizado, empático y fácil de tratar, además de tener una excelente capacidad para enseñar y compartir conocimiento.\"",
     "footer.note": "©{$INTERPOLATION}. Todos los derechos reservados. Codificado con {$START_TAG_SPAN}❤︎{$CLOSE_TAG_SPAN} por {$START_LINK}JSD Technologies{$CLOSE_LINK}.",
     "header.logo.aria": "Inicio",
