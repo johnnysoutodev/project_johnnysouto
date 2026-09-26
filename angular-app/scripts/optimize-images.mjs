@@ -28,7 +28,7 @@ const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const SOURCE_DIR = resolve(root, 'src/assets/images');
 const OUTPUT_DIR = resolve(root, 'public/assets/images');
 
-async function process({ source, output, width, height, format, quality }) {
+async function process({ source, output, width, height, fit = 'cover', format, quality }) {
   const src = resolve(SOURCE_DIR, source);
   const dst = resolve(OUTPUT_DIR, output);
 
@@ -39,7 +39,7 @@ async function process({ source, output, width, height, format, quality }) {
 
   const before = existsSync(dst) ? statSync(dst).size : 0;
 
-  let pipeline = sharp(src).resize(width, height, { fit: 'cover' });
+  let pipeline = sharp(src).resize(width, height, { fit });
   if (format === 'webp') {
     pipeline = pipeline.webp({ quality });
   } else if (format === 'jpeg') {
@@ -59,8 +59,12 @@ async function process({ source, output, width, height, format, quality }) {
 
   const after = statSync(dst).size;
   const arrow = before ? `${(before / 1024).toFixed(0)}KB -> ` : '';
+  // Dimensao real do arquivo gerado, nao a configurada: com `fit: 'inside'` o resultado pode
+  // fechar 1px diferente do pedido (arredondamento do calculo de escala do proprio Sharp).
+  const realDimensions = await sharp(dst).metadata();
   console.log(
-    `${source} -> ${output}: ${arrow}${(after / 1024).toFixed(0)}KB (${width}x${height})`,
+    `${source} -> ${output}: ${arrow}${(after / 1024).toFixed(0)}KB ` +
+      `(${realDimensions.width}x${realDimensions.height})`,
   );
 }
 

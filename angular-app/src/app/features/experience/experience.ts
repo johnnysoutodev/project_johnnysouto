@@ -80,10 +80,10 @@ export class Experience {
       company: 'Totvs',
       logo: {
         src: 'assets/images/logo_totvs.jpg',
-        width: 200,
-        height: 112,
-        displayHeight: 56,
-        displayWidth: 100,
+        width: 198,
+        height: 60,
+        displayHeight: 30,
+        displayWidth: 99,
       },
       positions: [
         {
