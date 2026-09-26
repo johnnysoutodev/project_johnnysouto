@@ -45,7 +45,7 @@ export const TARGETS = [
     width: 880,
     height: 1040,
     format: 'webp',
-    quality: 72,
+    quality: 50,
   },
   {
     // About, variante mobile (2x de 264x312) - ver comentario acima.
@@ -54,7 +54,7 @@ export const TARGETS = [
     width: 528,
     height: 624,
     format: 'webp',
-    quality: 72,
+    quality: 50,
   },
   {
     // About, variante tablet (2x de 352x416) - ver comentario acima.
@@ -63,7 +63,7 @@ export const TARGETS = [
     width: 704,
     height: 832,
     format: 'webp',
-    quality: 72,
+    quality: 50,
   },
   {
     // Experience (experience.ts) - `object-fit: contain` (experience.scss), logo com aspect
@@ -144,9 +144,9 @@ export const OG_COPIES = [
  */
 export const MAX_BYTES_BY_OUTPUT = {
   'profile_johnnysouto.webp': 40 * 1024,
-  'photo_about_02.webp': 200 * 1024,
-  'photo_about_02-528w.webp': 100 * 1024,
-  'photo_about_02-704w.webp': 150 * 1024,
+  'photo_about_02.webp': 140 * 1024,
+  'photo_about_02-528w.webp': 75 * 1024,
+  'photo_about_02-704w.webp': 105 * 1024,
   'logo_totvs.jpg': 15 * 1024,
   'profile_testmonial_02.jpg': 15 * 1024,
   'profile_testmonial_03.jpeg': 15 * 1024,
