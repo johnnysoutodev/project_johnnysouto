@@ -9,7 +9,8 @@
     "serve:i18n": "ng build && node scripts/serve-i18n.mjs",
     "serve:i18n:only": "node scripts/serve-i18n.mjs",
     "extract-i18n": "ng extract-i18n --format json --output-path src/locale",
-    "build": "ng build",
+    "optimize-images": "node scripts/optimize-images.mjs",
+    "build": "node scripts/optimize-images.mjs && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
@@ -44,6 +45,7 @@
     "eslint": "^10.9.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
+    "sharp": "^0.35.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "8.67.0",
     "vitest": "^4.0.8"
