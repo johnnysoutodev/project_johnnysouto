@@ -50,13 +50,13 @@ export class Testimonials {
   protected readonly testimonials: readonly Testimonial[] = [
     {
       name: 'Alexandre Franco',
-      role: $localize`:@@testimonial.alexandre.role:DBA da Capgemini`,
+      role: $localize`:@@testimonial.alexandre.role:DBA na Capgemini`,
       photo: { src: 'assets/images/profile_testmonial_01.jpeg', alt: 'Alexandre Franco' },
       quote: $localize`:@@testimonial.alexandre.quote:"Excelente profissional, sempre empenhado e focado em seus desafios. Coordenou uma migração de projeto com 22 pessoas com postura firme e competência."`,
     },
     {
       name: 'Raphaela Simon',
-      role: $localize`:@@testimonial.raphaela.role:Líder da TOTVS`,
+      role: $localize`:@@testimonial.raphaela.role:Líder na TOTVS`,
       photo: { src: 'assets/images/profile_testmonial_02.png', alt: 'Raphaela Simon' },
       quote: $localize`:@@testimonial.raphaela.quote:"Johnny é um profissional em quem sei que posso confiar e contar. Sua competência técnica, postura colaborativa e senso de responsabilidade fazem muita diferença nas nossas entregas."`,
     },
