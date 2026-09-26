@@ -17,6 +17,20 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <!--
+      Preload da imagem LCP (foto da Hero, hero.html) - antecipa a busca desse arquivo pro
+      quanto antes no carregamento, antes do parser HTML chegar no <img> ou de qualquer JS
+      rodar (26/09/2026, achado do PageSpeed Insights: mesmo com `priority`/fetchpriority=high
+      do NgOptimizedImage, a auditoria "Atraso no carregamento de recursos" do LCP ainda
+      apontava um delta a reduzir). Mesmo arquivo nas 3 pastas de idioma, path relativo
+      identico ao `ngSrc` do hero.html.
+    -->
+    <link
+      rel="preload"
+      as="image"
+      href="assets/images/profile_johnnysouto.webp"
+      fetchpriority="high"
+    />
+    <!--
       SEO por idioma: title/description/canonical/og:* sao definidos por idioma em
       `core/seo/seo.ts` (o Angular nao processa `i18n` no index.html); os valores abaixo sao
       so o padrao (pt-BR) caso o JS/prerender nao rode. `hreflang` e igual em todos os idiomas
@@ -38,9 +52,15 @@
       content="Johnny Souto | Engenheiro de Software"
       i18n-content="@@seo.title"
     />
+    <!--
+      JPEG dedicado (26/09/2026) - a foto em si na Hero foi convertida pra `.webp` (menor,
+      usada por `NgOptimizedImage`), mas crawlers de preview social (WhatsApp, Facebook,
+      LinkedIn) tem suporte inconsistente a WebP em og:image, entao og:image aponta pra
+      esta copia JPEG dedicada em vez do arquivo `.webp` da pagina.
+    -->
     <meta
       property="og:image"
-      content="https://www.johnnysouto.com.br/pt-br/assets/images/profile_johnnysouto.jpeg"
+      content="https://www.johnnysouto.com.br/pt-br/assets/images/profile_johnnysouto_og.jpeg"
     />
     <!-- Fonte "Inter" (docs/design-system.md secao 4) - Google Font padrao, sem arquivo local -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

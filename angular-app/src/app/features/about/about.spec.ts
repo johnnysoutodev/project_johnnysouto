@@ -54,7 +54,7 @@ describe('About', () => {
   it('renders a neutral (non-portrait) photo inside the picture block, for privacy', () => {
     const photo = fixture.debugElement.query(By.css('.about__pic img'));
     expect(photo.nativeElement.getAttribute('ng-src') ?? photo.nativeElement.src).toContain(
-      'photo_about_02.jpeg',
+      'photo_about_02.webp',
     );
     expect(photo.nativeElement.getAttribute('alt')).toBe('Ipê-amarelo florido');
   });
