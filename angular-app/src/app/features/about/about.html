@@ -14,8 +14,21 @@
         <div class="about__pic-container">
           <div class="about__pic-background" aria-hidden="true"></div>
           <div class="about__pic">
+            <!--
+              Imagem responsiva de verdade (26/09/2026, achado do PageSpeed + pergunta do
+              Johnny): o container muda de tamanho por breakpoint (about.scss - 264x312
+              mobile / 352x416 tablet / 440x520 desktop), entao um arquivo so dimensionado
+              pro maior (desktop) desperdicava banda em quem acessa pelo celular. `sizes`
+              abaixo espelha esses breakpoints (nao e 100vw - o `fill` nao ocupa a tela
+              toda, so o container fixo); `ngSrcset` + o loader customizado (app.config.ts,
+              core/images/responsive-image-loader.ts) mapeia cada largura pro arquivo real
+              certo (sem loader, ngSrcset sozinho so anexaria "?w=N" na mesma URL - inutil
+              num site 100% estatico).
+            -->
             <img
               ngSrc="assets/images/photo_about_02.webp"
+              ngSrcset="528w, 704w, 880w"
+              sizes="(min-width: 1024px) 440px, (min-width: 768px) 352px, 264px"
               fill
               priority
               alt="Ipê-amarelo florido"

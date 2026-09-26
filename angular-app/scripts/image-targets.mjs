@@ -17,20 +17,51 @@
 
 export const TARGETS = [
   {
-    // Hero (hero.html) - e a propria imagem LCP do site.
+    // Hero (hero.html) - e a propria imagem LCP do site. Tamanho real do container
+    // (`.hero__pic`, hero.scss) e 280x320 - FIXO, sem variacao por breakpoint - nao
+    // 1064x1064 (erro de calculo original, achado pelo Johnny 26/09/2026 ao perguntar
+    // sobre compactacao: o alvo usado sempre foi maior do que o necessario). Alvo agora
+    // e 2x de 280x320 (retina).
     source: 'profile_johnnysouto.jpeg',
     output: 'profile_johnnysouto.webp',
-    width: 1064,
-    height: 1064,
+    width: 560,
+    height: 640,
     format: 'webp',
     quality: 75,
   },
   {
-    // About (about.html).
+    // About (about.html). Tamanho real do container (`.about__pic-container`,
+    // about.scss) varia por breakpoint: 264x312 (mobile) / 352x416 (tablet) / 440x520
+    // (desktop) - mesmo erro do Hero acima, o alvo usado antes (784x1394, proporcao
+    // errada) nunca bateu com nenhum desses. Agora responsiva de verdade (26/09/2026,
+    // a pedido do Johnny): 3 variantes, 2x cada breakpoint, com `ngSrcset`/`sizes` no
+    // about.html + loader customizado (core/images/responsive-image-loader.ts) mapeando
+    // cada largura pro arquivo certo - sem isso, `ngSrcset` sem loader so anexaria
+    // `?w=N` na mesma URL (inutil, site estatico). Esta entrada (sem sufixo) e o arquivo
+    // BASE (`ngSrc` aponta pra ela) - tambem o maior, serve de fallback pra navegador
+    // sem suporte a `srcset`.
     source: 'photo_about_02.jpeg',
     output: 'photo_about_02.webp',
-    width: 784,
-    height: 1394,
+    width: 880,
+    height: 1040,
+    format: 'webp',
+    quality: 72,
+  },
+  {
+    // About, variante mobile (2x de 264x312) - ver comentario acima.
+    source: 'photo_about_02.jpeg',
+    output: 'photo_about_02-528w.webp',
+    width: 528,
+    height: 624,
+    format: 'webp',
+    quality: 72,
+  },
+  {
+    // About, variante tablet (2x de 352x416) - ver comentario acima.
+    source: 'photo_about_02.jpeg',
+    output: 'photo_about_02-704w.webp',
+    width: 704,
+    height: 832,
     format: 'webp',
     quality: 72,
   },
@@ -112,8 +143,10 @@ export const OG_COPIES = [
  * perceber o impacto). Numeros folgados em cima do que o pipeline entrega hoje.
  */
 export const MAX_BYTES_BY_OUTPUT = {
-  'profile_johnnysouto.webp': 100 * 1024,
-  'photo_about_02.webp': 250 * 1024,
+  'profile_johnnysouto.webp': 40 * 1024,
+  'photo_about_02.webp': 200 * 1024,
+  'photo_about_02-528w.webp': 100 * 1024,
+  'photo_about_02-704w.webp': 150 * 1024,
   'logo_totvs.jpg': 15 * 1024,
   'profile_testmonial_02.jpg': 15 * 1024,
   'profile_testmonial_03.jpeg': 15 * 1024,
