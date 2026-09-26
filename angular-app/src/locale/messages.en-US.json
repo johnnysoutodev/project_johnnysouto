@@ -93,6 +93,8 @@
     "testimonial.raphaela.quote": "\"Johnny is a professional I know I can trust and count on. His technical competence, collaborative approach and sense of responsibility make a big difference in our deliveries.\"",
     "testimonial.cesar.role": "Observability Specialist at IBM",
     "testimonial.cesar.quote": "\"Beyond his professional competence, he stands out for his teamwork, collaborative approach and willingness to support colleagues through everyday challenges. I strongly recommend his work.\"",
+    "testimonial.marion.role": "Coordinator at Nielsen",
+    "testimonial.marion.quote": "\"It was a pleasure working with Johnny, and I can say it was a very positive experience. He's an extremely organized, empathetic professional who's easy to work with, and he has an excellent ability to teach and share knowledge.\"",
     "footer.note": "©{$INTERPOLATION}. All rights reserved. Coded with {$START_TAG_SPAN}❤︎{$CLOSE_TAG_SPAN} by {$START_LINK}JSD Technologies{$CLOSE_LINK}.",
     "header.logo.aria": "Home",
     "nav.main.aria": "Main navigation",
