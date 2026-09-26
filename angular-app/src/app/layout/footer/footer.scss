@@ -27,10 +27,12 @@
   @include typography.body3-normal;
 }
 
-// Cor fixa (nao um token - a paleta do Figma, secao 3, so tem tons de cinza, sem
-// vermelho catalogado) - decorativo, mesmo valor nos dois temas.
+// Cor sem token formal (a paleta do Figma, secao 3, so tem tons de cinza, sem vermelho
+// catalogado) - decorativo, mas com valores DIFERENTES por tema desde 26/09/2026 (achado
+// do PageSpeed: a cor fixa original, #e11d48, falhava contraste WCAG AA nos dois temas -
+// ver --color-footer-heart em _tokens.scss pro raciocinio completo).
 .footer__heart {
-  color: #e11d48;
+  color: var(--color-footer-heart);
 }
 
 .footer__link {

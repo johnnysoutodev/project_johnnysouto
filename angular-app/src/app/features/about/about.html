@@ -39,9 +39,15 @@
       </div>
 
       <div class="about__content">
-        <h3 class="about__heading" i18n="@@about.heading">
+        <!--
+          `<h2>`, nao `<h3>` (26/09/2026, achado do PageSpeed - ordem de headings):
+          pulava do H1 (Hero) direto pro H3 aqui. Classe/mixin de tipografia
+          (`heading-h3-semibold`) mantidos - o tamanho visual do design nao muda, so o
+          nivel semantico do heading.
+        -->
+        <h2 class="about__heading" i18n="@@about.heading">
           Mais de 20 anos construindo tecnologia
-        </h3>
+        </h2>
 
         <div class="about__bio">
           <!--

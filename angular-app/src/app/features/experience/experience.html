@@ -2,9 +2,14 @@
   <div class="experience__container">
     <div class="experience__heading">
       <app-tag i18n="@@experience.tag">Experiência profissional</app-tag>
-      <p class="experience__subtitle" i18n="@@experience.subtitle">
+      <!--
+        `<h2>`, nao `<p>` (26/09/2026, achado do PageSpeed - ordem de headings): fecha a
+        hierarquia H1 (Hero) -> H2 (aqui) -> H3 (`.experience__role` de cada posicao,
+        abaixo) - antes pulava direto pro H3 sem heading de secao nenhum.
+      -->
+      <h2 class="experience__subtitle" i18n="@@experience.subtitle">
         Um breve resumo das minhas experiências profissionais
-      </p>
+      </h2>
     </div>
 
     <ol class="experience__list">

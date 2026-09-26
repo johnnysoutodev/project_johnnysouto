@@ -2,14 +2,20 @@
   <div class="skills__container">
     <div class="skills__heading">
       <app-tag i18n="@@skills.tag">Skills</app-tag>
-      <p class="skills__subtitle" i18n="@@skills.subtitle">
+      <!--
+        `<h2>`, nao `<p>` (26/09/2026, achado do PageSpeed - auditoria de ordem de
+        headings): era paragrafo simples, pulava do H1 (Hero) direto pro H3 (About/itens),
+        sem heading nenhum pra secao. Visual identico (`.skills__subtitle` ja reseta
+        margem/fonte via classe, nao depende da tag).
+      -->
+      <h2 class="skills__subtitle" i18n="@@skills.subtitle">
         <!--
           Traducao/adaptacao livre do subtitulo do Figma ("The skills, tools and
           technologies I am really good at:", secao 8.10) - o curriculo legado nao tinha
           esse heading; mesma convencao de "copy adaptada" ja usada no Hero/About.
         -->
         As tecnologias e ferramentas com as quais eu trabalho
-      </p>
+      </h2>
     </div>
 
     <div class="skills__row">
