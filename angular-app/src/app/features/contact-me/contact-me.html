@@ -103,21 +103,29 @@
         da URL visivel ao lado - o icone sozinho ja deixa claro qual link e qual, sem a
         ambiguidade que motivava o texto visivel antes de o LinkedIn ganhar icone).
       -->
+      <!--
+        size="large" (26/09/2026, a pedido do Johnny - icones pequenos demais no Hero e no
+        Contact me): variante ja existente no design system (icon-button.ts,
+        design-system.md secao 8.3, que ja registrava 44x44 como o tamanho observado
+        aqui - so nao estava sendo aplicada) - icone 32x32, botao 44x44.
+      -->
       <div class="contact-me__links">
         <app-icon-button
+          size="large"
           [href]="githubUrl"
           ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
           i18n-ariaLabel="@@social.github.aria"
         >
-          <img ngSrc="assets/icons/icon-social-github.svg" width="24" height="24" alt="" />
+          <img ngSrc="assets/icons/icon-social-github.svg" width="32" height="32" alt="" />
         </app-icon-button>
 
         <app-icon-button
+          size="large"
           [href]="linkedinUrl"
           ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
           i18n-ariaLabel="@@social.linkedin.aria"
         >
-          <img ngSrc="assets/icons/icon-social-linkedin.svg" width="24" height="24" alt="" />
+          <img ngSrc="assets/icons/icon-social-linkedin.svg" width="32" height="32" alt="" />
         </app-icon-button>
       </div>
     </div>
