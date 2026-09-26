@@ -66,5 +66,11 @@ export class Testimonials {
       photo: { src: 'assets/images/profile_testmonial_03.jpeg', alt: 'Cesar Sales Lima' },
       quote: $localize`:@@testimonial.cesar.quote:"Além da competência profissional, destaca-se pelo trabalho em equipe, postura colaborativa e disposição para apoiar colegas nos desafios do dia a dia. Recomendo fortemente seu trabalho."`,
     },
+    {
+      name: 'Marion Almeida',
+      role: $localize`:@@testimonial.marion.role:Coordenador na Nielsen`,
+      photo: { src: 'assets/images/profile_testmonial_04.jpeg', alt: 'Marion Almeida' },
+      quote: $localize`:@@testimonial.marion.quote:"Tive o prazer de trabalhar com o Johnny e posso dizer que foi uma experiência muito positiva. É um profissional extremamente organizado, empático e fácil de lidar, além de ter uma excelente capacidade de ensinar e compartilhar conhecimento."`,
+    },
   ];
 }
