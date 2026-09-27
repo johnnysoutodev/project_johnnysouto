@@ -106,6 +106,23 @@
 
   img {
     object-fit: cover;
+    // Zoom no hover (27/09/2026, a pedido do Johnny) - `overflow: hidden` acima contem o
+    // excesso, sem vazar por cima do resto do layout. `scale` na propria imagem, nao no
+    // container: cresce sem empurrar o `.about__pic-background` atras dela.
+    transition: transform 0.4s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.08);
+  }
+
+  // Respeita a preferencia do sistema por menos animacao (mesmo criterio ja usado no
+  // scroll suave - anchor-scroll.ts, scroll-to-top.ts - so que via CSS aqui, ja que e
+  // uma transicao pura de CSS, nao JS).
+  @media (prefers-reduced-motion: reduce) {
+    img {
+      transition: none;
+    }
   }
 
   @include breakpoints.tablet-up {
