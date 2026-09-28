@@ -8,6 +8,7 @@ import { LanguageSwitcher } from '../../shared/components/language-switcher/lang
 import { NAV_LINKS } from '../nav-links';
 import { menuToggleLabel, themeToggleLabel } from '../../core/i18n/labels';
 import { LanguageService } from '../../core/i18n/language';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 /** A partir de quantos pixels de scroll o Header entra no estado "rolado" (ver `isScrolled`). */
 const SCROLL_THRESHOLD_PX = 8;
@@ -35,6 +36,7 @@ export class Header {
   protected readonly themeService = inject(ThemeService);
   protected readonly language = inject(LanguageService);
   protected readonly anchorScroll = inject(AnchorScrollService);
+  private readonly analytics = inject(AnalyticsService);
 
   // `window`/eventos de scroll nao existem no SSR/prerender deste projeto - mesma
   // guarda ja obrigatoria desde o `ThemeService` (core/theme/theme.ts) pra qualquer
@@ -89,5 +91,10 @@ export class Header {
 
   protected closeMobileMenu(): void {
     this.isMobileMenuOpen.set(false);
+  }
+
+  /** Rastreia o clique no download do CV (27/09/2026) - GA4, evento customizado. */
+  protected trackCvDownload(): void {
+    this.analytics.trackEvent('download_cv', { language: this.language.current.code });
   }
 }

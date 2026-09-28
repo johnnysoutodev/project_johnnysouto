@@ -1,17 +1,23 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { AnalyticsService } from '../analytics/analytics';
 
 const SCROLL_DURATION_MS = 650;
 
 @Injectable({ providedIn: 'root' })
 export class AnchorScrollService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly analytics = inject(AnalyticsService);
   private animationFrameId: number | null = null;
 
   scroll(event: MouseEvent, href: string): void {
     if (!this.isBrowser || !this.shouldHandleClick(event, href)) {
       return;
     }
+
+    // Ponto unico pra rastrear clique de navegacao (27/09/2026) - cobre tanto o Header
+    // quanto o MobileMenu, que ja chamam este mesmo metodo pros seus links de nav.
+    this.analytics.trackEvent('nav_click', { section: href });
 
     const target = document.getElementById(href.slice(1));
     if (!target) {

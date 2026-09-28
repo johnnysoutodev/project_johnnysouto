@@ -1,0 +1,26 @@
+@if (showBanner()) {
+  <div
+    class="cookie-consent"
+    role="region"
+    aria-label="Cookies"
+    i18n-aria-label="@@cookie.consent.aria"
+  >
+    <div class="cookie-consent__card">
+      <p class="cookie-consent__message">
+        <span i18n="@@cookie.consent.message"
+          >Neste site utilizamos cookies e funções semelhantes para processar informações do
+          dispositivo final e dados pessoais.</span
+        >
+      </p>
+
+      <div class="cookie-consent__actions">
+        <button type="button" class="cookie-consent__accept" (click)="accept()">
+          <span i18n="@@cookie.consent.accept">Aceitar</span>
+        </button>
+        <button type="button" class="cookie-consent__decline" (click)="decline()">
+          <span i18n="@@cookie.consent.decline">Cancelar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

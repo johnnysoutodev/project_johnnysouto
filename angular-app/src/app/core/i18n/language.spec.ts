@@ -2,6 +2,7 @@ import { LOCALE_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { APP_LOCALES, LanguageService } from './language';
+import { AnalyticsService } from '../analytics/analytics';
 
 function create(localeId: string): LanguageService {
   TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: localeId }] });
@@ -60,6 +61,19 @@ describe('LanguageService', () => {
 
     expect(document.cookie).toContain('lang=es-es');
     expect(navigate).toHaveBeenCalledWith('/es-es/');
+  });
+
+  it('rastreia a troca de idioma no GA4 antes de navegar (evento "language_switch")', () => {
+    const service = create('pt-BR');
+    vi.spyOn(service, 'navigate').mockImplementation(() => undefined);
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+
+    service.select(APP_LOCALES[2]);
+
+    expect(trackEvent).toHaveBeenCalledWith('language_switch', {
+      to_language: 'es-ES',
+      transport_type: 'beacon',
+    });
   });
 
   it('does nothing when the selected locale is the current one', () => {

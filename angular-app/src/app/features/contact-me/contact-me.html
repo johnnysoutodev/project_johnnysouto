@@ -115,6 +115,7 @@
           [href]="githubUrl"
           ariaLabel="GitHub de Johnny Souto (abre em nova aba)"
           i18n-ariaLabel="@@social.github.aria"
+          (click)="analytics.trackEvent('outbound_click', { url: githubUrl })"
         >
           <img ngSrc="assets/icons/icon-social-github.svg" width="32" height="32" alt="" />
         </app-icon-button>
@@ -124,6 +125,7 @@
           [href]="linkedinUrl"
           ariaLabel="LinkedIn de Johnny Souto (abre em nova aba)"
           i18n-ariaLabel="@@social.linkedin.aria"
+          (click)="analytics.trackEvent('outbound_click', { url: linkedinUrl })"
         >
           <img ngSrc="assets/icons/icon-social-linkedin.svg" width="32" height="32" alt="" />
         </app-icon-button>

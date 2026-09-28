@@ -1,0 +1,166 @@
+@use 'typography';
+@use 'layout';
+@use 'breakpoints';
+
+// Mesma estrutura do Header (header.scss): um wrapper fixo que so posiciona e da a
+// folga em relacao a borda da tela (`.cookie-consent`, equivalente a `.header`), e um
+// card interno com a largura/alinhamento real do navbar (`.cookie-consent__card`,
+// `@include layout.content-container` - max-width 1280px centralizado, mesmo mixin do
+// `.header__container`) - a pedido do Johnny (27/09/2026), pro banner alinhar com o
+// navbar em vez de ocupar a tela inteira de ponta a ponta.
+.cookie-consent {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 200; // acima do menu mobile (100, mobile-menu.scss)
+  padding: var(--space-8);
+
+  @include breakpoints.tablet-up {
+    padding-inline: 24px;
+  }
+
+  @include breakpoints.desktop-up {
+    padding-inline: var(--space-section-padding-x);
+  }
+
+  // Um pouco mais de folga da borda inferior de verdade da tela no mobile (achado do
+  // Johnny, 28/09/2026: os `--space-8` de todo lado deixavam o card praticamente colado
+  // na base do navegador) - so o `bottom`, os outros lados continuam com `--space-8`.
+  @include breakpoints.mobile-only {
+    padding-bottom: var(--space-16);
+  }
+}
+
+.cookie-consent__card {
+  @include layout.content-container;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-24);
+  padding: var(--space-16) var(--space-24);
+  border-radius: var(--radius-sm);
+  // Mesma receita "card" translucido do header quando rolado (header.scss,
+  // `.header--scrolled .header__container`) - aqui sempre ativa, ja que o banner so
+  // aparece sobre o conteudo (nunca no topo "limpo" da pagina).
+  background-color: var(--color-header-scrolled-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-lg);
+
+  // Rodape flutuante COMPACTO no mobile (28/09/2026, achado do Johnny: a primeira
+  // versao - texto grande + botoes empilhados abaixo - ocupava boa parte da tela do
+  // celular). Mantido texto a esquerda + acoes a direita (MESMA estrutura em linha do
+  // tablet/desktop, so mais compacta, a pedido explicito do Johnny) - `flex-wrap:
+  // nowrap` garante que as acoes nunca quebram pra uma linha abaixo do texto; quem
+  // "cede" espaco e o texto (`.cookie-consent__message`, `min-width: 0` + fonte menor
+  // no mobile), nao a coluna de botoes.
+  @include breakpoints.mobile-only {
+    flex-wrap: nowrap;
+    gap: var(--space-8);
+    // BUG real corrigido (28/09/2026, achado do Johnny): `--space-12` nao existe em
+    // `_tokens.scss` (so ...-8, -10, -16...) - um `var()` apontando pra uma custom
+    // property inexistente invalida a declaracao INTEIRA de `padding` (nao so o valor
+    // que usava o token quebrado), entao o card ficava com `padding: 0` de verdade no
+    // mobile - a causa raiz de tudo parecer "colado" (texto, botoes, tudo sem margem).
+    padding: var(--space-16);
+  }
+}
+
+// Texto a esquerda, com proporcao maior (27/09/2026, a pedido do Johnny) - `flex-grow`
+// maior que `.cookie-consent__actions` reparte o espaco extra do card majoritariamente
+// pro texto, alem de uma fonte maior (`body1-normal`, 18px - as demais secoes do site
+// usam no maximo `body2`, 16px) pra dar mais peso visual a explicacao. No mobile volta
+// pro tamanho normal de texto (`body3-normal`, 14px) - a fonte grande e o "respiro" de
+// secao de conteudo nao cabem numa faixa compacta de rodape (achado do Johnny, 28/09/2026).
+.cookie-consent__message {
+  @include typography.body1-normal;
+  flex: 3 1 320px;
+  margin: 0;
+  color: var(--color-gray-900);
+  align-self: flex-start;
+
+  // `min-width: 0` (sobrescreve o `320px` do `flex-basis` acima): sem isso, um flex
+  // item nunca encolhe alem do seu conteudo/base minima, entao os botoes a direita
+  // seriam empurrados pra fora do card num celular estreito. Fonte de volta ao
+  // tamanho normal (`body3-normal`, 14px) - a versao grande (`body1`, 18px) nao cabe
+  // numa faixa compacta de rodape (achado do Johnny, 28/09/2026).
+  @include breakpoints.mobile-only {
+    @include typography.body3-normal;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+// Coluna a direita, em QUALQUER largura de tela: Aceitar em cima (maior, de destaque) e
+// Cancelar embaixo (menor, com contorno) - decisao de UX do Johnny (27/09/2026) pra
+// induzir visualmente o aceite, sem esconder ou desabilitar o Cancelar (continua um
+// botao real, clicavel e acessivel via teclado - so com MENOS peso visual, nao menos
+// funcional).
+.cookie-consent__actions {
+  display: flex;
+  flex: 0 0 auto; // nunca encolhe (quem cede espaco no mobile e o texto, ver acima)
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+
+  @include breakpoints.mobile-only {
+    gap: var(--space-4);
+  }
+}
+
+.cookie-consent__accept,
+.cookie-consent__decline {
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-gray-900);
+    outline-offset: 2px;
+  }
+}
+
+// Acao primaria: MESMA receita/tamanho do `.header__cta`/`.mobile-menu__cta` em
+// QUALQUER largura de tela (sem encolher no mobile, ao contrario do Cancelar abaixo) -
+// e assim que o Aceitar fica visivelmente maior que o Cancelar (pedido do Johnny,
+// 28/09/2026): a primeira tentativa encolhia os dois no mobile e eles acabavam quase do
+// mesmo tamanho (o Cancelar, com borda, ate ficava 2px mais alto). Reaproveitar o
+// tamanho real do CTA de CV tambem garante o mesmo raio/altura ja usado em outro botao
+// real do site nesse breakpoint (mobile-menu aberto), sem precisar inventar um novo par
+// padding/raio so pro Aceitar.
+.cookie-consent__accept {
+  @include typography.body2-medium;
+  padding: var(--space-6) var(--space-16);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-900);
+  color: var(--color-gray-50);
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+// Acao secundaria: contorno simples (sem fundo), fonte menor - visualmente mais leve
+// que o Aceitar acima, mas ainda um botao "de verdade" (nao um link de texto solto).
+.cookie-consent__decline {
+  @include typography.body3-normal;
+  padding: var(--space-4) var(--space-16);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-gray-900);
+
+  &:hover {
+    opacity: 0.72;
+  }
+
+  // Mesmo ajuste de proporcao do Aceitar acima (raio menor pro botao mais baixo).
+  @include breakpoints.mobile-only {
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-sm);
+  }
+}

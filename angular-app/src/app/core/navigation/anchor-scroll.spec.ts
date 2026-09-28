@@ -2,6 +2,7 @@ import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AnchorScrollService } from './anchor-scroll';
+import { AnalyticsService } from '../analytics/analytics';
 
 describe('AnchorScrollService', () => {
   let service: AnchorScrollService;
@@ -73,6 +74,24 @@ describe('AnchorScrollService', () => {
 
     expect(event.defaultPrevented).toBe(false);
     expect(animationFrames).toHaveLength(0);
+  });
+
+  it('rastreia o clique de navegacao no GA4 (evento "nav_click")', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const event = new MouseEvent('click', { button: 0, cancelable: true });
+
+    service.scroll(event, '#work');
+
+    expect(trackEvent).toHaveBeenCalledWith('nav_click', { section: '#work' });
+  });
+
+  it('NAO rastreia cliques modificados (comportamento nativo preservado)', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const event = new MouseEvent('click', { button: 0, metaKey: true, cancelable: true });
+
+    service.scroll(event, '#work');
+
+    expect(trackEvent).not.toHaveBeenCalled();
   });
 });
 

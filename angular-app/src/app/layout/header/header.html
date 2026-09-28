@@ -78,6 +78,7 @@
           class="header__cta"
           [href]="language.cvHref"
           [attr.download]="language.cvFileName"
+          (click)="trackCvDownload()"
           i18n="@@cta.download-cv"
           >Download CV</a
         >
