@@ -117,6 +117,33 @@ git log -N --oneline  # N = número de commits criados
 git status
 ```
 
+### 6. Informar o Comando de Push Correto (sem executar)
+
+O agente **nunca executa `git push`** (ver "Não executa" abaixo — regra do Johnny: push é
+sempre manual). Mas depois dos commits, ele **deve informar ao Johnny o comando exato**
+a rodar, verificando antes se a branch atual já tem upstream configurado:
+
+```bash
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null
+```
+
+- **Sem saída (erro)** → a branch nunca foi enviada ao remoto. Um `git push` simples
+  falha aqui com `fatal: The current branch <branch> has no upstream branch`. Informar o
+  comando completo, com a branch atual (`git branch --show-current`):
+
+  ```bash
+  git push -u origin <branch-atual>
+  ```
+
+  Exemplo real: numa branch nova `feat/mobile-menu-swipe` recém-criada, o comando a
+  informar é `git push -u origin feat/mobile-menu-swipe`, nunca só `git push`.
+
+- **Com saída** (ex.: `origin/feat/mobile-menu-swipe`) → a branch já tem upstream; um
+  `git push` simples já basta, sem precisar do `-u origin <branch>` de novo.
+
+Essa checagem evita informar um comando que vai falhar na primeira tentativa — o Johnny
+não deveria precisar descobrir sozinho que faltou o `-u origin <branch>`.
+
 ## Exemplos de Uso
 
 ### Exemplo 1: Documentação + Regra de Agente
@@ -221,6 +248,17 @@ git commit -m "fix: corrige bug crítico!"
 git commit -m 'fix: corrige bug crítico!'
 ```
 
+**Erro: "has no upstream branch" (ao Johnny rodar o push informado)**
+
+```bash
+# PROBLEMA: agente informou só "git push" numa branch que nunca foi enviada ao remoto
+git push
+# fatal: The current branch feat/mobile-menu-swipe has no upstream branch
+
+# SOLUÇÃO: o agente deveria ter checado o upstream antes (ver seção 6) e informado
+git push -u origin feat/mobile-menu-swipe
+```
+
 **Erro: "nothing to commit"**
 
 ```bash
@@ -255,12 +293,13 @@ git commit -m 'mudanças'
 
 **Não executa:**
 
-- `git push` (sempre manual)
+- `git push` (sempre manual — o agente só informa o comando exato a rodar, ver seção 6
+  "Informar o Comando de Push Correto")
 - `git rebase` (sempre manual)
 - Mudanças em arquivos (apenas commits)
 
 ---
 
-**Última atualização:** 06/09/2026
-**Versão:** 1.1
+**Última atualização:** 27/09/2026
+**Versão:** 1.2
 **Mantido por:** @JohnnySouto
