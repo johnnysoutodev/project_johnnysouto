@@ -125,7 +125,7 @@ export class Experience {
       positions: [
         {
           role: $localize`:@@exp.capgemini.0.role:Consultor de Sistemas`,
-          period: $localize`:@@exp.capgemini.0.period:Julho de 2021 | Janeiro de 2024`,
+          period: $localize`:@@exp.capgemini.0.period:Junho de 2021 | Janeiro de 2024`,
           bullets: [
             $localize`:@@exp.capgemini.0.b1:Administração de dados SQL, SAP e Salesforce`,
             $localize`:@@exp.capgemini.0.b2:Gestão de dados por fórmulas e gráficos dinâmicos`,
