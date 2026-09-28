@@ -73,7 +73,7 @@ describe('Experience', () => {
     expect(periods).toEqual([
       'Março de 2026 | Atual',
       'Junho de 2024 | Janeiro de 2026',
-      'Julho de 2021 | Janeiro de 2024',
+      'Junho de 2021 | Janeiro de 2024',
       'Agosto de 2019 | Maio de 2021',
       'Agosto de 2017 | Agosto de 2019',
       'Agosto de 2015 | Julho de 2017',
