@@ -27,6 +27,21 @@
   pointer-events: auto;
 }
 
+// Faixa invisivel na borda direita pra iniciar o arraste de abrir (27/09/2026, ver
+// mobile-menu.ts) - largura generosa o bastante pro dedo (nao so alguns px), mas estreita
+// o suficiente pra nao atrapalhar interacao com o conteudo da pagina por baixo.
+// `touch-action: pan-y`: deixa o navegador lidar nativamente com scroll VERTICAL que comece
+// aqui (o JS so intercepta gestos claramente horizontais - ver `onDragMove`).
+.mobile-menu__edge-trigger {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
 .mobile-menu__scrim {
   position: absolute;
   inset: 0;
@@ -35,6 +50,9 @@
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.2s ease;
+  // Tambem aceita o arraste-pra-fechar (mobile-menu.ts, `onCloseDragStart`) - mesmo
+  // `pan-y` do painel, pra deixar o navegador lidar nativamente com scroll VERTICAL.
+  touch-action: pan-y;
 }
 
 .mobile-menu--open .mobile-menu__scrim {
@@ -66,6 +84,9 @@
   // `+ 8px`: a folga da direita tambem precisa sair da tela quando fechado.
   transform: translateX(calc(100% + var(--space-8)));
   transition: transform 0.25s ease;
+  // Deixa o navegador lidar nativamente com scroll VERTICAL do conteudo do painel; o JS
+  // (mobile-menu.ts, onDragMove) so intercepta gestos claramente horizontais.
+  touch-action: pan-y;
 
   @include breakpoints.tablet-only {
     width: min(60%, 400px);

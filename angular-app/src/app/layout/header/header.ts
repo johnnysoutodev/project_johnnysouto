@@ -69,9 +69,9 @@ export class Header {
    * Estado de abertura do menu mobile — decisao de implementacao: a spec 8.13 nao tem
    * frame de "fechado" nem gatilho de abertura documentado no Figma (limitacao ja
    * registrada la). Vive aqui (Header, dono do botao hamburguer) e desce como `[open]`
-   * pro `MobileMenu`, que e "controlado" (sem estado proprio) e so pede pra fechar via
-   * `(closed)` (scrim, Escape, botao "X", link clicado) — o Header e a unica fonte de
-   * verdade do estado.
+   * pro `MobileMenu`, que e "controlado" (sem estado proprio) e so pede pra abrir/fechar
+   * via `(openRequested)`/`(closed)` (arraste na borda/no painel, scrim, Escape, botao
+   * "X", link clicado) — o Header e a unica fonte de verdade do estado.
    */
   protected readonly isMobileMenuOpen = signal(false);
 
@@ -81,6 +81,10 @@ export class Header {
 
   protected toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((open) => !open);
+  }
+
+  protected openMobileMenu(): void {
+    this.isMobileMenuOpen.set(true);
   }
 
   protected closeMobileMenu(): void {

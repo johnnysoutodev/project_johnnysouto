@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, effect, inject, input, output } from '@angular/core';
+import { Component, PLATFORM_ID, effect, inject, input, output, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ThemeService } from '../../core/theme/theme';
 import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
@@ -11,6 +11,25 @@ const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
 
 /** Mesmo id usado no template (`mobile-menu.html`) pro elemento raiz do painel. */
 const PANEL_ID = 'mobile-menu-panel';
+
+/**
+ * Folga entre o painel fechado e a borda da tela (27/09/2026, pro arraste - ver
+ * `dragOffset` abaixo). Mesmo valor de `--space-8` usado no `transform` do painel em
+ * mobile-menu.scss (`translateX(calc(100% + var(--space-8)))`) - hardcoded aqui de
+ * proposito (ler a custom property via `getComputedStyle` pra evitar duplicar um numero
+ * adicionaria complexidade/fragilidade - parsing de string "8px" - por um valor que so
+ * muda se alguem mexer no design system). Se `--space-8` mudar, atualizar aqui tambem.
+ */
+const EDGE_GAP_PX = 8;
+
+/** Distancia minima (px) de movimento antes de decidir se o gesto e um arraste horizontal
+ * de verdade ou so um toque/scroll vertical - evita que um tap num link/botao dentro do
+ * painel seja interpretado como inicio de arraste. */
+const DRAG_ENGAGE_THRESHOLD_PX = 8;
+
+/** Arrastou mais de 60% do caminho até o destino oposto -> troca de estado ao soltar;
+ * menos que isso -> "encaixa" de volta no estado que já tinha. */
+const DRAG_SNAP_RATIO = 0.6;
 
 /**
  * Menu mobile (overlay) — design-system.md secao 8.13. Painel ancorado a direita
@@ -31,6 +50,23 @@ const PANEL_ID = 'mobile-menu-panel';
  * **Transicao** (slide-in do painel da direita + fade do scrim): decisao de UI razoavel
  * pra um padrao comum de "drawer", NAO extraida do Figma (a spec so tem o frame estatico
  * do estado aberto).
+ *
+ * **Arraste pra abrir/fechar** (27/09/2026, a pedido do Johnny, alem do botao hamburguer
+ * que ja existia): uma faixa fina e invisivel na borda direita da tela (`.mobile-menu__
+ * edge-trigger`, so renderizada quando fechado) inicia o gesto de abrir; arrastar o
+ * painel OU o scrim (quando aberto) inicia o de fechar - o scrim tambem precisa escutar
+ * porque o painel so cobre ~85% da largura (mobile-menu.scss), entao a faixa de scrim a
+ * esquerda dele tambem e uma area valida pra comecar o gesto de fechar (QA do Johnny,
+ * 27/09/2026: arraste comecando fora do painel nao fechava). Usa a Pointer Events API (funciona
+ * com toque E mouse) com `setPointerCapture` - so CAPTURA o ponteiro depois de confirmar
+ * que e um arraste horizontal de verdade (`DRAG_ENGAGE_THRESHOLD_PX`), pra nao atrapalhar
+ * um tap simples num link/botao dentro do painel nem um scroll vertical acidental que
+ * comece na faixa da borda. Durante o arraste, `dragOffset` sobrescreve a transicao/
+ * transform do CSS via `[style.*]` no template pra o painel acompanhar o dedo em tempo
+ * real; ao soltar, decide entre abrir/fechar (`DRAG_SNAP_RATIO`) e volta a depender so da
+ * classe CSS `mobile-menu--open` pro "encaixe" final (mesma transicao de sempre).
+ * `openRequested` (novo output, simetrico ao `closed` que ja existia) e como o painel PEDE
+ * pra abrir - continua sem estado proprio, e o `Header` quem decide de verdade.
  *
  * **Bloqueio de scroll do body enquanto aberto**: decisao de UX adicional (nao pedida
  * explicitamente na spec 8.13, nem no pedido desta tarefa) — comum em overlays de menu
@@ -65,6 +101,21 @@ export class MobileMenu {
 
   readonly open = input<boolean>(false);
   readonly closed = output<void>();
+  /** Pedido de abertura via arraste (ver nota de classe) - simetrico ao `closed` acima. */
+  readonly openRequested = output<void>();
+
+  /**
+   * Deslocamento (px) do painel durante um arraste em andamento; `null` quando nao ha
+   * arraste ativo (o `[style.transform]`/`[style.transition]` no template caem de volta
+   * pro CSS estatico controlado por `mobile-menu--open`).
+   */
+  protected readonly dragOffset = signal<number | null>(null);
+
+  private dragPointerId: number | null = null;
+  private dragStartX = 0;
+  private dragStartY = 0;
+  private dragMode: 'open' | 'close' | null = null;
+  private dragPanelWidth = 0;
 
   constructor() {
     effect(() => {
@@ -100,6 +151,125 @@ export class MobileMenu {
   protected close(restoreFocus = true): void {
     this.shouldRestoreFocus = restoreFocus;
     this.closed.emit();
+  }
+
+  /** Pointerdown na faixa da borda direita (`.mobile-menu__edge-trigger`) - so quando
+   * fechado. So registra a INTENCAO de arrastar pra abrir; nada visual acontece ainda
+   * (ver `onDragMove`, que so "engata" o arraste depois do limiar de movimento). */
+  protected onEdgeDragStart(event: PointerEvent): void {
+    if (this.open() || !this.isBrowser) {
+      return;
+    }
+    this.armDrag(event, 'open');
+  }
+
+  /** Pointerdown no painel OU no scrim (quando aberto) - mesma logica do gesto de abrir,
+   * so que pro sentido contrario. Cobre os dois porque o painel so ocupa ~85% da largura
+   * (mobile-menu.scss): um arraste que comeca na faixa de scrim a esquerda do painel
+   * precisa fechar tambem, nao so um arraste que comeca em cima do painel (QA do Johnny,
+   * 27/09/2026). Nao interfere em clique/tap normal em links e botoes dentro do painel nem
+   * no clique do scrim (`(click)="close()"`, ainda ativo): so "engata" como arraste depois
+   * do limiar de movimento (`onDragMove`), entao um toque que nao se move o suficiente
+   * nunca captura o ponteiro nem chama `preventDefault`, e o clique acontece normalmente. */
+  protected onCloseDragStart(event: PointerEvent): void {
+    if (!this.open() || !this.isBrowser) {
+      return;
+    }
+    this.armDrag(event, 'close');
+  }
+
+  private armDrag(event: PointerEvent, mode: 'open' | 'close'): void {
+    this.dragPointerId = event.pointerId;
+    this.dragStartX = event.clientX;
+    this.dragStartY = event.clientY;
+    this.dragMode = mode;
+  }
+
+  /**
+   * Comum aos dois gestos (`(pointermove)` no template, tanto na faixa da borda quanto no
+   * painel). Antes do arraste "engatar" (ver `dragOffset() === null` abaixo), so observa -
+   * decide se o movimento e horizontal o bastante pra ser um arraste de verdade (contra um
+   * tap parado ou um scroll vertical, que deixa o navegador tratar normalmente, sem
+   * `preventDefault`). So DEPOIS de confirmado e que captura o ponteiro e mede o painel -
+   * capturar cedo demais atrapalharia o clique nativo em links/botoes num tap simples.
+   */
+  protected onDragMove(event: PointerEvent): void {
+    if (this.dragPointerId !== event.pointerId || this.dragMode === null) {
+      return;
+    }
+
+    const deltaX = event.clientX - this.dragStartX;
+
+    if (this.dragOffset() === null) {
+      const deltaY = event.clientY - this.dragStartY;
+      if (
+        Math.abs(deltaX) < DRAG_ENGAGE_THRESHOLD_PX &&
+        Math.abs(deltaY) < DRAG_ENGAGE_THRESHOLD_PX
+      ) {
+        return;
+      }
+      if (Math.abs(deltaY) >= Math.abs(deltaX)) {
+        // Scroll vertical, nao arraste horizontal - desiste sem capturar nada.
+        this.dragPointerId = null;
+        this.dragMode = null;
+        return;
+      }
+
+      const panel = document.getElementById(PANEL_ID);
+      this.dragPanelWidth = panel?.getBoundingClientRect().width ?? 0;
+      // `?.` + `try/catch`: capturar o ponteiro e "nice to have" (mantem o arraste
+      // funcionando mesmo se o dedo/cursor sair de cima do elemento), nao essencial - o
+      // resto do gesto (atualizar `dragOffset` abaixo) precisa continuar funcionando
+      // mesmo se a captura falhar. Achado real ao testar no Chrome (26/09/2026): o metodo
+      // LANCA `NotFoundError` (nao so falha silenciosamente) quando o navegador nao acha
+      // "um ponteiro ativo" com aquele id - sem o try/catch, a excecao interrompia o
+      // metodo ANTES da linha de baixo, travando o arraste. O jsdom (ambiente de teste)
+      // nem implementa o metodo (por isso o `?.` tambem).
+      try {
+        (event.target as Element).setPointerCapture?.(event.pointerId);
+      } catch {
+        // Sem captura, o arraste ainda funciona - so fica mais sensivel a perder o
+        // ponteiro se ele sair de cima do elemento durante o gesto.
+      }
+      this.dragOffset.set(this.dragMode === 'open' ? this.closedOffsetPx() : 0);
+    }
+
+    event.preventDefault();
+    const closed = this.closedOffsetPx();
+    const base = this.dragMode === 'open' ? closed : 0;
+    this.dragOffset.set(Math.min(closed, Math.max(0, base + deltaX)));
+  }
+
+  /** `(pointerup)`/`(pointercancel)` no template - decide, pela posicao final, se troca de
+   * estado (arrastou mais da metade do caminho) ou "encaixa" de volta no que já tinha. */
+  protected onDragEnd(event: PointerEvent): void {
+    if (this.dragPointerId !== event.pointerId) {
+      return;
+    }
+    this.dragPointerId = null;
+    const offset = this.dragOffset();
+    const mode = this.dragMode;
+    this.dragMode = null;
+
+    if (offset === null) {
+      // Nunca engatou como arraste (foi so um toque) - deixa o clique/tap acontecer normal.
+      return;
+    }
+
+    const shouldBeOpen = offset < this.closedOffsetPx() * DRAG_SNAP_RATIO;
+    this.dragOffset.set(null);
+
+    if (shouldBeOpen && mode === 'open') {
+      this.openRequested.emit();
+    } else if (!shouldBeOpen && mode === 'close') {
+      this.close();
+    }
+    // Nas outras 2 combinacoes (soltou sem passar do limiar), nao emite nada - o painel
+    // volta sozinho pro estado anterior assim que `dragOffset` vira `null` (CSS de novo).
+  }
+
+  private closedOffsetPx(): number {
+    return this.dragPanelWidth + EDGE_GAP_PX;
   }
 
   /**

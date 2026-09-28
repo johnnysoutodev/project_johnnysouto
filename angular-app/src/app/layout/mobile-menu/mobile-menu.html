@@ -1,6 +1,38 @@
 <div id="mobile-menu" class="mobile-menu" [class.mobile-menu--open]="open()">
-  <!-- Scrim: blur + cor a 10% (design-system.md 8.13) — clicavel, fecha o menu. -->
-  <div class="mobile-menu__scrim" (click)="close()" aria-hidden="true"></div>
+  <!--
+    Faixa fina na borda direita pra iniciar o arraste de abrir (27/09/2026, a pedido do
+    Johnny - ver nota completa em mobile-menu.ts). So existe quando fechado (`@if`) - com
+    o painel aberto ela ficaria embaixo dele de qualquer forma, sem sentido continuar
+    escutando toque ali. `pointer-events: auto` no CSS mesmo com o `.mobile-menu` pai em
+    `pointer-events: none` enquanto fechado - cada elemento tem seu proprio valor,
+    independente do pai.
+  -->
+  @if (!open()) {
+    <div
+      class="mobile-menu__edge-trigger"
+      aria-hidden="true"
+      (pointerdown)="onEdgeDragStart($event)"
+      (pointermove)="onDragMove($event)"
+      (pointerup)="onDragEnd($event)"
+      (pointercancel)="onDragEnd($event)"
+    ></div>
+  }
+
+  <!--
+    Scrim: blur + cor a 10% (design-system.md 8.13) — clicavel, fecha o menu. Tambem
+    escuta arraste (27/09/2026, QA do Johnny): o painel so cobre ~85% da largura
+    (mobile-menu.scss), entao a faixa de scrim a esquerda dele precisa aceitar o mesmo
+    gesto de fechar que o painel ja aceitava, nao so o clique/tap simples.
+  -->
+  <div
+    class="mobile-menu__scrim"
+    aria-hidden="true"
+    (click)="close()"
+    (pointerdown)="onCloseDragStart($event)"
+    (pointermove)="onDragMove($event)"
+    (pointerup)="onDragEnd($event)"
+    (pointercancel)="onDragEnd($event)"
+  ></div>
 
   <div
     [id]="panelId"
@@ -10,6 +42,12 @@
     aria-label="Menu de navegação"
     i18n-aria-label="@@mobilemenu.dialog.aria"
     [attr.inert]="open() ? null : ''"
+    [style.transform]="dragOffset() !== null ? 'translateX(' + dragOffset() + 'px)' : null"
+    [style.transition]="dragOffset() !== null ? 'none' : null"
+    (pointerdown)="onCloseDragStart($event)"
+    (pointermove)="onDragMove($event)"
+    (pointerup)="onDragEnd($event)"
+    (pointercancel)="onDragEnd($event)"
     (keydown)="onPanelKeydown($event)"
   >
     <!-- Bloco 1: Logo + botao fechar (design-system.md 8.13, bloco "Logo") -->
