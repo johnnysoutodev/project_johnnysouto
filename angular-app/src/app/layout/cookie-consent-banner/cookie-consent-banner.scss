@@ -78,6 +78,7 @@
   flex: 3 1 320px;
   margin: 0;
   color: var(--color-gray-900);
+  vertical-align: top;
 
   // `min-width: 0` (sobrescreve o `320px` do `flex-basis` acima): sem isso, um flex
   // item nunca encolhe alem do seu conteudo/base minima, entao os botoes a direita
