@@ -106,6 +106,18 @@ describe('Header', () => {
 
       expect(menuToggleButton().getAttribute('aria-expanded')).toBe('false');
     });
+
+    it('opens the mobile menu when MobileMenu emits (openRequested) - arraste na borda/painel', () => {
+      fixture.detectChanges();
+      expect(menuToggleButton().getAttribute('aria-expanded')).toBe('false');
+
+      const mobileMenu = fixture.debugElement.query(By.directive(MobileMenu))
+        .componentInstance as MobileMenu;
+      mobileMenu.openRequested.emit();
+      fixture.detectChanges();
+
+      expect(menuToggleButton().getAttribute('aria-expanded')).toBe('true');
+    });
   });
 
   describe('sticky + blur ao rolar', () => {

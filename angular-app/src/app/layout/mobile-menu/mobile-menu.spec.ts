@@ -1,7 +1,7 @@
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MobileMenu } from './mobile-menu';
 
 describe('MobileMenu', () => {
@@ -239,6 +239,158 @@ describe('MobileMenu', () => {
     fixture.detectChanges();
 
     expect(themeRow.attributes['aria-pressed']).toBe('true');
+  });
+
+  /**
+   * Arraste pra abrir/fechar (27/09/2026, ver nota completa em mobile-menu.ts). O jsdom
+   * (ambiente de teste) nao faz layout de verdade - `getBoundingClientRect()` do painel
+   * sempre volta zerado - entao mockamos a largura pra ter uma faixa de arraste
+   * significativa pra testar o limiar de "encaixe" (`DRAG_SNAP_RATIO`). Sem esse mock, o
+   * "fechado" cairia em so 8px (`EDGE_GAP_PX`), igual ao limiar de engate do gesto
+   * (`DRAG_ENGAGE_THRESHOLD_PX`), sem espaco pra um caso de "arrastou um pouco, mas nao o
+   * bastante".
+   */
+  describe('arraste (abrir/fechar)', () => {
+    const PANEL_WIDTH = 320; // fechado = 320 + EDGE_GAP_PX (8) = 328px; 60% disso = 196,8px.
+
+    function edgeTrigger(): HTMLElement {
+      const el = fixture.debugElement.query(By.css('.mobile-menu__edge-trigger'));
+      expect(el, 'faixa da borda deveria existir com o menu fechado').toBeTruthy();
+      return el.nativeElement as HTMLElement;
+    }
+
+    function pointerEvent(type: string, clientX: number, clientY = 0): PointerEvent {
+      return new PointerEvent(type, {
+        pointerId: 1,
+        clientX,
+        clientY,
+        bubbles: true,
+        cancelable: true,
+      });
+    }
+
+    /** Dispara pointerdown -> pointermove -> pointerup no MESMO elemento, do jeito que o
+     * template escuta (sem depender de `setPointerCapture` de verdade - ver nota em
+     * mobile-menu.ts sobre esse metodo ser opcional/no-op no jsdom). */
+    function drag(el: HTMLElement, fromX: number, toX: number, fromY = 0, toY = 0): PointerEvent {
+      el.dispatchEvent(pointerEvent('pointerdown', fromX, fromY));
+      const move = pointerEvent('pointermove', toX, toY);
+      el.dispatchEvent(move);
+      fixture.detectChanges();
+      el.dispatchEvent(pointerEvent('pointerup', toX, toY));
+      fixture.detectChanges();
+      return move;
+    }
+
+    beforeEach(() => {
+      vi.spyOn(panel(), 'getBoundingClientRect').mockReturnValue({
+        width: PANEL_WIDTH,
+      } as DOMRect);
+    });
+
+    it('arrastar a faixa da borda mais da metade do caminho pede pra abrir (openRequested)', () => {
+      let opened = false;
+      component.openRequested.subscribe(() => (opened = true));
+
+      drag(edgeTrigger(), 300, 0);
+
+      expect(opened).toBe(true);
+    });
+
+    it('arrastar a faixa da borda menos da metade do caminho: solta e "encaixa" de volta fechado', () => {
+      let opened = false;
+      component.openRequested.subscribe(() => (opened = true));
+
+      drag(edgeTrigger(), 300, 280); // engata (20px > limiar), mas fica bem perto do fechado
+
+      expect(opened).toBe(false);
+      expect(fixture.debugElement.query(By.css('.mobile-menu--open'))).toBeNull();
+    });
+
+    it('arrastar o painel aberto mais da metade do caminho emite (closed)', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      drag(panel(), 0, 250);
+
+      expect(closed).toBe(true);
+    });
+
+    it('arrastar o painel aberto pouco: solta e "encaixa" de volta aberto, sem emitir (closed)', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      drag(panel(), 0, 100); // engata, mas fica bem perto do aberto
+
+      expect(closed).toBe(false);
+    });
+
+    // QA do Johnny (27/09/2026): o painel so cobre ~85% da largura, entao um arraste
+    // comecando na faixa de scrim a esquerda do painel (nao em cima do painel em si)
+    // tambem precisa fechar - antes dessa correcao, o scrim so escutava `(click)`.
+    it('arrastar o SCRIM mais da metade do caminho tambem emite (closed)', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      drag(scrim(), 0, 250);
+
+      expect(closed).toBe(true);
+    });
+
+    it('arrastar o SCRIM pouco: solta e "encaixa" de volta aberto, sem emitir (closed)', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      drag(scrim(), 0, 100);
+
+      expect(closed).toBe(false);
+    });
+
+    it('um toque que nao se move o bastante nao engata como arraste (nao atrapalha um tap/clique)', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      drag(panel(), 0, 3); // 3px, abaixo do limiar de engate
+
+      expect(closed).toBe(false);
+      expect(panel().style.transform).toBe('');
+    });
+
+    it('um gesto majoritariamente vertical no painel nao intercepta o scroll nativo', async () => {
+      let closed = false;
+      component.closed.subscribe(() => (closed = true));
+      await open();
+
+      const move = drag(panel(), 0, 20, 0, 200); // deltaX=20, deltaY=200 - vertical domina
+
+      expect(move.defaultPrevented).toBe(false);
+      expect(closed).toBe(false);
+      expect(panel().style.transform).toBe('');
+    });
+
+    it('o painel acompanha o dedo em tempo real durante o arraste (antes de soltar)', async () => {
+      await open();
+
+      panel().dispatchEvent(pointerEvent('pointerdown', 0, 0));
+      panel().dispatchEvent(pointerEvent('pointermove', 150, 0));
+      fixture.detectChanges();
+
+      // Ainda com o ponteiro pressionado (sem pointerup): o transform/transition inline
+      // devem refletir o arraste em andamento, nao mais o estado estatico do CSS.
+      expect(panel().style.transition).toBe('none');
+      expect(panel().style.transform).toBe('translateX(150px)');
+
+      panel().dispatchEvent(pointerEvent('pointerup', 150, 0));
+      fixture.detectChanges();
+
+      // Ao soltar, volta a depender so da classe CSS (inline style limpo).
+      expect(panel().style.transform).toBe('');
+    });
   });
 });
 
