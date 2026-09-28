@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 /**
  * Ano da primeira experiencia real documentada (Nielsen do Brasil, Jan/2006 -
@@ -36,6 +37,8 @@ export function calculateExperienceYears(
   styleUrl: './hero.scss',
 })
 export class Hero {
+  protected readonly analytics = inject(AnalyticsService);
+
   /** GitHub real do Johnny (design-system.md secao 10) — tem icone (`icon-social-github`). */
   protected readonly githubUrl = 'https://github.com/johnnysoutodev';
 

@@ -2,6 +2,7 @@ import { Component, DestroyRef, PLATFORM_ID, inject, signal } from '@angular/cor
 import { NgOptimizedImage, isPlatformBrowser } from '@angular/common';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { Tag } from '../../shared/components/tag/tag';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 /** Campo que acabou de ser copiado (feedback visual temporario no Icon Button de "copiar"). */
 type CopyField = 'email' | 'phone';
@@ -47,6 +48,7 @@ export class ContactMe {
   // browser na pratica".
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly analytics = inject(AnalyticsService);
   private resetTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly email = 'johnnyjns@gmail.com';

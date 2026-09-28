@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Project } from './project';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 describe('Project', () => {
   let component: Project;
@@ -43,10 +44,7 @@ describe('Project', () => {
       .queryAll(By.css('.project__period'))
       .map((el) => el.nativeElement.textContent.trim());
 
-    expect(periods).toEqual([
-      'Julho de 2021 | Outubro de 2023',
-      'Agosto de 2015 | Julho de 2017',
-    ]);
+    expect(periods).toEqual(['Julho de 2021 | Outubro de 2023', 'Agosto de 2015 | Julho de 2017']);
   });
 
   it('renders the technology tags extracted from each real project description, without inventing any', () => {
@@ -80,6 +78,17 @@ describe('Project', () => {
     expect(profuturoAction.nativeElement.getAttribute('href')).toBe(
       'https://fundacaotelefonicavivo.org.br/profuturo/',
     );
+  });
+
+  it('rastreia o clique na acao "ver projeto" no GA4 (evento "outbound_click")', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const cards = fixture.debugElement.queryAll(By.css('.project__card'));
+
+    cards[1].query(By.css('.project__actions app-icon-button a')).nativeElement.click();
+
+    expect(trackEvent).toHaveBeenCalledWith('outbound_click', {
+      url: 'https://fundacaotelefonicavivo.org.br/profuturo/',
+    });
   });
 
   it('renders each project logo inside the image block', () => {

@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { Footer } from './layout/footer/footer';
 import { ScrollToTop } from './layout/scroll-to-top/scroll-to-top';
+import { CookieConsentBanner } from './layout/cookie-consent-banner/cookie-consent-banner';
 import { SeoService } from './core/seo/seo';
 
 @Component({
-  imports: [RouterOutlet, Header, Footer, ScrollToTop],
+  imports: [RouterOutlet, Header, Footer, ScrollToTop, CookieConsentBanner],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

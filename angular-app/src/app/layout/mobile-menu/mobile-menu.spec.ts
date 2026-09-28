@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MobileMenu } from './mobile-menu';
+import { AnalyticsService } from '../../core/analytics/analytics';
+import { LanguageService } from '../../core/i18n/language';
 
 describe('MobileMenu', () => {
   let fixture: ComponentFixture<MobileMenu>;
@@ -34,6 +36,15 @@ describe('MobileMenu', () => {
       /^assets\/cv\/cv_johnny-souto_[a-z]{2}-[a-z]{2}\.pdf$/,
     );
     expect(cta.hasAttribute('download')).toBe(true);
+  });
+
+  it('rastreia o clique no download do CV no GA4 (evento "download_cv")', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const expectedLanguage = TestBed.inject(LanguageService).current.code;
+
+    fixture.debugElement.query(By.css('a.mobile-menu__cta')).nativeElement.click();
+
+    expect(trackEvent).toHaveBeenCalledWith('download_cv', { language: expectedLanguage });
   });
 
   function panel(): HTMLElement {

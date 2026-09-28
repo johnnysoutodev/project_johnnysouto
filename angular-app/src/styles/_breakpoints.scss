@@ -9,7 +9,12 @@
 // arquivo Figma.
 
 $breakpoint-tablet-min: 768px;
-$breakpoint-desktop-min: 1024px;
+// 1200px, nao 1024px (28/09/2026, achado do Johnny): entre 1024-1199px o `.header__container`
+// (logo + 4 links de nav + seletor de idioma + tema + "Download CV") nao cabe numa linha so
+// nesse modo "desktop" (nav inline, sem hamburguer) - o `.header__cta` vazava pra fora da
+// viewport, cortando o texto. Confirmado com `scrollWidth > clientWidth` no Chrome real numa
+// janela de ~1027px.
+$breakpoint-desktop-min: 1200px;
 
 @mixin mobile-only {
   @media (max-width: $breakpoint-tablet-min - 1) {
