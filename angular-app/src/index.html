@@ -111,29 +111,52 @@
       página) - roda direto aqui, antes/independente da hidratação do Angular, e é
       idêntico nas 3 pastas de idioma (não é gerado por `i18n`, é o mesmo HTML puro
       nas 3), então não "segue o idioma" da forma errada que o serviço antigo seguia.
+
+      Gate de consentimento (27/09/2026, a pedido do Johnny, banner de cookies -
+      `layout/cookie-consent-banner/`): alem do hostname de producao, so carrega se
+      `localStorage['cookie-consent'] === 'accepted'` (mesma chave que o `ConsentService`
+      Angular le/escreve, `core/consent/consent.ts` - nao ha como compartilhar uma
+      constante de verdade entre este script plano e o bundle do Angular, entao o nome
+      da chave precisa ficar em sincronia manual entre os dois lugares). O boot inteiro
+      vira uma funcao global idempotente (`window.loadGoogleAnalytics`) pra poder ser
+      chamada de novo pelo `ConsentService.accept()` assim que o usuario aceita, sem
+      esperar um reload da pagina.
     -->
     <script>
       (function () {
-        var host = location.hostname;
-        if (host !== 'www.johnnysouto.com.br' && host !== 'johnnysouto.com.br') {
-          return; // preview da Vercel, localhost etc. - nunca manda dado real
+        function isProductionHost() {
+          var host = location.hostname;
+          return host === 'www.johnnysouto.com.br' || host === 'johnnysouto.com.br';
         }
-        window['ga-disable-G-YYR4SND80L'] = false;
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
+        function hasConsent() {
+          try {
+            return localStorage.getItem('cookie-consent') === 'accepted';
+          } catch (e) {
+            return false; // localStorage indisponivel (ex.: modo privado restrito)
+          }
         }
-        window.gtag = gtag;
-        gtag('js', new Date());
-        gtag('config', 'G-YYR4SND80L', {
-          cookie_domain: 'johnnysouto.com.br',
-          cookie_expires: 60 * 60 * 24 * 90,
-          cookie_update: false,
-        });
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-YYR4SND80L';
-        document.head.appendChild(script);
+        window.loadGoogleAnalytics = function () {
+          if (window.gtag || !isProductionHost() || !hasConsent()) {
+            return; // ja carregado, preview/localhost, ou sem consentimento ainda
+          }
+          window['ga-disable-G-YYR4SND80L'] = false;
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', 'G-YYR4SND80L', {
+            cookie_domain: 'johnnysouto.com.br',
+            cookie_expires: 60 * 60 * 24 * 90,
+            cookie_update: false,
+          });
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-YYR4SND80L';
+          document.head.appendChild(script);
+        };
+        window.loadGoogleAnalytics();
       })();
     </script>
   </body>

@@ -60,7 +60,11 @@
 
             @if (project.actionHref) {
               <div class="project__actions">
-                <app-icon-button [href]="project.actionHref" [ariaLabel]="project.actionAriaLabel!">
+                <app-icon-button
+                  [href]="project.actionHref"
+                  [ariaLabel]="project.actionAriaLabel!"
+                  (click)="trackProjectClick(project.actionHref!)"
+                >
                   <!--
                     Icone generico de "link externo" - nao ha icone especifico exportado
                     do Figma pra essa acao (design-system.md secao 6/8.5 nao cobrem o

@@ -4,6 +4,8 @@ import { By } from '@angular/platform-browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from './header';
 import { MobileMenu } from '../mobile-menu/mobile-menu';
+import { AnalyticsService } from '../../core/analytics/analytics';
+import { LanguageService } from '../../core/i18n/language';
 
 describe('Header', () => {
   let component: Header;
@@ -33,6 +35,16 @@ describe('Header', () => {
       /^assets\/cv\/cv_johnny-souto_[a-z]{2}-[a-z]{2}\.pdf$/,
     );
     expect(cta.getAttribute('download')).toMatch(/^cv_johnny-souto_.+\.pdf$/);
+  });
+
+  it('rastreia o clique no download do CV no GA4 (evento "download_cv")', () => {
+    fixture.detectChanges();
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const expectedLanguage = TestBed.inject(LanguageService).current.code;
+
+    fixture.debugElement.query(By.css('a.header__cta')).nativeElement.click();
+
+    expect(trackEvent).toHaveBeenCalledWith('download_cv', { language: expectedLanguage });
   });
 
   it('should create', () => {

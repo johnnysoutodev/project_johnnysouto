@@ -1,5 +1,6 @@
 import { Injectable, LOCALE_ID, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { AnalyticsService } from '../analytics/analytics';
 
 /** Idioma suportado pelo site: um build por idioma (i18n nativo do Angular), cada um em `/<path>/`. */
 export interface AppLocale {
@@ -39,6 +40,7 @@ const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 export class LanguageService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly localeId = inject(LOCALE_ID);
+  private readonly analytics = inject(AnalyticsService);
 
   readonly locales = APP_LOCALES;
 
@@ -73,6 +75,15 @@ export class LanguageService {
       return;
     }
     this.rememberChoice(locale);
+    // Ponto unico pra rastrear troca de idioma (27/09/2026) - cobre os dois disparos
+    // possiveis (`choose()`/`onChange()` do language-switcher.ts). `transport_type:
+    // 'beacon'`: `navigate()` logo abaixo dispara uma navegacao completa
+    // (`window.location.assign`) - beacon e o transporte do GA4 pensado pra sobreviver
+    // ao unload da pagina que acontece em seguida.
+    this.analytics.trackEvent('language_switch', {
+      to_language: locale.code,
+      transport_type: 'beacon',
+    });
     this.navigate(this.hrefFor(locale));
   }
 

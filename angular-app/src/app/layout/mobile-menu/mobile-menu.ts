@@ -5,6 +5,7 @@ import { AnchorScrollService } from '../../core/navigation/anchor-scroll';
 import { NAV_LINKS } from '../nav-links';
 import { LanguageService } from '../../core/i18n/language';
 import { LanguageSwitcher } from '../../shared/components/language-switcher/language-switcher';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 /** Elementos considerados "focaveis" dentro do painel, pro focus trap (ver `trapFocus`). */
 const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled])';
@@ -95,6 +96,7 @@ export class MobileMenu {
   protected readonly themeService = inject(ThemeService);
   protected readonly language = inject(LanguageService);
   protected readonly anchorScroll = inject(AnchorScrollService);
+  private readonly analytics = inject(AnalyticsService);
   protected readonly navLinks = NAV_LINKS;
 
   protected readonly panelId = PANEL_ID;
@@ -270,6 +272,11 @@ export class MobileMenu {
 
   private closedOffsetPx(): number {
     return this.dragPanelWidth + EDGE_GAP_PX;
+  }
+
+  /** Rastreia o clique no download do CV (27/09/2026) - GA4, evento customizado. */
+  protected trackCvDownload(): void {
+    this.analytics.trackEvent('download_cv', { language: this.language.current.code });
   }
 
   /**

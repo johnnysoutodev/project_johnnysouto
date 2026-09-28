@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { vi } from 'vitest';
 import { EXPERIENCE_START_YEAR, Hero, calculateExperienceYears } from './hero';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 describe('calculateExperienceYears', () => {
   it('calcula os anos a partir do ano-base real (Nielsen do Brasil, Jan/2006)', () => {
@@ -58,6 +60,22 @@ describe('Hero', () => {
       'https://www.linkedin.com/in/johnnysouto',
     );
     expect(linkedinLink.nativeElement.getAttribute('target')).toBe('_blank');
+  });
+
+  it('rastreia o clique nos links sociais no GA4 (evento "outbound_click")', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+
+    fixture.debugElement.query(By.css('a.icon-button')).nativeElement.click();
+    fixture.debugElement
+      .query(By.css('a.icon-button[aria-label^="LinkedIn"]'))
+      .nativeElement.click();
+
+    expect(trackEvent).toHaveBeenCalledWith('outbound_click', {
+      url: 'https://github.com/johnnysoutodev',
+    });
+    expect(trackEvent).toHaveBeenCalledWith('outbound_click', {
+      url: 'https://www.linkedin.com/in/johnnysouto',
+    });
   });
 
   it('does not render a location/availability badge (no real data, design-system.md secao 10)', () => {

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { Tag } from '../../shared/components/tag/tag';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 /** Logo do projeto (largura/altura = aspect ratio real do arquivo, exigido pelo `NgOptimizedImage`). */
 interface ProjectLogo {
@@ -88,6 +89,8 @@ interface ProjectItem {
   styleUrl: './project.scss',
 })
 export class Project {
+  private readonly analytics = inject(AnalyticsService);
+
   protected readonly projects: readonly ProjectItem[] = [
     {
       name: 'Pitcher App',
@@ -117,5 +120,10 @@ export class Project {
   /** Texto alternativo do logo do projeto (traduzido via `$localize`). */
   protected logoAlt(name: string): string {
     return $localize`:@@project.logo.alt:Logo do projeto ${name}:name:`;
+  }
+
+  /** Rastreia o clique na acao "ver projeto" (27/09/2026) - GA4, evento customizado. */
+  protected trackProjectClick(url: string): void {
+    this.analytics.trackEvent('outbound_click', { url });
   }
 }

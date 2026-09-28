@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ContactMe } from './contact-me';
+import { AnalyticsService } from '../../core/analytics/analytics';
 
 describe('ContactMe', () => {
   let component: ContactMe;
@@ -66,9 +67,7 @@ describe('ContactMe', () => {
     expect(githubLink.nativeElement.getAttribute('href')).toBe('https://github.com/johnnysoutodev');
     expect(githubLink.nativeElement.getAttribute('target')).toBe('_blank');
     const githubIcon = githubLink.nativeElement.querySelector('img');
-    expect(githubIcon.getAttribute('ng-src') ?? githubIcon.src).toContain(
-      'icon-social-github.svg',
-    );
+    expect(githubIcon.getAttribute('ng-src') ?? githubIcon.src).toContain('icon-social-github.svg');
 
     const linkedinLink = socialLinks[1];
     expect(linkedinLink.nativeElement.getAttribute('href')).toBe(
@@ -76,6 +75,21 @@ describe('ContactMe', () => {
     );
     expect(linkedinLink.nativeElement.getAttribute('target')).toBe('_blank');
     expect(linkedinLink.nativeElement.querySelector('img')).toBeTruthy();
+  });
+
+  it('rastreia o clique nos links sociais no GA4 (evento "outbound_click")', () => {
+    const trackEvent = vi.spyOn(TestBed.inject(AnalyticsService), 'trackEvent');
+    const socialLinks = fixture.debugElement.queryAll(By.css('.contact-me__links a.icon-button'));
+
+    socialLinks[0].nativeElement.click();
+    socialLinks[1].nativeElement.click();
+
+    expect(trackEvent).toHaveBeenCalledWith('outbound_click', {
+      url: 'https://github.com/johnnysoutodev',
+    });
+    expect(trackEvent).toHaveBeenCalledWith('outbound_click', {
+      url: 'https://www.linkedin.com/in/johnnysouto',
+    });
   });
 
   it('copies the given value to the clipboard and reverts the "copied" feedback after a few seconds', async () => {

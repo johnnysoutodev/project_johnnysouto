@@ -21,7 +21,18 @@ function extractAnalyticsScript(): string {
   return analyticsScript;
 }
 
-function run(hostname: string) {
+/** `localStorage` real e minimo o bastante pro script (`getItem` e `setItem`, so isso e usado). */
+function createLocalStorage(initial: Record<string, string> = {}) {
+  const store = { ...initial };
+  return {
+    getItem: (key: string) => (key in store ? store[key] : null),
+    setItem: (key: string, value: string) => {
+      store[key] = value;
+    },
+  };
+}
+
+function run(hostname: string, consent?: 'accepted') {
   const appendedScripts: Record<string, unknown>[] = [];
   const window: Record<string, unknown> = {};
   const document = {
@@ -38,6 +49,7 @@ function run(hostname: string) {
   window['window'] = window;
   window['document'] = document;
   window['location'] = { hostname };
+  window['localStorage'] = createLocalStorage(consent ? { 'cookie-consent': consent } : undefined);
 
   runInNewContext(extractAnalyticsScript(), window);
 
@@ -46,9 +58,9 @@ function run(hostname: string) {
 
 describe('index.html — script do Google Analytics', () => {
   it.each(['project-johnnysouto-abc123.vercel.app', 'localhost'])(
-    'não faz nada em hosts que não são de produção (%s)',
+    'não faz nada em hosts que não são de produção, mesmo com consentimento aceito (%s)',
     (hostname) => {
-      const { window, appendedScripts } = run(hostname);
+      const { window, appendedScripts } = run(hostname, 'accepted');
 
       expect(window['dataLayer']).toBeUndefined();
       expect(window['gtag']).toBeUndefined();
@@ -56,10 +68,33 @@ describe('index.html — script do Google Analytics', () => {
     },
   );
 
+  it('não faz nada em host de produção sem consentimento (aguarda o banner/ConsentService)', () => {
+    const { window, appendedScripts } = run('www.johnnysouto.com.br');
+
+    expect(window['dataLayer']).toBeUndefined();
+    expect(window['gtag']).toBeUndefined();
+    expect(appendedScripts).toHaveLength(0);
+  });
+
+  it('expõe window.loadGoogleAnalytics globalmente (bridge usado pelo ConsentService.accept())', () => {
+    const { window } = run('www.johnnysouto.com.br');
+
+    expect(typeof window['loadGoogleAnalytics']).toBe('function');
+  });
+
+  it('window.loadGoogleAnalytics é idempotente (chamar de novo não duplica o script)', () => {
+    const { window, appendedScripts } = run('www.johnnysouto.com.br', 'accepted');
+
+    (window['loadGoogleAnalytics'] as () => void)();
+    (window['loadGoogleAnalytics'] as () => void)();
+
+    expect(appendedScripts).toHaveLength(1);
+  });
+
   it.each(['www.johnnysouto.com.br', 'johnnysouto.com.br'])(
-    'configura o GA4 e injeta o loader nos hosts de produção (%s)',
+    'configura o GA4 e injeta o loader nos hosts de produção com consentimento aceito (%s)',
     (hostname) => {
-      const { window, appendedScripts } = run(hostname);
+      const { window, appendedScripts } = run(hostname, 'accepted');
 
       expect(window['ga-disable-G-YYR4SND80L']).toBe(false);
       expect(typeof window['gtag']).toBe('function');
