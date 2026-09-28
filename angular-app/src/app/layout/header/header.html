@@ -6,11 +6,7 @@
     </a>
 
     <div class="header__right">
-      <nav
-        class="header__nav"
-        aria-label="Navegação principal"
-        i18n-aria-label="@@nav.main.aria"
-      >
+      <nav class="header__nav" aria-label="Navegação principal" i18n-aria-label="@@nav.main.aria">
         @for (link of navLinks; track link.href) {
           <a
             class="header__nav-link"
@@ -136,4 +132,8 @@
   </div>
 </header>
 
-<app-mobile-menu [open]="isMobileMenuOpen()" (closed)="closeMobileMenu()" />
+<app-mobile-menu
+  [open]="isMobileMenuOpen()"
+  (openRequested)="openMobileMenu()"
+  (closed)="closeMobileMenu()"
+/>
