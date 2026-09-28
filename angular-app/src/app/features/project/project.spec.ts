@@ -44,7 +44,7 @@ describe('Project', () => {
       .queryAll(By.css('.project__period'))
       .map((el) => el.nativeElement.textContent.trim());
 
-    expect(periods).toEqual(['Julho de 2021 | Outubro de 2023', 'Agosto de 2015 | Julho de 2017']);
+    expect(periods).toEqual(['Junho de 2021 | Outubro de 2023', 'Agosto de 2015 | Julho de 2017']);
   });
 
   it('renders the technology tags extracted from each real project description, without inventing any', () => {
