@@ -17,6 +17,9 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
 ### Alterado
+- Verifier: novo check `npm-audit`; relatório sempre em `site-factory/reports/latest/`; telas limpas a cada execução; overflow nomeia o elemento culpado; canonical conhece o spec do cliente.
+- `builder`: receita de criação de projeto validada em projeto novo (flags do `ng new`, lint, `$localize`, `sourceLocale`, `lang`), política de instalação e de auditoria; template de ESLint em `site-factory/templates/angular/`.
+- `apply.mjs`: projeto de sandbox é tratado como raiz do próprio repositório; workflows AWS de produção ganham portão de `npm audit` crítico.
 - Schema do `site-spec`: seção `draft` pode ter só estrutura; conteúdo mínimo passa a ser exigido apenas em `ready`/`migrated`.
 - `designer` e `builder` generalizados; `angular-scaffold` e `angular-components` foram fundidos no `builder`.
 - Lições de bugs de Angular e CSS saíram de `docs/ai-instructions.md` para a skill `angular-conventions`.

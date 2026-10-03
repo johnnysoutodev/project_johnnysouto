@@ -9,6 +9,7 @@
 | 4 | Orquestração `/build-landing <cliente>`, `status.mjs`, `strategist` pequeno e opcional, modo `contentMode: placeholder` (Lorem Ipsum) e prova com uma segunda landing (fictícia, `studio-aurora`) do zero, sem editar o motor | Feita: prova executada e aprovada (ver resultado abaixo) |
 | 5 | **CI com Playwright:** rodar o `verifier` no GitHub Actions (Chrome já vem nos runners `ubuntu-latest`), bloqueando PR/deploy em falha; hoje o CI não faz build, teste nem lint | Em aberto — a conversar |
 | 6 | **Regras de engenharia:** como escrever testes unitários e componentes, aprofundamento de clean code; provavelmente skills (`testing-conventions`, `clean-code`) consumidas por `builder` e `verifier` | Ideia — a conversar |
+| 7 | **Template:** duplicar este projeto em outro repositório e transformá-lo em template (motor sem cliente: `.claude/` + `site-factory/` + regras gerais; clientes e o site do johnnysouto ficam fora) | Ideia — a conversar |
 
 ## Pendências conhecidas do verifier (candidatas à fase 5 ou depois)
 
@@ -63,3 +64,19 @@ O que a prova mostrou:
 - Custo aproximado em tokens de subagente: intake 20 mil, designer 83 mil, strategist 18 mil, builder 58 mil (+65 mil na correção), verifier 15 mil + 11 mil.
 - Limites do que a prova prova: Figma duplicado do mesmo template (não prova variedade de design); 1 idioma; deploy nunca implantado; nenhuma interação testada.
 - Observação visual que nenhum check automático pega: no mobile o e-mail da seção de contato quebra no meio da palavra (`contato@studioa / urora.example`). Não é falha do verifier; é o tipo de coisa que a comparação visual com o Figma (fase 5/6) deveria cobrir.
+
+## Estado das lacunas da prova (atualizado em 03/10/2026)
+
+**Resolvidas e testadas:**
+
+- **Vulnerabilidades no pipeline:** check `npm-audit` no verifier (crítica = falha; alta/moderada = aviso; sem rede = aviso, nunca aprovação silenciosa), testado com 5 saídas simuladas e com auditoria real nos dois projetos. `builder` reporta achados e não corrige sozinho; a skill `/build-landing` aciona `resolved-vulnerability` quando o check reprova; portão de `npm audit` crítico também no workflow de produção do `aws-static`; política de instalação no `builder` (`npm install` uma vez, lockfile versionado, `npm ci`, nada de `--force`/`--legacy-peer-deps` sem avisar).
+- **Workflows no `.github/` real:** `apply.mjs` trata projeto de `site-factory/sandbox/` (ou `--standalone`) como raiz do próprio repositório. Testado: nenhum arquivo novo no `.github/` real.
+- **Verifier:** relatório sempre em `site-factory/reports/latest/`; telas antigas apagadas a cada execução; prefixo `default_` com um idioma só; `horizontal-overflow` nomeia o elemento mais externo (testado: `div.miolo`); canonical só exigido quando o spec do cliente tem `project.domain`.
+- **Builder (receita executada num projeto Angular novo, zero warnings):** `ng new NAME --directory=<caminho>` (nome não aceita `/`); `--ai-config=claude-code` (valor `claude` não existe); `ng add` falha com npm 12 (`EALLOWSCRIPTS`), então `npm i` + `ng generate <pacote>:ng-add`; lint por `npm i -D` + `site-factory/templates/angular/eslint.config.js` + target `lint`; `@angular/localize` mesmo com um idioma só; `sourceLocale` sem região (`pt`) e `lang` regional definido por `provideAppInitializer`; regra de i18n entre dados e template esclarecida na skill `landing-sections`.
+
+**Ainda abertas:**
+
+- Os ajustes do `builder` foram validados passo a passo num projeto novo, mas **não** por uma nova execução completa de `/build-landing`.
+- Comparação visual com o Figma e testes de interação (menu, foco programático): fases 5/6.
+- **`angular-app` (site em produção) tem 2 vulnerabilidades críticas e 3 altas**, todas com correção disponível (pacotes do próprio Angular, `piscina`, `brace-expansion`...). Decisão do dono do projeto; o `resolved-vulnerability` é o caminho. O workflow de produção atual bloqueia deploy com crítica.
+- Ruído do npm 12 na instalação (`npm warn install-scripts ... fsevents`): não vem do build; reportado, não corrigido.

@@ -11,8 +11,9 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 1. Rode, a partir de `site-factory/verifier/`:
    `node verify.mjs --project <caminho-do-projeto-angular>` (padrão deste repositório: `../../angular-app`).
    Flags úteis: `--skip-build`, `--skip-tests`, `--locales pt-br`, `--viewports 375,1440` para iterações rápidas; rode a verificação completa (sem flags) antes de declarar "pronto".
-2. Não suba dev server e não use a porta 4200 — o script serve o `dist` numa porta própria.
-3. Leia `site-factory/reports/latest/report.md` (e `report.json` se precisar de detalhe). Screenshots ficam em `site-factory/reports/latest/screenshots/` — abra os que ajudem a explicar uma falha visual.
+2. O relatório vai sempre para `site-factory/reports/latest/` (padrão do script, para qualquer projeto, inclusive os de `site-factory/sandbox/`); as telas antigas são apagadas a cada execução. Não passe `--out` a menos que precise de outro destino.
+3. Não suba dev server e não use a porta 4200 — o script serve o `dist` numa porta própria.
+4. Leia `site-factory/reports/latest/report.md` (e `report.json` se precisar de detalhe). Screenshots ficam em `site-factory/reports/latest/screenshots/` — abra os que ajudem a explicar uma falha visual.
 
 ## Como reportar
 
@@ -25,5 +26,6 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 ## O que o verifier não cobre (limites conhecidos)
 
 - Interações que exigem abrir/clicar (menus, modais): o check de teclado só vê o foco do Tab, não pega `.focus()` programático que falha em elemento `inert`. Esses casos pedem teste Playwright específico por componente.
-- Lighthouse (performance) e comparação visual com o frame do Figma ainda não estão implementados.
+- Lighthouse (performance) e comparação visual com o frame do Figma ainda não estão implementados (a comparação visual também pegaria defeitos como texto quebrando no meio da palavra no mobile).
+- `npm-audit` depende do registro do npm: sem rede vira aviso ("auditoria indisponível"), não aprovação silenciosa. Critica = falha; alta/moderada = aviso.
 - `platform-guards` é uma heurística (aviso); o build com prerender é a prova real de segurança de SSR.

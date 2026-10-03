@@ -9,13 +9,14 @@ node site-factory/deploy-templates/apply.mjs --spec site-factory/clients/<id>/si
 | Template | Gera | Status |
 |---|---|---|
 | `vercel-static` | `<projectDir>/vercel.json` (redirects de idioma, `cleanUrls`) e dois workflows (preview e produção) | Não testado em repositório real. O `vercel.json` gerado foi comparado com o de produção do johnnysouto e equivale. |
-| `aws-static` | CloudFormation (S3 privado + CloudFront + Function de idiomas/URLs limpas), role OIDC do GitHub, README de setup e dois workflows | Não implantado em conta real. Validado com `cfn-lint`, YAML e a Function executada localmente contra 15 eventos simulados. |
+| `aws-static` | CloudFormation (S3 privado + CloudFront + Function de idiomas/URLs limpas), role OIDC do GitHub, README de setup e dois workflows (o de produção tem portão de `npm audit` crítico, como o da Vercel) | Não implantado em conta real. Validado com `cfn-lint`, YAML e a Function executada localmente contra 15 eventos simulados. |
 
 Sem template (`azure`, `netlify`, `server`...): o script sai com código 3 sem gerar nada. O spec continua válido.
 
 ## Comportamento do `apply.mjs`
 
 - Não sobrescreve arquivo existente sem `--force`; nunca apaga nada.
+- **Projeto em `site-factory/sandbox/` (ou `--standalone`):** a pasta do projeto é tratada como a raiz do próprio repositório; os workflows vão para `<projeto>/.github/workflows/` (inertes) e nunca para o `.github/` real.
 - **Não duplica deploy:** se o repositório já tem um workflow que faz deploy do mesmo provedor (padrão `deployDetect` do manifesto), os workflows do template não são criados (cada push publicaria duas vezes); os demais arquivos seguem. Exceção consciente: `--allow-existing-deploy-workflows`.
 - Workflows têm nome por provedor (`deploy-<provedor>-preview.yaml`/`-production.yaml`), para que a troca de provedor não se confunda com o anterior.
 - Lista arquivos de **outro** provedor já presentes no projeto (troca de provedor); a remoção é do usuário.

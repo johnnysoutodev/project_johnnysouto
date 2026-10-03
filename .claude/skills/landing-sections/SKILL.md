@@ -30,7 +30,7 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 
 - Um componente standalone por seção, em `<projectDir>/src/app/features/<id>/` (`header`/`footer` em `layout/`). O `id` do spec vira a pasta, o seletor `app-<id>` e a âncora `#<id>`.
 - Os dados ficam num `.ts` tipado ao lado do componente (interface + constante), não no template. Esse arquivo é o `contentRef` da seção.
-- Texto visível marcado para i18n (`i18n`/`i18n-aria-label`/`i18n-alt` no template, `$localize` com ID `@@...` no TS), depois extração e tradução nos idiomas-alvo do spec.
+- Texto visível marcado para i18n, em dois lugares sem conflito: **conteúdo da seção** (o que vem do `content`/arquivo de dados) fica no `.ts` de dados com `$localize` e ID `@@...`; **rótulos fixos de UI** escritos direto no template levam `i18n`/`i18n-aria-label`/`i18n-alt`. Depois extração e tradução nos idiomas-alvo do spec (sem idiomas-alvo, só o `$localize` precisa estar configurado).
 - Cores, tipografia e sombras só por token (CSS custom property) do documento de design; nunca valor copiado do Figma. Pronto para os temas de `design.themes`.
 - Assets só de `<projectDir>/public/assets/<categoria>/`. Ausente: reportar, não gerar nem baixar.
 - Status: `draft` (conteúdo incompleto, bloqueia o builder), `ready` (aprovada, o builder gera), `migrated` (já existe, não é regenerada).
