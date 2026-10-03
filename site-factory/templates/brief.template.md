@@ -21,6 +21,10 @@ Quem vai ler e o que essa pessoa precisa decidir?
 - O Figma é referência final de layout ou só de estilo (cores/tipografia)?
 - Temas: só claro, só escuro ou ambos?
 
+## Textos: finais ou provisórios? (*)
+- **Finais:** você manda os textos e eles entram como estão.
+- **Provisórios (Lorem Ipsum):** o site é montado com texto de exemplo do tamanho de um texto real e você troca depois, nos arquivos de dados de cada seção. O site **não deve ir para produção** enquanto houver Lorem Ipsum (a verificação avisa).
+
 ## Seções e conteúdo (*)
 Liste, na ordem em que devem aparecer, cada seção com o texto e os materiais que já existem (textos, fotos, logos, depoimentos, preços, perguntas frequentes). Seções comuns: hero, sobre, benefícios, prova social, preços, FAQ, CTA final, contato.
 

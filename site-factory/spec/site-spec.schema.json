@@ -75,6 +75,14 @@
         "domain": {
           "type": "string",
           "format": "uri"
+        },
+        "contentMode": {
+          "enum": [
+            "final",
+            "placeholder"
+          ],
+          "default": "final",
+          "description": "final = os textos do spec/codigo sao os do cliente. placeholder = textos em Lorem Ipsum de tamanho realista, para o cliente editar depois nos arquivos de dados das secoes. Placeholder nunca deve ir para producao: o verifier avisa."
         }
       }
     },
@@ -344,7 +352,7 @@
             "ready",
             "migrated"
           ],
-          "description": "migrated = ja implementada antes do site-factory; builder nao regenera."
+          "description": "draft = so estrutura (sem conteudo exigido; bloqueia o builder), ready = aprovada e com conteudo (o builder gera), migrated = ja existe, nao e regenerada."
         },
         "content": {
           "type": "object",
@@ -358,26 +366,52 @@
           "type": "string"
         }
       },
-      "anyOf": [
-        {
-          "required": [
-            "content"
-          ]
-        },
-        {
-          "required": [
-            "contentRef"
-          ]
-        }
-      ],
       "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": [
+                  "content"
+                ]
+              },
+              {
+                "required": [
+                  "contentRef"
+                ]
+              }
+            ]
+          }
+        },
         {
           "if": {
             "properties": {
               "type": {
                 "const": "hero"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -395,8 +429,17 @@
             "properties": {
               "type": {
                 "const": "about"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -414,8 +457,17 @@
             "properties": {
               "type": {
                 "const": "skills"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -439,8 +491,17 @@
             "properties": {
               "type": {
                 "const": "timeline"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -464,8 +525,17 @@
             "properties": {
               "type": {
                 "const": "projects"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -489,8 +559,17 @@
             "properties": {
               "type": {
                 "const": "testimonials"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -514,8 +593,17 @@
             "properties": {
               "type": {
                 "const": "features"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -539,8 +627,17 @@
             "properties": {
               "type": {
                 "const": "pricing"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -564,8 +661,17 @@
             "properties": {
               "type": {
                 "const": "faq"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -589,8 +695,17 @@
             "properties": {
               "type": {
                 "const": "cta"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -609,8 +724,17 @@
             "properties": {
               "type": {
                 "const": "logos"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -634,8 +758,17 @@
             "properties": {
               "type": {
                 "const": "stats"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -659,8 +792,17 @@
             "properties": {
               "type": {
                 "const": "gallery"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {
@@ -684,8 +826,17 @@
             "properties": {
               "type": {
                 "const": "contact"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
               }
-            }
+            },
+            "required": [
+              "status"
+            ]
           },
           "then": {
             "properties": {

@@ -153,7 +153,7 @@ async function checkBrowser() {
     return add('browser', 'fail', `nao consegui abrir o Chrome: ${error.message.split('\n')[0]}`);
   }
 
-  const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [] };
+  const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [], placeholder: [] };
   const shots = join(out, 'screenshots');
   await mkdir(shots, { recursive: true });
 
@@ -176,6 +176,11 @@ async function checkBrowser() {
 
         const broken = await page.evaluate(() => [...document.images].filter((i) => i.complete && i.naturalWidth === 0).map((i) => i.currentSrc || i.src));
         broken.forEach((src) => problems.images.push(`${tag}: ${src}`));
+
+        if (theme === 'light' && width === viewports[viewports.length - 1]) {
+          const lorem = await page.evaluate(() => (document.body.innerText.match(/lorem ipsum/gi) ?? []).length);
+          if (lorem) problems.placeholder.push(`${locale}: ${lorem} ocorrencia(s) de "Lorem ipsum" no texto visivel`);
+        }
 
         const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
         axe.violations.forEach((v) => problems.axe.push(`${tag}: [${v.impact}] ${v.id} (${v.nodes.length}x) ${v.nodes[0]?.target?.join(' ')}`));
@@ -215,6 +220,7 @@ async function checkBrowser() {
   report('broken-images', problems.images, 'fail', 'todas as imagens carregaram');
   report('a11y-axe', problems.axe, 'fail', `axe WCAG A/AA sem violacoes (${scope})`);
   report('seo-basics', problems.seo, 'warn', 'lang, title, description, h1 unico e canonical presentes');
+  report('placeholder-content', problems.placeholder, 'warn', 'sem Lorem Ipsum no texto visivel');
   report('keyboard-focus', problems.keyboard, 'fail', 'Tab so pousa em elementos visiveis e nao-inert');
   add('screenshots', 'pass', shots);
 }

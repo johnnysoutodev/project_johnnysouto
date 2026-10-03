@@ -35,3 +35,10 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 - Assets só de `<projectDir>/public/assets/<categoria>/`. Ausente: reportar, não gerar nem baixar.
 - Status: `draft` (conteúdo incompleto, bloqueia o builder), `ready` (aprovada, o builder gera), `migrated` (já existe, não é regenerada).
 - Lógica não trivial leva teste Vitest. Regras de SSR, `effect()` e CSS: skill `angular-conventions`.
+
+## Modo placeholder (`project.contentMode: "placeholder"`)
+
+- Texto em Lorem Ipsum **do tamanho de um texto real** (título curto, parágrafo de 2–3 frases, 3–6 itens por lista). Texto curto demais esconde estouro de layout; o verifier não acharia.
+- Nunca placeholder para fatos: sem preço, número, depoimento, nome de pessoa ou logo "realistas" inventados. Use valores obviamente de exemplo (`R$ 00,00`, `Nome Sobrenome`, bloco neutro no lugar do logo).
+- Os dados ficam no `.ts` tipado da seção (o `contentRef`): é lá que o cliente troca o texto.
+- Idiomas-alvo: o placeholder do idioma-fonte é copiado como "tradução" (para o build não falhar por tradução ausente) e continua marcado como placeholder.

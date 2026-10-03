@@ -36,6 +36,11 @@ if (targets.includes(spec.locales?.source)) errors.push('/locales/targets: conte
 const fb = spec.locales?.fallback;
 if (fb && fb !== spec.locales.source && !targets.includes(fb)) errors.push(`/locales/fallback "${fb}" nao esta em source/targets`);
 
+// Lorem Ipsum so e aceito quando o cliente escolheu contentMode "placeholder" (o texto e do tamanho de um real,
+// para o layout ser validado, e o cliente edita depois). Em contentMode final seria texto de teste vazando.
+const hasLorem = /lorem ipsum/i.test(JSON.stringify(spec.sections ?? []));
+if (hasLorem && spec.project?.contentMode !== 'placeholder') errors.push('/sections: contem "Lorem ipsum" mas project.contentMode nao e "placeholder"');
+
 const open = spec.openQuestions ?? [];
 const strict = process.argv.includes('--ready');
 if (strict && open.length) errors.push(`--ready: ${open.length} pergunta(s) em aberto em openQuestions`);
@@ -45,4 +50,5 @@ if (errors.length) {
   console.error(`site-spec INVALIDO (${file}):\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
-console.log(`site-spec valido: ${spec.sections.length} secao(oes)${open.length ? `, ${open.length} pergunta(s) em aberto` : ''}${strict ? ' [pronto para o builder]' : ''}`);
+const mode = spec.project?.contentMode === 'placeholder' ? ' [conteudo placeholder]' : '';
+console.log(`site-spec valido: ${spec.sections.length} secao(oes)${open.length ? `, ${open.length} pergunta(s) em aberto` : ''}${mode}${strict ? ' [pronto para o builder]' : ''}`);
