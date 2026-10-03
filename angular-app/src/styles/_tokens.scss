@@ -1,5 +1,4 @@
-// Design tokens — migrado de `docs/design-tokens.css` (por sua vez derivado de
-// `docs/design-system.md`, secoes 2, 3, 4 e 5) para dentro do projeto Angular.
+// Design tokens — derivados de `docs/design-system.md` (secoes 2, 3, 4 e 5).
 //
 // Artefato MECANICO: nenhum valor aqui foi inventado — cada variavel so traduz o que
 // ja estava documentado/validado contra o Figma (`template_portfolio_website`, file key
@@ -7,8 +6,7 @@
 // este arquivo e so o formato consumido pelos componentes Angular (CSS custom properties,
 // para que a troca de tema em runtime via `[data-theme="dark"]` nao exija recompilar SCSS).
 //
-// Convencoes preservadas de `docs/design-tokens.css` (ver esse arquivo para o raciocinio
-// completo por trás de cada uma):
+// Convencoes:
 // 1) Cores: MESMO nome de variavel nos dois temas, valor sobrescrito em `[data-theme="dark"]`.
 // 2) Tipografia: letter-spacing convertido de "% do tamanho da fonte" (unidade real medida
 //    no Figma) para `em`, nao pixels fixos.
