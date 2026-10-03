@@ -26,7 +26,8 @@
     "targets": [
       "en-US",
       "es-ES"
-    ]
+    ],
+    "fallback": "en-US"
   },
   "design": {
     "figma": {

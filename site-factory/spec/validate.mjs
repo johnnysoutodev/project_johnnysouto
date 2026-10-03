@@ -33,6 +33,8 @@ if (urlKey && urlKey !== spec.design.figma.fileKey) errors.push(`/design/figma/f
 
 const targets = spec.locales?.targets ?? [];
 if (targets.includes(spec.locales?.source)) errors.push('/locales/targets: contem o idioma-fonte');
+const fb = spec.locales?.fallback;
+if (fb && fb !== spec.locales.source && !targets.includes(fb)) errors.push(`/locales/fallback "${fb}" nao esta em source/targets`);
 
 const open = spec.openQuestions ?? [];
 const strict = process.argv.includes('--ready');

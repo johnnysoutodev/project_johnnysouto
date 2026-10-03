@@ -4,10 +4,15 @@
 //   node figma-map.mjs find --file <file.json> --name <regex> [--type FRAME,COMPONENT]
 //                                                                            busca nos nos ja baixados
 //   node figma-map.mjs node --url <url|fileKey> --ids 316:588,316:194 [--depth 4] [--out <dir>]
+//   node figma-map.mjs check --spec <site-spec.json>                         confere se cada figmaNode do spec existe no Figma
 //   (map/node aceitam --from-file <json> para trabalhar offline com uma resposta ja salva)
-// Token: variavel de ambiente FIGMA_TOKEN (Figma > Settings > Security > Personal access tokens,
-// escopo file_content:read). Nunca grave o token em arquivo do repositorio.
+// Token: variavel de ambiente FIGMA_TOKEN ou, se ela nao existir, o arquivo
+// ~/.config/site-factory/.env (fora do repositorio, chmod 600), com a linha FIGMA_TOKEN=...
+// (Figma > Settings > Security > Personal access tokens, escopo file_content:read).
+// Nunca grave o token em arquivo do repositorio.
+import { existsSync, statSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 const [command, ...rest] = process.argv.slice(2);
@@ -27,10 +32,19 @@ function fileKeyOf(input) {
 
 const normalizeId = (id) => id.replace('-', ':');
 
+// A variavel de ambiente tem prioridade; o arquivo so e lido se ela nao existir.
+function loadTokenFile() {
+  const file = join(homedir(), '.config', 'site-factory', '.env');
+  if (process.env.FIGMA_TOKEN || !existsSync(file)) return;
+  if (statSync(file).mode & 0o077) console.error(`Aviso: ${file} e legivel por outros usuarios; rode chmod 600 nele.`);
+  process.loadEnvFile(file);
+}
+
 async function api(path) {
+  loadTokenFile();
   const token = process.env.FIGMA_TOKEN;
   if (!token) {
-    console.error('FIGMA_TOKEN nao definido. Crie um Personal access token (Figma > Settings > Security, escopo file_content:read) e rode `export FIGMA_TOKEN=...` no seu terminal. Nao salve o token em arquivos do repositorio.');
+    console.error('FIGMA_TOKEN nao definido. Crie um Personal access token (Figma > Settings > Security, escopo file_content:read) e guarde em ~/.config/site-factory/.env (linha FIGMA_TOKEN=..., chmod 600) ou rode `export FIGMA_TOKEN=...` no terminal antes de abrir o Claude Code. Nao salve o token em arquivos do repositorio.');
     process.exit(2);
   }
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -54,12 +68,30 @@ const size = (n) => (n.absoluteBoundingBox ? `${Math.round(n.absoluteBoundingBox
 
 const countNodes = (node) => (node.children ?? []).reduce((sum, c) => sum + 1 + countNodes(c), 0);
 
-// Capa = nome de capa/thumbnail OU pagina quase vazia (um unico no, sem filhos). Nunca pelo numero de frames:
-// uma pagina de conteudo pode ter um unico frame grande ("Home") cheio de filhos.
-function pageKind(page) {
-  if (LIBRARY.test(page.name)) return 'library';
-  if (COVER.test(page.name) || countNodes(page) <= 1) return 'cover?';
-  return 'content';
+// O tipo da pagina e so uma DICA para o humano/agente; nenhuma pagina e ignorada por causa dele.
+// Regras (conteudo vence o nome, para nao rotular como capa uma pagina que tem o site inteiro):
+//  - arquivo com uma unica pagina: sempre `content` (ela e o conteudo, seja qual for o nome);
+//  - pagina com mais que SMALL nos: `content`, mesmo que o nome sugira capa/biblioteca;
+//  - pagina pequena: nome de biblioteca -> `library`; nome de capa ou <= 1 no -> `cover?`.
+const SMALL = 8;
+function pageKind(page, totalPages) {
+  const nodes = countNodes(page);
+  const nameHint = LIBRARY.test(page.name) ? 'library' : COVER.test(page.name) ? 'cover?' : null;
+  if (totalPages === 1) return nameHint ? `content (nome sugere ${nameHint === 'library' ? 'biblioteca' : 'capa'}, mas e a unica pagina)` : 'content';
+  if (nodes > SMALL) return nameHint ? `content (nome sugere ${nameHint === 'library' ? 'biblioteca' : 'capa'}, mas tem ${nodes} nos)` : 'content';
+  if (nameHint) return nameHint;
+  return nodes <= 1 ? 'cover?' : 'content';
+}
+
+// Frames com "cara de pagina do site" (largura de viewport, altura de pagina), no nivel mais alto em que
+// aparecem. Mostra onde o site mora mesmo quando tudo esta numa pagina so, dentro de grupos e secoes.
+function pageLikeFrames(node, acc = []) {
+  for (const c of node.children ?? []) {
+    const b = c.absoluteBoundingBox;
+    if (['FRAME', 'COMPONENT', 'COMPONENT_SET'].includes(c.type) && b && b.width >= 320 && b.width <= 1920 && b.height >= 400) acc.push(c);
+    else pageLikeFrames(c, acc);
+  }
+  return acc;
 }
 
 function tree(node, maxDepth, depth = 0, lines = []) {
@@ -99,15 +131,19 @@ async function cmdMap() {
   const pages = file.document.children;
   const md = [`# ${file.name}`, '', `- Arquivo: \`${key}\``, `- Ultima modificacao: ${file.lastModified ?? '?'}`, `- Paginas: ${pages.length} (profundidade ${depth})`, ''];
   for (const page of pages) {
-    md.push(`## ${page.name} [${page.id}] - ${pageKind(page)}`, '', ...tree(page, depth - 1).slice(1), '');
+    const likely = pageLikeFrames(page).map((f) => `  - ${f.name} [${f.id} ${size(f)}]`);
+    md.push(`## ${page.name} [${page.id}] - ${pageKind(page, pages.length)}`, '', ...tree(page, depth - 1).slice(1), '');
+    if (likely.length) md.push(`Frames com cara de pagina do site (use \`node --ids <id>\` para ver as secoes):`, ...likely, '');
   }
   await writeFile(join(out, 'map.md'), md.join('\n'));
 
   console.log(`${file.name}: ${pages.length} pagina(s)`);
   for (const page of pages) {
     const frames = (page.children ?? []).filter((c) => ['FRAME', 'SECTION', 'COMPONENT_SET'].includes(c.type)).length;
-    console.log(`  ${page.id.padEnd(8)} ${pageKind(page).padEnd(8)} ${page.name} (${(page.children ?? []).length} no(s) de topo, ${frames} frame/secao)`);
+    const likely = pageLikeFrames(page);
+    console.log(`  ${page.id.padEnd(8)} ${pageKind(page, pages.length).padEnd(8)} ${page.name} (${(page.children ?? []).length} no(s) de topo, ${frames} frame/secao, ${likely.length} frame(s) com cara de pagina)`);
   }
+  console.log('\nNenhuma pagina e ignorada pelo tipo: ele e so uma dica. Procure secoes em TODAS com `find`; se nao achar, aumente --depth antes de concluir que nao existe.');
   console.log(`\nMapa completo: ${join(out, 'map.md')}\nJSON bruto (para o comando find): ${join(out, 'file.json')}`);
 }
 
@@ -153,9 +189,41 @@ async function cmdNode() {
   }
 }
 
-const commands = { map: cmdMap, find: cmdFind, node: cmdNode };
+// Teste de obtencao de dados: cada `figmaNode` do spec precisa existir no arquivo do cliente.
+// Sai com codigo 1 se algum faltar; nos que existem mostra nome e tamanho para conferencia humana.
+async function cmdCheck() {
+  const specPath = opt('spec');
+  if (!specPath) {
+    console.error('check: informe --spec <site-spec.json>');
+    process.exit(2);
+  }
+  const spec = JSON.parse(await readFile(resolve(specPath), 'utf8'));
+  const key = spec.design?.figma?.fileKey;
+  const wanted = spec.sections.filter((x) => x.figmaNode).map((x) => ({ section: x.id, id: x.figmaNode }));
+  const meta = await api(`/files/${key}?depth=1`);
+  console.log(`Arquivo ${key}: "${meta.name}" (${meta.document.children.length} pagina(s)), ultima modificacao ${meta.lastModified}`);
+  if (!wanted.length) {
+    console.log('Nenhuma secao com figmaNode no spec (o designer ainda nao mapeou).');
+    return;
+  }
+  const data = await api(`/files/${key}/nodes?ids=${encodeURIComponent(wanted.map((w) => w.id).join(','))}&depth=1`);
+  let missing = 0;
+  for (const { section, id } of wanted) {
+    const doc = data.nodes?.[id]?.document;
+    if (!doc) {
+      missing++;
+      console.log(`FALTA  ${section.padEnd(14)} ${id}  (nao existe no arquivo)`);
+    } else {
+      console.log(`OK     ${section.padEnd(14)} ${id.padEnd(9)} ${doc.type.padEnd(10)} "${doc.name}" ${size(doc)}`);
+    }
+  }
+  console.log(missing ? `\n${missing} de ${wanted.length} figmaNode(s) nao encontrado(s)` : `\nTodos os ${wanted.length} figmaNode(s) existem no Figma`);
+  if (missing) process.exit(1);
+}
+
+const commands = { map: cmdMap, find: cmdFind, node: cmdNode, check: cmdCheck };
 if (!commands[command]) {
-  console.error('Uso: node figma-map.mjs <map|find|node> [opcoes]  (ver cabecalho do arquivo)');
+  console.error('Uso: node figma-map.mjs <map|find|node|check> [opcoes]  (ver cabecalho do arquivo)');
   process.exit(2);
 }
 await commands[command]();

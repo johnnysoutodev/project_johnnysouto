@@ -107,6 +107,10 @@
             "$ref": "#/$defs/locale"
           },
           "uniqueItems": true
+        },
+        "fallback": {
+          "$ref": "#/$defs/locale",
+          "description": "Idioma para quem nao tem cookie nem Accept-Language conhecido (redirect da raiz). Padrao: o idioma-fonte."
         }
       }
     },
