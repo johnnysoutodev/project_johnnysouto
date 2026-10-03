@@ -43,6 +43,16 @@ Para cada item de `sections[]` na ordem do spec:
 
 Rode no projeto: `npm run lint`, `npm run test`, `ng build` com prerender e `npm audit`. Meta do projeto: zero warnings e zero erros; warning não é "inofensivo", corrija a causa. **Vulnerabilidades (`npm audit`)**: reporte o resumo (críticas/altas/moderadas e quais pacotes). **Não corrija sozinho**: nada de `npm audit fix` nem `--force`, que atualizam com quebra de compatibilidade; o orquestrador aciona o agente `resolved-vulnerability` (atualização compatível primeiro, `overrides` só se preciso, nunca `--force`). Não suba dev server nem use a porta 4200 (o usuário mantém o dele).
 
+## Modo ajustes (QA visual)
+
+Quando o orquestrador entrega uma **lista de ajustes aprovados** (itens `QA-n` do `qa-report.md` e as decisões do usuário), você não recria nada: altera só o necessário nos arquivos das seções afetadas (`.ts` de dados, `.html`, `.scss` do componente e compartilhados), sem regenerar seções nem trocar o conteúdo do cliente. Regras:
+
+- Corrija a **causa** (largura fixa, grid sem `min-width: 0`, token errado), nunca com atalho como `overflow-x: hidden` ou `!important` em cascata.
+- O Figma é a referência: valores de design vêm do documento de design do cliente e do frame, não do seu palpite. Se faltar medida, pare e peça ao orquestrador (é do `designer`); não invente.
+- Item que o usuário classificou como **divergência intencional**: não mexa no código; registre a decisão no documento de design do cliente (`design.docRef`), numa seção "Decisões e divergências intencionais" (crie se não existir; merge incremental, uma linha por decisão, com data), para o QA tratar como esperado.
+- Depois de cada rodada: `npm run lint`, `npm run test` e `npx ng build` com zero warnings e zero erros; acrescente uma entrada no `build-log.md` com os itens `QA-n` resolvidos.
+- Não reanalise o visual (é do `qa-visual`); entregue o resumo do que mudou e peça a reanálise das seções alteradas.
+
 ## Saída
 
 - Atualize `site-factory/clients/<client-id>/build-log.md` (crie se não existir) com entrada nova: data, versões (Node/Angular/CLI), seções geradas/puladas, lacunas. Merge incremental; não toque nos documentos de plano do cliente fora dessa pasta.

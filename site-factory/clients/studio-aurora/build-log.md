@@ -38,3 +38,15 @@ Correção (só no sandbox): `photo-frame.scss` com `max-width: 100%` no host e 
 **Canonical (seo-basics): pendência por design.** O spec não tem `project.domain`, então não há URL para o `<link rel="canonical">` e nenhuma foi inventada. O projeto não tem SeoService; quando o cliente definir o domínio, o canonical deve ser adicionado (domínio configurável) e o aviso some. Até lá o aviso permanece.
 
 **Validação:** lint 0 erros/0 warnings; test 9/9; `ng build` sem warnings/erros.
+
+## 2026-10-03 — ajustes de QA visual (rodada 1)
+
+**QA-1 resolvido.** Causa: `.container` de hero, sobre e contato com `max-width: 1216px` + `padding: 0 32px` (border-box), deixando o conteúdo útil em 1152px em vez de 1216px. Correção: mixin `content-container` em `src/styles/_layout.scss` (width 100%, max-width 1280px, margin-inline auto, padding-inline 32px), usado nas 3 seções. Em telas estreitas ocupa 100% do espaço disponível (host com padding-x 0 no mobile), sem estourar o viewport; sem `overflow-x: hidden`.
+**QA-2 resolvido.** `sobre.scss`: `.columns` com `align-items: flex-start` (no mobile as colunas empilham e o texto ocupa 100%, sem efeito visível).
+**Divergências intencionais / ignorados** (QA-3, 4, 5, 6, 7, 9): sem mudança de código; registrados em design-system.md seção 10.
+**Validação:** lint sem erros/warnings; test 9/9; `ng build` sem warnings/erros. Reanálise visual (hero, sobre, contato, 1440 e 375) pendente com o qa-visual.
+
+## 2026-10-03 — correção automática (QA-10), rodada 2
+
+**QA-10 resolvido (seção "sobre").** Causa: no Figma a Row interna tem duas colunas iguais (w=584, grow=1, gap 48), mas no código só a coluna do texto crescia (`flex: 1 1 444px`) e a moldura da foto (440px) era item direto do flex sem crescer; o texto ocupava 728px a partir de x=600 em vez de 584px a partir de x=744.
+Correção (`features/sobre/`): a moldura ganhou uma coluna própria `.pic` (template) e `.pic`/`.text` compartilham `flex: 1 1 584px; min-width: 0`; `.pic` alinha a moldura à esquerda. No mobile ambas com `flex-basis: 100%` (empilhadas, sem rolagem horizontal). QA-1/QA-2 preservados (container e `align-items: flex-start` intactos). Sem divergência intencional nova.

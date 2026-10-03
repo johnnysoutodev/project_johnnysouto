@@ -7,7 +7,7 @@
 | 1 | `site-spec.schema.json`, validador, template de brief, agente `intake` | Feita |
 | 3 | `designer` e `builder` genéricos (substituem `angular-scaffold`/`angular-components`), skill `landing-sections`, formas de `content` por tipo no schema; `figma-map.mjs` (mapa de todas as páginas do Figma por API REST); campo `deploy` agnóstico de provedor; `CHANGELOG.md` + skill `changelog`; templates de deploy `vercel-static` e `aws-static` com `apply.mjs` (só o provedor escolhido); `figma-map.mjs check` (teste de obtenção de dados) | Feita; agentes ainda não exercitados de ponta a ponta |
 | 4 | Orquestração `/build-landing <cliente>`, `status.mjs`, `strategist` pequeno e opcional, modo `contentMode: placeholder` (Lorem Ipsum) e prova com uma segunda landing (fictícia, `studio-aurora`) do zero, sem editar o motor | Feita: prova executada e aprovada (ver resultado abaixo) |
-| 5 | **QA visual assistido (local):** skill/agente que abre as páginas com o Playwright, tira as telas de cada seção por tamanho e tema, compara lado a lado com o frame do Figma (imagem do MCP) e mede estilos computados contra os tokens e medidas do documento de design; devolve o que diverge, o usuário decide e o agente ajusta e repete. Cobre o que os checks automáticos não pegam (ex.: texto quebrando no meio da palavra no mobile) e testes de interação por componente | Em aberto — a conversar |
+| 5 | **QA visual assistido (local):** `figma-map.mjs variants`/`image`/`layout`, `verifier/qa-capture.mjs` (recortes, medidas, achados automáticos, geometria do DOM), agente `qa-visual` e skill `/qa-visual` (corrige o automático, o usuário decide só o que depende dele). Playwright sobre um build | Feita para `desktop-light` na `studio-aurora` (3 correções, `verifier` aprovado). Pendente: dark, tablet, mobile e smoke de interação por componente |
 | 6 | **Regras de engenharia:** como escrever testes unitários e componentes, aprofundamento de clean code; provavelmente skills (`testing-conventions`, `clean-code`) consumidas por `builder` e `verifier` | Ideia — a conversar |
 | 7 | **Template:** duplicar este projeto em outro repositório e transformá-lo em template (motor sem cliente: `.claude/` + `site-factory/` + regras gerais; clientes e o site do johnnysouto ficam fora). Inclui a **opção de CI por cliente** (não regra do motor): `verifier` no GitHub Actions e/ou CI leve de lint, testes e build sem navegador | Ideia — a conversar |
 
@@ -84,3 +84,22 @@ O que a prova mostrou:
 - Comparação visual com o Figma e testes de interação (menu, foco programático): fase 5 (QA visual assistido).
 - ~~`angular-app` com 2 críticas e 3 altas~~ **Resolvido em 03/10/2026** pelo `resolved-vulnerability` reescrito: `npm update` da família `@angular/*` (22.1.x → 22.2.1, dentro da faixa) + `npm audit fix` sem `--force`; `npm audit` 0, só o `package-lock.json` mudou, lint/test/build e `verifier` completo (3 idiomas) aprovados.
 - Ruído do npm 12 na instalação (`npm warn install-scripts ... fsevents`): não vem do build; reportado, não corrigido.
+
+## Fase 5: decisão de processo (03/10/2026)
+
+O QA não deve pedir aprovação para tudo. O que tem fonte da verdade escrita (documento de design, token, spec) e correção local e reversível é corrigido automaticamente pelo `builder` e só reanalisado; o usuário decide apenas o que depende de gosto, ambiguidade, estado não definido no Figma, semântica de comportamento ou conteúdo. Com essa regra, na primeira rodada da `studio-aurora` só QA-2/QA-8, QA-7 e QA-9 teriam chegado ao usuário (QA-1 seria automático; QA-3, QA-4 e QA-5 ignorados por serem artefato do placeholder).
+
+## Fase 5: o que o primeiro contato com o Figma real mostrou
+
+- **Mobile e dark existem como design completo** no arquivo duplicado (página de conteúdo com desktop, mobile iPhone 8, dark e menu mobile lado a lado; ex.: Hero de 552px no desktop e 880px no mobile). A afirmação anterior "mobile não tem Figma" estava errada: o `designer` só não extraiu o mobile porque o escopo da execução foi limitado a desktop, e o `builder` inventou valores que o Figma já definia. Correções: `figma-map.mjs variants`, campo `figmaVariants` no spec e procedimento do `designer` tratando todas as variantes como design.
+- A detecção de palavra quebrada no `qa-capture` pegou o e-mail do contato no mobile e, de brinde, o telefone `(00) 00000-0000` partido no hífen, que ninguém tinha visto.
+- Pendente do `designer` para a `studio-aurora`: `figmaVariants` e as medidas mobile e dark das 3 seções (hoje só desktop-light). Entra quando o QA mobile/dark for aberto.
+- O agente `qa-visual` foi criado nesta sessão e o registro de agentes ainda não o enxergava; a primeira rodada usou um agente genérico instruído a seguir o arquivo dele.
+
+## Fase 5: resultado do primeiro ciclo (`studio-aurora`, desktop-light, 03/10/2026)
+
+- Rodada 1: 6 diferenças + 3 dúvidas. Rodada 2: QA-1 e QA-2 resolvidos, 1 novo (QA-10). Rodada 3: QA-10 resolvido por medição. Custo aproximado em tokens de subagente: `qa-visual` 34 mil + 38 mil, `builder` 24 mil + 17 mil.
+- O QA pegou o que nenhum check automático via: container 64px estreito (o `builder` usou 1216 em vez de 1280), texto do "sobre" centralizado em vez de no topo, colunas desiguais (`grow` ausente). Todos conferidos pela geometria do Figma e do DOM.
+- Um item do próprio `qa-visual` estava errado (QA-6, peso da Tag) e a medição o refutou; a regra passou a exigir confirmação numérica antes de reportar.
+- A regra de ação foi refinada no meio do ciclo: geometria lida do nó do Figma pela API conta como fonte escrita; estimativa pela imagem não.
+- Pendências do ciclo: sandbox é ignorado pelo git (as correções vivem em disco, não em commit; para um cliente real o projeto vai a um repositório); dark, tablet e mobile exigem `figmaVariants` e medidas do `designer`.

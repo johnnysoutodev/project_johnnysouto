@@ -108,3 +108,11 @@ Origem dos arquivos: URLs de assets do get_design_context (SVG limpo do ícone, 
 ## 9. Log
 
 - 2026-10-03: criação do documento (hero, sobre, contato; tokens light/dark; 7 ícones).
+
+## 10. Decisões e divergências intencionais
+
+- 2026-10-03 — QA-7: hover (fundo Gray/200) e `:focus-visible` (outline) dos Icon Buttons não existem no Figma; definidos pelo builder e aprovados como intencionais.
+- 2026-10-03 — QA-3, QA-4, QA-5: alturas e quebras de linha de hero, contato e sobre diferem do Figma por causa do conteúdo placeholder (Lorem Ipsum); ignorado de propósito, reavaliar com conteúdo real.
+- 2026-10-03 — QA-9: ícone de copiar ao lado do e-mail e do telefone do contato mantido como está (decisão: não alterar).
+- 2026-10-03 — QA-6: refutado pela medição; a Tag está na especificação e confere com o Figma.
+- 2026-10-03: seção 10 (decisões e divergências intencionais, QA rodada 1).

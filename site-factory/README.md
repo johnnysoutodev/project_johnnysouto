@@ -42,3 +42,15 @@ read -s T && printf 'FIGMA_TOKEN=%s\n' "$T" > ~/.config/site-factory/.env && chm
 ```
 
 A variável de ambiente `FIGMA_TOKEN` tem prioridade sobre o arquivo. Nunca cole o token no chat nem salve em arquivo do projeto.
+
+## QA visual
+
+`/qa-visual <cliente> [variante] [secoes]` conduz o ciclo olhar, decidir, ajustar, repetir.
+
+```bash
+node site-factory/figma/figma-map.mjs variants --url <figma>          # variantes do design (desktop/mobile x light/dark)
+node site-factory/figma/figma-map.mjs image --spec <spec> --variant desktop-light   # referencia do Figma em PNG, por secao
+node site-factory/verifier/qa-capture.mjs --project <projeto> --variant desktop-light   # recortes, medidas e achados automaticos
+```
+
+Saídas em `site-factory/reports/qa/<cliente>/<variante>/` e `site-factory/reports/figma/<fileKey>/ref/` (ignoradas pelo git); o relatório de análise fica em `clients/<cliente>/qa-report.md`.

@@ -13,10 +13,13 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Agente `strategist` (pequeno e opcional), skill `/build-landing <cliente>` (pipeline retomável com três portões humanos) e `site-factory/status.mjs` (etapa do pipeline descoberta pelos artefatos).
 - Modo `project.contentMode: placeholder` (Lorem Ipsum de tamanho realista): o spec só aceita Lorem nesse modo e o verifier avisa se ele aparecer no site (`placeholder-content`).
 - Prova do pipeline com o cliente fictício `studio-aurora` (landing de 3 seções, deploy AWS estático, textos em Lorem Ipsum): verifier completo aprovado sem alterar o motor. Resultado e lacunas em `site-factory/ROADMAP.md`.
+- QA visual assistido: agente `qa-visual`, skill `/qa-visual`, `verifier/qa-capture.mjs` (recortes, estilos medidos, altura vs. Figma e achados automáticos como palavra quebrada) e `figma-map.mjs variants`/`image`. Campo `figmaVariants` no `site-spec` (desktop/mobile x light/dark). O QA classifica cada achado como automático (fonte da verdade escrita, correção local e reversível), dependente do usuário ou ignorado, e só leva ao usuário o que depende dele.
 - Campo `deploy` no `site-spec` (provedor, formato do build, ambientes), para o pipeline ser agnóstico de provedor.
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
 ### Alterado
+- `designer` passa a tratar mobile, dark e menus como variantes de design (`figmaVariants`), não só desktop; `builder` ganha o modo ajustes (QA).
+- `verifier`: servidor estático e descoberta do spec extraídos para `verifier/lib/site.mjs` (compartilhados com o QA).
 - Agente `resolved-vulnerability` reescrito: escada de preferência (atualização compatível com a família `@angular/*` junta, depois faixa de pacote direto, `overrides` só para transitivo sem correção do pai), nunca `--force`, major e "sem correção" reportados e não aplicados. Ensaiado e executado no `angular-app`.
 - Verifier: novo check `npm-audit`; relatório sempre em `site-factory/reports/latest/`; telas limpas a cada execução; overflow nomeia o elemento culpado; canonical conhece o spec do cliente.
 - `builder`: receita de criação de projeto validada em projeto novo (flags do `ng new`, lint, `$localize`, `sourceLocale`, `lang`), política de instalação e de auditoria; template de ESLint em `site-factory/templates/angular/`.
