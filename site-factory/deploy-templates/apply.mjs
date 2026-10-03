@@ -113,12 +113,29 @@ if (id.startsWith('aws-')) {
   ctx = { ...ctx, cloudfrontFunctionCode: fn.trimEnd() };
 }
 
+// Seguranca: se o repositorio ja tem um workflow que faz deploy deste provedor, nao cria os workflows do
+// template (cada push publicaria duas vezes). Os demais arquivos do template seguem normalmente.
+const wfDir = join(root, '.github', 'workflows');
+const existingDeployWorkflows = [];
+if (manifest.deployDetect && !flag('allow-existing-deploy-workflows') && existsSync(wfDir)) {
+  const re = new RegExp(manifest.deployDetect);
+  for (const name of readdirSync(wfDir).filter((n) => /\.ya?ml$/.test(n))) {
+    if (re.test(await readFile(join(wfDir, name), 'utf8'))) existingDeployWorkflows.push(name);
+  }
+}
+
 const dry = flag('dry-run');
 const written = [];
 const skipped = [];
+const skippedWorkflows = [];
 for (const f of manifest.files) {
   const to = render(f.to, ctx, 'template.json');
   const dest = join(root, to);
+  const isWorkflow = to.startsWith('.github/workflows/');
+  if (isWorkflow && existingDeployWorkflows.length) {
+    skippedWorkflows.push(to);
+    continue;
+  }
   if (existsSync(dest) && !flag('force')) {
     skipped.push(to);
     continue;
@@ -143,6 +160,7 @@ for (const other of available.filter((a) => a !== id)) {
 console.log(`Template ${id} [${manifest.status}]${dry ? ' (dry-run)' : ''}`);
 written.forEach((f) => console.log(`  ${dry ? 'criaria ' : 'criado  '} ${f}`));
 skipped.forEach((f) => console.log(`  pulado   ${f} (ja existe; use --force para sobrescrever)`));
+if (skippedWorkflows.length) console.log(`  pulado   ${skippedWorkflows.join(', ')}\n           (workflow de deploy deste provedor ja existe: ${existingDeployWorkflows.join(', ')}; aplicar o do template publicaria duas vezes a cada push. Para aplicar mesmo assim: --allow-existing-deploy-workflows)`);
 if (stale.length) console.log(`\nArquivos de OUTRO provedor presentes (nada foi apagado; remova se nao forem mais usados):\n${stale.map((s) => `  - ${s}`).join('\n')}`);
 if (manifest.notes) console.log(`\nNota: ${manifest.notes}`);
 if (manifest.afterApply?.length) console.log(`\nDepois de aplicar (configuracao fora do codigo):\n${manifest.afterApply.map((s, i) => `  ${i + 1}. ${render(s, ctx, 'template.json')}`).join('\n')}`);

@@ -4,10 +4,11 @@
   "outputMode": "static",
   "status": "untested",
   "notes": "vercel.json gerado equivale ao de producao do johnnysouto (comparado por script, sem os redirects legados /pt e /en). Os workflows derivam dos do johnnysouto, simplificados, e ainda nao rodaram num repositorio real.",
+  "deployDetect": "vercel\\s+deploy",
   "files": [
     { "from": "vercel.json.tmpl", "to": "{{projectDir}}/vercel.json" },
-    { "from": "workflows/deploy-preview.yaml.tmpl", "to": ".github/workflows/deploy-preview.yaml" },
-    { "from": "workflows/deploy-production.yaml.tmpl", "to": ".github/workflows/deploy-production.yaml" }
+    { "from": "workflows/deploy-preview.yaml.tmpl", "to": ".github/workflows/deploy-vercel-preview.yaml" },
+    { "from": "workflows/deploy-production.yaml.tmpl", "to": ".github/workflows/deploy-vercel-production.yaml" }
   ],
   "afterApply": [
     "No painel da Vercel: crie o projeto e defina o Root Directory como {{projectDir}}.",

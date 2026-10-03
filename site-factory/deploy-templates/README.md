@@ -16,6 +16,8 @@ Sem template (`azure`, `netlify`, `server`...): o script sai com código 3 sem g
 ## Comportamento do `apply.mjs`
 
 - Não sobrescreve arquivo existente sem `--force`; nunca apaga nada.
+- **Não duplica deploy:** se o repositório já tem um workflow que faz deploy do mesmo provedor (padrão `deployDetect` do manifesto), os workflows do template não são criados (cada push publicaria duas vezes); os demais arquivos seguem. Exceção consciente: `--allow-existing-deploy-workflows`.
+- Workflows têm nome por provedor (`deploy-<provedor>-preview.yaml`/`-production.yaml`), para que a troca de provedor não se confunda com o anterior.
 - Lista arquivos de **outro** provedor já presentes no projeto (troca de provedor); a remoção é do usuário.
 - Imprime as etapas de configuração fora do código (segredos, ambientes, DNS) vindas do `afterApply` do manifesto.
 - Precisa do projeto Angular criado (`<projectDir>/angular.json`) para descobrir a pasta de saída do build.
@@ -26,7 +28,7 @@ Sem template (`azure`, `netlify`, `server`...): o script sai com código 3 sem g
 
 ## Adicionar um provedor
 
-1. Crie `<provedor>-<outputMode>/` com `template.json` (`id`, `provider`, `outputMode`, `status`, `notes`, `files[{from,to}]`, `afterApply[]`) e os arquivos `.tmpl`.
+1. Crie `<provedor>-<outputMode>/` com `template.json` (`id`, `provider`, `outputMode`, `status`, `notes`, `deployDetect` (regex que identifica um workflow de deploy deste provedor), `files[{from,to}]`, `afterApply[]`) e os arquivos `.tmpl`.
 2. Registre `status: "untested"` até rodar numa conta/repositório real, e diga em `notes` o que foi validado e como.
 3. Valide: aplique num diretório temporário com `--root`, rode o linter do formato (ex.: `cfn-lint`, parse do YAML) e confira que não restam `{{...}}`.
 4. Atualize a tabela acima, o `ROADMAP.md` e o `CHANGELOG.md`.

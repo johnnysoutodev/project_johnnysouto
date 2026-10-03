@@ -7,7 +7,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 ### Adicionado
 - `site-factory/`: motor reutilizável para criar landing pages em Angular a partir de um brief (texto + link do Figma). Inclui o contrato `site-spec.json` (schema + validador), o `verifier` com Playwright e axe, template de brief e o mapeador de Figma por API REST (todas as páginas do arquivo; token em `~/.config/site-factory/.env`, fora do repositório).
 - Agentes `intake`, `designer`, `builder` e `verifier` em `.claude/agents/`; skills `angular-conventions`, `landing-sections` e `changelog`.
-- Templates de deploy `vercel-static` e `aws-static` (S3 + CloudFront via CloudFormation, role OIDC do GitHub, workflows) em `site-factory/deploy-templates/`, aplicados por `apply.mjs` só para o provedor escolhido no spec.
+- Templates de deploy `vercel-static` e `aws-static` (S3 + CloudFront via CloudFormation, role OIDC do GitHub, workflows) em `site-factory/deploy-templates/`, aplicados por `apply.mjs` só para o provedor escolhido no spec; não criam workflows se o repositório já tem deploy do mesmo provedor.
 - `figma-map.mjs check`: confere se cada `figmaNode` do spec existe no Figma.
 - Campo `locales.fallback` no `site-spec` (idioma para quem não tem cookie nem `Accept-Language` conhecido).
 - Campo `deploy` no `site-spec` (provedor, formato do build, ambientes), para o pipeline ser agnóstico de provedor.
