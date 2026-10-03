@@ -16,6 +16,10 @@ Site pessoal/currículo de Johnny Souto. Dois códigos convivem: o site legado e
 
 Siga Conventional Commits, com commits atômicos (uma mudança lógica por commit). O procedimento detalhado de agrupamento está em `docs/agent-rules/atomics-commits.md`.
 
+## Changelog
+
+Registre toda mudança relevante (`feat`, `fix`, remoções, mudanças de processo) em `CHANGELOG.md` (raiz), seção "Não lançado", no mesmo PR; na release, a seção vira a versão. Formato e rascunho a partir dos commits: skill `.claude/skills/changelog/SKILL.md`.
+
 ## Segurança de dependências
 
 Vulnerabilidades reportadas por `npm audit` devem ser resolvidas preferencialmente via `overrides` no `package.json`, sem quebrar o projeto. Procedimento completo em `docs/agent-rules/resolved-vulnerability.md`.
