@@ -174,3 +174,6 @@ yarn-error.log*
 /.vscode
 # site-factory: relatorios e screenshots gerados pelo verifier
 site-factory/reports/
+
+# site-factory: projetos gerados para clientes de teste/ficticios (descartaveis)
+site-factory/sandbox/

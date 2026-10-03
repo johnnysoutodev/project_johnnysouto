@@ -8,13 +8,14 @@ site-factory/
   figma/                          figma-map.mjs: mapa recursivo de todas as páginas de um arquivo Figma (token em ~/.config/site-factory/.env ou FIGMA_TOKEN)
   deploy-templates/               templates de deploy por provedor (vercel-static, aws-static) + apply.mjs
   spec/                           site-spec.schema.json + validate.mjs (contrato entre as etapas)
+  status.mjs                      etapa do pipeline de um cliente, descoberta pelos artefatos (node status.mjs <id>)
   ROADMAP.md                      fases e status
   verifier/                       checks executáveis (build, a11y, SEO, layout, teclado)
   clients/<id>/                   brief.md, site-spec.json (um por cliente)
   reports/                        saída do verifier (ignorado pelo git)
 ```
 
-Pipeline: `intake → designer → strategist → builder → verifier` (agentes em `.claude/agents/`, conhecimento em `.claude/skills/`). Hoje existem `intake`, `designer`, `builder` e `verifier`; o `strategist` ainda é decisão em aberto. Status das fases: `ROADMAP.md`.
+Pipeline: `intake → designer → strategist → builder → verifier` (agentes em `.claude/agents/`, conhecimento em `.claude/skills/`). Hoje existem `intake`, `designer`, `strategist` (pequeno e opcional), `builder` e `verifier`. A skill `/build-landing <id>` conduz tudo, com três portões humanos (G1 respostas do cliente, G2 aprovação de textos finais, G3 relatório do verifier) e é retomável via `status.mjs`. Status das fases: `ROADMAP.md`.
 
 ```bash
 cd site-factory/spec && npm install          # primeira vez
