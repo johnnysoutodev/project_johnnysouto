@@ -1,5 +1,7 @@
 // Aplica o template de deploy do provedor escolhido no site-spec (so ele; nunca os outros).
-//   node apply.mjs --spec <site-spec.json> [--root <raiz-do-repo>] [--dry-run] [--force]
+//   node apply.mjs --spec <site-spec.json> [--root <raiz-do-repo>] [--standalone] [--dry-run] [--force]
+//   (projeto em site-factory/sandbox/ ou --standalone: a pasta do projeto vira a raiz do seu proprio repo;
+//    os workflows nao tocam o .github/ real)
 // Le deploy.provider + deploy.outputMode -> pasta <provider>-<outputMode>/ (manifesto template.json).
 // Placeholders {{nome}} (sem espacos; expressoes do GitHub `${{ ... }}` nao sao tocadas).
 // Nao sobrescreve arquivo existente sem --force. Nunca apaga nada; so lista arquivos de outro provedor.
@@ -19,7 +21,7 @@ if (!specPath) {
   console.error('Uso: node apply.mjs --spec <site-spec.json> [--root <raiz>] [--dry-run] [--force]');
   process.exit(2);
 }
-const root = resolve(opt('root', join(here, '..', '..')));
+let root = resolve(opt('root', join(here, '..', '..')));
 const spec = JSON.parse(await readFile(resolve(specPath), 'utf8'));
 const { provider, outputMode } = spec.deploy ?? {};
 const available = readdirSync(here, { withFileTypes: true }).filter((d) => d.isDirectory() && existsSync(join(here, d.name, 'template.json'))).map((d) => d.name);
@@ -30,8 +32,15 @@ if (!available.includes(id)) {
 }
 
 // ---------- contexto derivado do spec e do projeto Angular ----------
-const projectDir = spec.build?.projectDir;
+let projectDir = spec.build?.projectDir;
 if (!projectDir) fail('build.projectDir ausente no spec');
+// Projeto de sandbox (cliente de teste dentro de site-factory/sandbox/) ou --standalone: trata a pasta do projeto como a
+// RAIZ do seu proprio repositorio. Os workflows vao para <projeto>/.github/workflows (inertes) e nunca para o .github/ real.
+const standalone = flag('standalone') || (!opt('root') && /^site-factory\/sandbox\//.test(projectDir));
+if (standalone) {
+  root = join(root, projectDir);
+  projectDir = '.';
+}
 const angularJson = join(root, projectDir, 'angular.json');
 if (!existsSync(angularJson)) fail(`${join(projectDir, 'angular.json')} nao existe: o projeto Angular precisa ser criado antes (etapa A do builder)`);
 const ng = JSON.parse(await readFile(angularJson, 'utf8'));
@@ -157,7 +166,7 @@ for (const other of available.filter((a) => a !== id)) {
   }
 }
 
-console.log(`Template ${id} [${manifest.status}]${dry ? ' (dry-run)' : ''}`);
+console.log(`Template ${id} [${manifest.status}]${dry ? ' (dry-run)' : ''}${standalone ? ` - raiz: ${root.replace(`${resolve(here, '..', '..')}/`, '')}` : ''}`);
 written.forEach((f) => console.log(`  ${dry ? 'criaria ' : 'criado  '} ${f}`));
 skipped.forEach((f) => console.log(`  pulado   ${f} (ja existe; use --force para sobrescrever)`));
 if (skippedWorkflows.length) console.log(`  pulado   ${skippedWorkflows.join(', ')}\n           (workflow de deploy deste provedor ja existe: ${existingDeployWorkflows.join(', ')}; aplicar o do template publicaria duas vezes a cada push. Para aplicar mesmo assim: --allow-existing-deploy-workflows)`);
