@@ -4,7 +4,7 @@
 
 ## Sobre o projeto
 
-Site pessoal/currículo estático (HTML/CSS/JS + Materialize CSS, build via Grunt, deploy na Vercel). Para o retrato completo e atualizado do repositório (estrutura, stack, CI/CD, pendências), veja **`docs/ANALISE-PROJETO.md`** antes de propor mudanças estruturais — mantenha esse documento atualizado quando o projeto evoluir.
+Site pessoal/currículo de Johnny Souto. Dois códigos convivem: o site legado estático (`src/`, HTML/CSS/JS + Materialize CSS, build via Grunt, publicado a partir de `public/`) e o novo site Angular em `angular-app/`, que o substituirá (migração em andamento, ver abaixo). Ambos fazem deploy na Vercel. Para o retrato completo do repositório (estrutura, stack, CI/CD, pendências), veja **`docs/ANALISE-PROJETO.md`** antes de propor mudanças estruturais — mantenha esse documento atualizado quando o projeto evoluir.
 
 ## Fluxo de branches e deploy
 
@@ -24,11 +24,9 @@ Vulnerabilidades reportadas por `npm audit` devem ser resolvidas preferencialmen
 
 Specs de design (cores, tipografia, espaçamento, sombras, estrutura de seções) vêm de um arquivo Figma fornecido pelo Johnny e são documentadas em `docs/design-system.md`, atualizado por merge incremental (nunca regerado do zero, para não perder notas e pendências já registradas). Procedimento completo de extração via MCP do Figma em `docs/agent-rules/designer.md`.
 
-## Lições da migração Angular (aplicar a todo componente/serviço novo)
+## Lições da migração Angular
 
-Um terceiro bug real, da mesma família, ocorreu na criação do menu mobile (`angular-app/src/app/layout/mobile-menu/mobile-menu.ts`): um `effect()` chamava `.focus()` no primeiro elemento do painel ao abrir, mas o binding `[attr.inert]` do template reage ao mesmo signal sem ordem garantida entre "effect roda" e "change detection aplica o binding" — o `.focus()` rodava antes do `inert` ser removido do DOM, e o navegador recusa focar elemento `inert` (silenciosamente, sem erro). Passava despercebido nos testes porque o helper de teste chamava `detectChanges()` antes de `flushEffects()`, o que coincidentemente já aplicava o binding a tempo dentro do teste — só apareceu em teste manual real no navegador. Regra adicional: quando um `effect()` precisa interagir com um elemento cujo estado (visibilidade, `inert`, `disabled`) é controlado por um binding de template reagindo ao mesmo signal, empurre a interação (`.focus()` etc.) pra um `queueMicrotask()`/próximo tick, nunca assuma que o binding já foi aplicado só porque o `effect()` já rodou.
-
-Dois bugs reais já ocorreram na criação do `ThemeService` (`angular-app/src/app/core/theme/theme.ts`, detalhe completo em `docs/agent-rules/angular-components.md`, seção "Validar"): um `effect()` sem guarda de plataforma quebrou o build de SSR/prerender com `document is not defined`, e a ordem de leitura de estado persistido (localStorage) fez o `effect()` sobrescrever um tema salvo a cada reload. Regra para qualquer componente/serviço Angular novo deste projeto: (1) todo acesso a `document`/`window`/`localStorage`/`matchMedia` dentro de `effect()`/construtor precisa estar atrás de `isPlatformBrowser(inject(PLATFORM_ID))`; (2) leia o valor inicial real de estado persistido de forma síncrona **antes** de declarar o `effect()`, nunca deixe o `effect()` gravar um default transitório por cima; (3) valide sempre com `ng build` com prerender ligado (não só o dev server) — é o único jeito de pegar erro de SSR; (4) escreva teste unitário (Vitest) para qualquer lógica não-trivial, não só o `should create` padrão.
+Bugs reais já ocorreram em `ThemeService` (SSR/prerender e estado persistido) e no menu mobile (`effect()` vs binding `[attr.inert]`). As regras derivadas deles vivem na skill `.claude/skills/angular-conventions/SKILL.md` — aplique-as a todo componente/serviço Angular novo. Resumo: guarda `isPlatformBrowser` para APIs de navegador, ler estado persistido antes do `effect()`, validar com `ng build` + prerender, teste unitário para lógica não-trivial, e `queueMicrotask()` para interação com DOM controlado por binding do mesmo signal.
 
 ## Migração Angular
 
@@ -51,4 +49,4 @@ Minimize o consumo de tokens em todas as interações, sem sacrificar corretude:
 ## Convenções gerais
 
 - O site Angular (`angular-app/`) é multilíngue: pt-BR (idioma-fonte), en-US e es-ES, via i18n nativo do Angular. Ao editar ou criar textos visíveis, escreva em português e marque com `i18n`/`i18n-aria-label`/`i18n-alt` (templates) ou `$localize` com ID `@@...` (TS); depois rode `npm run extract-i18n` e adicione a tradução nas 3 pastas de `angular-app/src/locale/` (`messages.json`, `messages.en-US.json`, `messages.es-ES.json`) — o build falha se faltar. O site legado (`src/pt/` e `src/en/`) segue apenas em português/inglês, sem mudanças.
-- O projeto é intencionalmente HTML/CSS/JS vanilla + Materialize, sem framework de front-end reativo. Não introduza um novo framework (React, Vue, Angular etc.) sem alinhar com o Johnny antes — já houve um experimento não finalizado (`app/`, removido) que confundiu esse ponto.
+- Stack: o site legado (`src/`) é vanilla + Materialize e está congelado (só correções). Todo código novo é Angular em `angular-app/` (boas práticas oficiais em `angular-app/CLAUDE.md`). Não introduza outro framework (React, Vue etc.) sem alinhar com o Johnny antes.
