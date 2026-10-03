@@ -17,6 +17,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
 ### Alterado
+- Agente `resolved-vulnerability` reescrito: escada de preferência (atualização compatível com a família `@angular/*` junta, depois faixa de pacote direto, `overrides` só para transitivo sem correção do pai), nunca `--force`, major e "sem correção" reportados e não aplicados. Ensaiado e executado no `angular-app`.
 - Verifier: novo check `npm-audit`; relatório sempre em `site-factory/reports/latest/`; telas limpas a cada execução; overflow nomeia o elemento culpado; canonical conhece o spec do cliente.
 - `builder`: receita de criação de projeto validada em projeto novo (flags do `ng new`, lint, `$localize`, `sourceLocale`, `lang`), política de instalação e de auditoria; template de ESLint em `site-factory/templates/angular/`.
 - `apply.mjs`: projeto de sandbox é tratado como raiz do próprio repositório; workflows AWS de produção ganham portão de `npm audit` crítico.
@@ -24,6 +25,9 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - `designer` e `builder` generalizados; `angular-scaffold` e `angular-components` foram fundidos no `builder`.
 - Lições de bugs de Angular e CSS saíram de `docs/ai-instructions.md` para a skill `angular-conventions`.
 - `docs/ai-instructions.md`: descreve o legado e o Angular convivendo e deixa de proibir Angular.
+
+### Segurança
+- `angular-app`: atualizada a família `@angular/*` para 22.2.1 (dentro de `^22.1.0`) e aplicado `npm audit fix` sem `--force`, zerando o `npm audit` (antes: 2 críticas, 3 altas, 2 moderadas). Corrige DoS por SSR no `@angular/router` e no `@angular/platform-server`, prototype pollution/RCE no `piscina` (via `@angular/build`), DoS no `brace-expansion` e falhas no `fast-uri` e no `ip-address`. Só o `package-lock.json` mudou; sem `overrides`.
 
 ### Removido
 - `docs/design-tokens.css`: duplicado e desatualizado; os tokens vivem em `angular-app/src/styles/_tokens.scss`.

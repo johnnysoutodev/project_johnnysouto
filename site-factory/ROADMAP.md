@@ -78,5 +78,5 @@ O que a prova mostrou:
 
 - Os ajustes do `builder` foram validados passo a passo num projeto novo, mas **não** por uma nova execução completa de `/build-landing`.
 - Comparação visual com o Figma e testes de interação (menu, foco programático): fases 5/6.
-- **`angular-app` (site em produção) tem 2 vulnerabilidades críticas e 3 altas**, todas com correção disponível (pacotes do próprio Angular, `piscina`, `brace-expansion`...). Decisão do dono do projeto; o `resolved-vulnerability` é o caminho. O workflow de produção atual bloqueia deploy com crítica.
+- ~~`angular-app` com 2 críticas e 3 altas~~ **Resolvido em 03/10/2026** pelo `resolved-vulnerability` reescrito: `npm update` da família `@angular/*` (22.1.x → 22.2.1, dentro da faixa) + `npm audit fix` sem `--force`; `npm audit` 0, só o `package-lock.json` mudou, lint/test/build e `verifier` completo (3 idiomas) aprovados.
 - Ruído do npm 12 na instalação (`npm warn install-scripts ... fsevents`): não vem do build; reportado, não corrigido.

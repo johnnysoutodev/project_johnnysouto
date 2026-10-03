@@ -41,7 +41,7 @@ Para cada item de `sections[]` na ordem do spec:
 
 ## Etapa C — Validação própria (rápida; a aprovação final é do `verifier`)
 
-Rode no projeto: `npm run lint`, `npm run test`, `ng build` com prerender e `npm audit`. Meta do projeto: zero warnings e zero erros; warning não é "inofensivo", corrija a causa. **Vulnerabilidades (`npm audit`)**: reporte o resumo (críticas/altas/moderadas e quais pacotes). **Não corrija sozinho**: nada de `npm audit fix` nem `--force`, que atualizam com quebra de compatibilidade; o orquestrador aciona o agente `resolved-vulnerability` (correção por `overrides`). Não suba dev server nem use a porta 4200 (o usuário mantém o dele).
+Rode no projeto: `npm run lint`, `npm run test`, `ng build` com prerender e `npm audit`. Meta do projeto: zero warnings e zero erros; warning não é "inofensivo", corrija a causa. **Vulnerabilidades (`npm audit`)**: reporte o resumo (críticas/altas/moderadas e quais pacotes). **Não corrija sozinho**: nada de `npm audit fix` nem `--force`, que atualizam com quebra de compatibilidade; o orquestrador aciona o agente `resolved-vulnerability` (atualização compatível primeiro, `overrides` só se preciso, nunca `--force`). Não suba dev server nem use a porta 4200 (o usuário mantém o dele).
 
 ## Saída
 
