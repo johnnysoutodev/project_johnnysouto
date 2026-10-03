@@ -10,10 +10,13 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Templates de deploy `vercel-static` e `aws-static` (S3 + CloudFront via CloudFormation, role OIDC do GitHub, workflows) em `site-factory/deploy-templates/`, aplicados por `apply.mjs` só para o provedor escolhido no spec; não criam workflows se o repositório já tem deploy do mesmo provedor.
 - `figma-map.mjs check`: confere se cada `figmaNode` do spec existe no Figma.
 - Campo `locales.fallback` no `site-spec` (idioma para quem não tem cookie nem `Accept-Language` conhecido).
+- Agente `strategist` (pequeno e opcional), skill `/build-landing <cliente>` (pipeline retomável com três portões humanos) e `site-factory/status.mjs` (etapa do pipeline descoberta pelos artefatos).
+- Modo `project.contentMode: placeholder` (Lorem Ipsum de tamanho realista): o spec só aceita Lorem nesse modo e o verifier avisa se ele aparecer no site (`placeholder-content`).
 - Campo `deploy` no `site-spec` (provedor, formato do build, ambientes), para o pipeline ser agnóstico de provedor.
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
 ### Alterado
+- Schema do `site-spec`: seção `draft` pode ter só estrutura; conteúdo mínimo passa a ser exigido apenas em `ready`/`migrated`.
 - `designer` e `builder` generalizados; `angular-scaffold` e `angular-components` foram fundidos no `builder`.
 - Lições de bugs de Angular e CSS saíram de `docs/ai-instructions.md` para a skill `angular-conventions`.
 - `docs/ai-instructions.md`: descreve o legado e o Angular convivendo e deixa de proibir Angular.
