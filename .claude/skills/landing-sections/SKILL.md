@@ -33,5 +33,5 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 - Texto visível marcado para i18n (`i18n`/`i18n-aria-label`/`i18n-alt` no template, `$localize` com ID `@@...` no TS), depois extração e tradução nos idiomas-alvo do spec.
 - Cores, tipografia e sombras só por token (CSS custom property) do documento de design; nunca valor copiado do Figma. Pronto para os temas de `design.themes`.
 - Assets só de `<projectDir>/public/assets/<categoria>/`. Ausente: reportar, não gerar nem baixar.
-- Seção com `status: migrated` não é regenerada.
+- Status: `draft` (conteúdo incompleto, bloqueia o builder), `ready` (aprovada, o builder gera), `migrated` (já existe, não é regenerada).
 - Lógica não trivial leva teste Vitest. Regras de SSR, `effect()` e CSS: skill `angular-conventions`.

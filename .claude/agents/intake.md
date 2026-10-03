@@ -17,11 +17,12 @@ Você é o `intake` do site-factory: a primeira etapa do pipeline (intake → de
 2. Extraia o `fileKey` da URL do Figma (`figma.com/design/<fileKey>/...`). **Não use o MCP do Figma**: mapear `figmaNode` das seções é trabalho do `designer`; deixe `null`.
 3. Monte o `site-spec.json`:
    - Texto visível no idioma-fonte (`locales.source`); traduções seguem o i18n nativo do Angular, não entram no spec.
-   - Uma entrada em `sections` por seção do brief, na ordem pedida, com `type` do catálogo do schema, `id` em kebab-case e `status: "draft"`.
+   - Uma entrada em `sections` por seção do brief, na ordem pedida, com `type` do catálogo do schema e `id` em kebab-case. `status` é `draft` enquanto faltar conteúdo ou houver pergunta sobre a seção; vira `ready` só quando o conteúdo está completo e aprovado.
    - `content` só com o que o cliente forneceu. Se o conteúdo já vive em código (projeto migrado), use `contentRef` com o caminho e `status: "migrated"`.
+   - `deploy`: provedor, `outputMode` (`static` = prerender servido por CDN/bucket; `server` = SSR em runtime Node), ambientes/branches e notas. Brief diz "indefinido" ou omite: é pergunta **bloqueante** (muda o formato do build). Ao perguntar, recomende `static` para landing page e explique em uma linha a diferença; só use `server` se houver necessidade real de SSR em runtime. Nunca assuma o provedor.
    - Campos opcionais sem informação no brief: omita. Nunca preencha com texto plausível inventado (depoimentos, preços, números, logos de clientes).
 4. Para cada lacuna, decida se bloqueia o `builder` (falta objetivo, público, Figma, conteúdo de uma seção, idioma-fonte) ou se é opcional (tom, SEO, analytics). Registre as bloqueantes em `openQuestions` como perguntas curtas, objetivas, uma por item.
-5. Valide: `cd site-factory/spec && node validate.mjs ../clients/<client-id>/site-spec.json`. Corrija até validar. Antes de declarar o spec pronto, rode com `--ready` (exige `openQuestions` vazio e nenhuma seção `draft`).
+5. Valide: `cd site-factory/spec && node validate.mjs ../clients/<client-id>/site-spec.json`. Corrija até validar. Antes de declarar o spec pronto, rode com `--ready` (exige `openQuestions` vazio e nenhuma seção `draft`; só `ready` ou `migrated` passam).
 
 ## Saída (resposta ao orquestrador)
 

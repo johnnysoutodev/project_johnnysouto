@@ -1,0 +1,62 @@
+{
+  "specVersion": "1",
+  "client": {
+    "id": "cafe-aurora",
+    "name": "Cafe Aurora"
+  },
+  "project": {
+    "type": "landing-page",
+    "goal": "Divulgar a promocao de lancamento e levar o visitante ao WhatsApp.",
+    "audience": "Moradores do bairro que ainda nao conhecem a cafeteria.",
+    "tone": [
+      "acolhedor",
+      "direto"
+    ]
+  },
+  "locales": {
+    "source": "pt-BR"
+  },
+  "design": {
+    "figma": {
+      "url": "https://www.figma.com/design/AbC123xyz/cafe-aurora",
+      "fileKey": "AbC123xyz"
+    },
+    "themes": [
+      "light"
+    ]
+  },
+  "deploy": {
+    "provider": "aws",
+    "outputMode": "static",
+    "notes": "S3 + CloudFront"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "status": "ready",
+      "figmaNode": null,
+      "content": {
+        "headline": "Cafe fresco, todo dia, na esquina",
+        "cta": {
+          "label": "Pedir no WhatsApp",
+          "href": "https://wa.me/5500000000000"
+        }
+      }
+    },
+    {
+      "id": "promo",
+      "type": "cta",
+      "status": "ready",
+      "figmaNode": null,
+      "content": {
+        "headline": "Cafe + pao de queijo por R$ 9,90 ate domingo",
+        "action": {
+          "label": "Garantir o meu",
+          "href": "https://wa.me/5500000000000"
+        }
+      }
+    }
+  ],
+  "openQuestions": []
+}

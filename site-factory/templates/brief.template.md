@@ -28,6 +28,12 @@ Liste, na ordem em que devem aparecer, cada seção com o texto e os materiais q
 - Idioma principal (*):
 - Outros idiomas:
 
+## Publicação (deploy) (*)
+- Onde será publicado (Vercel, Netlify, Cloudflare Pages, AWS, Azure, GCP, outro) e o serviço, se já definido (ex.: S3 + CloudFront, Azure Static Web Apps, App Runner):
+- Ambientes e branches (ex.: preview em `develop`, produção em `main`):
+- Domínio de produção:
+- Não sabe? Escreva "indefinido" — o agente `intake` pergunta e recomenda (landing page costuma ser estática, em CDN).
+
 ## SEO e métricas
 - Título e descrição para buscadores (ou deixe em branco para o agente propor):
 - Ferramenta de métricas (ex.: Google Analytics) e se precisa de banner de consentimento:

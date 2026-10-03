@@ -1,36 +1,145 @@
 {
   "specVersion": "1",
-  "client": { "id": "johnnysouto", "name": "Johnny Souto", "email": "johnnyjns@gmail.com" },
+  "client": {
+    "id": "johnnysouto",
+    "name": "Johnny Souto",
+    "email": "johnnyjns@gmail.com"
+  },
   "project": {
     "type": "landing-page",
     "goal": "Apresentar o currículo e levar o visitante a entrar em contato (e-mail, LinkedIn, WhatsApp).",
     "audience": "Recrutadores, gestores de engenharia e potenciais clientes que avaliam experiência, stack e projetos.",
-    "tone": ["profissional", "direto", "técnico", "acessível"],
+    "tone": [
+      "profissional",
+      "direto",
+      "técnico",
+      "acessível"
+    ],
     "domain": "https://www.johnnysouto.com.br"
   },
-  "build": { "framework": "angular", "projectDir": "angular-app" },
-  "locales": { "source": "pt-BR", "targets": ["en-US", "es-ES"] },
+  "build": {
+    "framework": "angular",
+    "projectDir": "angular-app"
+  },
+  "locales": {
+    "source": "pt-BR",
+    "targets": [
+      "en-US",
+      "es-ES"
+    ]
+  },
   "design": {
     "figma": {
       "url": "https://www.figma.com/design/9z2dzCKhlXWqVynN5SEeEM/template_portfolio_website?node-id=0-1&m=dev&t=p400RgMm8j8SjqJM-1",
       "fileKey": "9z2dzCKhlXWqVynN5SEeEM"
     },
-    "themes": ["light", "dark"],
+    "themes": [
+      "light",
+      "dark"
+    ],
     "docRef": "docs/design-system.md",
-    "tokensRef": "docs/design-tokens.css"
+    "tokensRef": "angular-app/src/styles/_tokens.scss"
   },
-  "seo": { "title": "Johnny Souto | Engenheiro de Software" },
-  "analytics": { "provider": "ga4", "consentBanner": true },
+  "deploy": {
+    "provider": "vercel",
+    "outputMode": "static",
+    "environments": [
+      {
+        "name": "Develop",
+        "branch": "develop"
+      },
+      {
+        "name": "Production",
+        "branch": "main",
+        "url": "https://www.johnnysouto.com.br"
+      }
+    ],
+    "notes": "Build por idioma (pt-br, en-us, es-es) com prerender; redirects de idioma em angular-app/vercel.json."
+  },
+  "seo": {
+    "title": "Johnny Souto | Engenheiro de Software"
+  },
+  "analytics": {
+    "provider": "ga4",
+    "consentBanner": true
+  },
   "sections": [
-    { "id": "header", "type": "header", "status": "migrated", "figmaNode": "316:588", "contentRef": "angular-app/src/app/layout/nav-links.ts" },
-    { "id": "hero", "type": "hero", "status": "migrated", "figmaNode": "316:194", "contentRef": "angular-app/src/app/features/hero/hero.ts" },
-    { "id": "about", "type": "about", "status": "migrated", "figmaNode": "316:229", "nav": { "label": "Sobre" }, "contentRef": "angular-app/src/app/features/about/about.ts" },
-    { "id": "skills", "type": "skills", "status": "migrated", "figmaNode": "316:256", "contentRef": "angular-app/src/app/features/skills/skills.ts" },
-    { "id": "experience", "type": "timeline", "status": "migrated", "figmaNode": "316:357", "contentRef": "angular-app/src/app/features/experience/experience.ts" },
-    { "id": "project", "type": "projects", "status": "migrated", "figmaNode": "316:415", "nav": { "label": "Projetos" }, "contentRef": "angular-app/src/app/features/project/project.ts", "notes": "No Figma o frame se chama Work." },
-    { "id": "testimonials", "type": "testimonials", "status": "migrated", "figmaNode": "316:510", "nav": { "label": "Depoimentos" }, "contentRef": "angular-app/src/app/features/testimonials/testimonials.ts" },
-    { "id": "contact", "type": "contact", "status": "migrated", "figmaNode": "316:537", "nav": { "label": "Contato" }, "contentRef": "angular-app/src/app/features/contact-me/contact-me.ts" },
-    { "id": "footer", "type": "footer", "status": "migrated", "figmaNode": "316:579", "contentRef": "angular-app/src/app/layout/footer/footer.ts" }
+    {
+      "id": "header",
+      "type": "header",
+      "status": "migrated",
+      "figmaNode": "316:588",
+      "contentRef": "angular-app/src/app/layout/nav-links.ts"
+    },
+    {
+      "id": "hero",
+      "type": "hero",
+      "status": "migrated",
+      "figmaNode": "316:194",
+      "contentRef": "angular-app/src/app/features/hero/hero.ts"
+    },
+    {
+      "id": "about",
+      "type": "about",
+      "status": "migrated",
+      "figmaNode": "316:229",
+      "nav": {
+        "label": "Sobre"
+      },
+      "contentRef": "angular-app/src/app/features/about/about.ts"
+    },
+    {
+      "id": "skills",
+      "type": "skills",
+      "status": "migrated",
+      "figmaNode": "316:256",
+      "contentRef": "angular-app/src/app/features/skills/skills.ts"
+    },
+    {
+      "id": "experience",
+      "type": "timeline",
+      "status": "migrated",
+      "figmaNode": "316:357",
+      "contentRef": "angular-app/src/app/features/experience/experience.ts"
+    },
+    {
+      "id": "project",
+      "type": "projects",
+      "status": "migrated",
+      "figmaNode": "316:415",
+      "nav": {
+        "label": "Projetos"
+      },
+      "contentRef": "angular-app/src/app/features/project/project.ts",
+      "notes": "No Figma o frame se chama Work."
+    },
+    {
+      "id": "testimonials",
+      "type": "testimonials",
+      "status": "migrated",
+      "figmaNode": "316:510",
+      "nav": {
+        "label": "Depoimentos"
+      },
+      "contentRef": "angular-app/src/app/features/testimonials/testimonials.ts"
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "status": "migrated",
+      "figmaNode": "316:537",
+      "nav": {
+        "label": "Contato"
+      },
+      "contentRef": "angular-app/src/app/features/contact-me/contact-me.ts"
+    },
+    {
+      "id": "footer",
+      "type": "footer",
+      "status": "migrated",
+      "figmaNode": "316:579",
+      "contentRef": "angular-app/src/app/layout/footer/footer.ts"
+    }
   ],
   "openQuestions": []
 }

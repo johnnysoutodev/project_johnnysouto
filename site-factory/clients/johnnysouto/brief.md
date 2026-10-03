@@ -28,6 +28,9 @@ Header (menu, com menu mobile), Hero, Sobre, Skills (grid de ícones), Experiên
 - Principal: pt-BR
 - Outros: en-US, es-ES (i18n nativo do Angular)
 
+## Publicação (deploy)
+Vercel, build estático (prerender por idioma). Ambientes: Develop (branch `develop`, preview) e Production (branch `main`, https://www.johnnysouto.com.br).
+
 ## SEO e métricas
 - Título: "Johnny Souto | Engenheiro de Software"
 - Google Analytics 4 com banner de consentimento.

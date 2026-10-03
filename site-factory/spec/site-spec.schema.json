@@ -11,6 +11,7 @@
     "project",
     "locales",
     "design",
+    "deploy",
     "sections"
   ],
   "properties": {
@@ -200,6 +201,74 @@
         "type": "string"
       },
       "description": "Lacunas que o intake nao conseguiu resolver; devem estar vazias antes do builder rodar."
+    },
+    "deploy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "outputMode"
+      ],
+      "description": "Onde o site sera publicado. Define o formato do build (estatico em CDN ou servidor Node), nao o pipeline de deploy em si.",
+      "properties": {
+        "provider": {
+          "enum": [
+            "vercel",
+            "netlify",
+            "cloudflare-pages",
+            "github-pages",
+            "aws",
+            "azure",
+            "gcp",
+            "other"
+          ]
+        },
+        "outputMode": {
+          "enum": [
+            "static",
+            "server"
+          ],
+          "description": "static = prerender completo servido por CDN/bucket (Vercel, Netlify, S3+CloudFront, Azure Static Web Apps...). server = SSR em runtime Node (App Runner/ECS/Lambda, App Service, Cloud Run...)."
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Detalhes que o brief trouxe: servico especifico (ex.: S3+CloudFront), conta, regiao, restricoes."
+        }
+      },
+      "if": {
+        "properties": {
+          "provider": {
+            "const": "other"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "notes"
+        ]
+      }
     }
   },
   "$defs": {

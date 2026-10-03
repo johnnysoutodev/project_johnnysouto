@@ -5,9 +5,10 @@
 | 0 | Limpeza das instruções, `.mcp.json` com `angular-cli`, skill `angular-conventions` | Feita |
 | 2 | `verifier` (build/SSR, testes, lint, axe, SEO, overflow, teclado, screenshots) | Feita |
 | 1 | `site-spec.schema.json`, validador, template de brief, agente `intake` | Feita |
-| 3 | `designer` e `builder` genéricos (substituem `angular-scaffold`/`angular-components`), skill `landing-sections`, formas de `content` por tipo no schema | Feita; agentes ainda não exercitados de ponta a ponta |
+| 3 | `designer` e `builder` genéricos (substituem `angular-scaffold`/`angular-components`), skill `landing-sections`, formas de `content` por tipo no schema; `figma-map.mjs` (mapa de todas as páginas do Figma por API REST); campo `deploy` agnóstico de provedor; `CHANGELOG.md` + skill `changelog` | Feita; agentes ainda não exercitados de ponta a ponta |
 | 4 | Orquestração `/build-landing <cliente>` e prova com uma segunda landing (fictícia) do zero, sem editar o motor. Inclui decidir o `strategist` (seções, copy, SEO) | A decidir |
-| 5 | **CI com Playwright:** rodar o `verifier` no GitHub Actions (Chrome já vem nos runners `ubuntu-latest`), bloqueando PR/deploy em falha; hoje o CI não faz build, teste nem lint | Planejada (a detalhar) |
+| 5 | **CI com Playwright:** rodar o `verifier` no GitHub Actions (Chrome já vem nos runners `ubuntu-latest`), bloqueando PR/deploy em falha; hoje o CI não faz build, teste nem lint | Em aberto — a conversar |
+| 6 | **Regras de engenharia:** como escrever testes unitários e componentes, aprofundamento de clean code; provavelmente skills (`testing-conventions`, `clean-code`) consumidas por `builder` e `verifier` | Ideia — a conversar |
 
 ## Pendências conhecidas do verifier (candidatas à fase 5 ou depois)
 
