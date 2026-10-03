@@ -12,6 +12,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Campo `locales.fallback` no `site-spec` (idioma para quem não tem cookie nem `Accept-Language` conhecido).
 - Agente `strategist` (pequeno e opcional), skill `/build-landing <cliente>` (pipeline retomável com três portões humanos) e `site-factory/status.mjs` (etapa do pipeline descoberta pelos artefatos).
 - Modo `project.contentMode: placeholder` (Lorem Ipsum de tamanho realista): o spec só aceita Lorem nesse modo e o verifier avisa se ele aparecer no site (`placeholder-content`).
+- Prova do pipeline com o cliente fictício `studio-aurora` (landing de 3 seções, deploy AWS estático, textos em Lorem Ipsum): verifier completo aprovado sem alterar o motor. Resultado e lacunas em `site-factory/ROADMAP.md`.
 - Campo `deploy` no `site-spec` (provedor, formato do build, ambientes), para o pipeline ser agnóstico de provedor.
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
