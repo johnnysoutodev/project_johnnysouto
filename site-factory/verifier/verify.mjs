@@ -1,13 +1,15 @@
 // Verificador generico de sites Angular. Uso:
 //   node verify.mjs --project ../../angular-app [--out <dir>] [--skip-build] [--skip-tests]
-//                   [--skip-browser] [--locales pt-br,en-us] [--viewports 375,768,1440]
+//                   [--skip-browser] [--skip-audit] [--audit-from <npm-audit.json>]
+//                   [--spec <site-spec.json>] [--locales pt-br,en-us] [--viewports 375,768,1440]
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
 // Exit code 1 se qualquer check falhar; `warn` nao falha mas aparece no relatorio.
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { extname, join, relative, resolve } from 'node:path';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -19,7 +21,26 @@ const opt = (name, fallback) => {
 };
 
 const project = resolve(opt('project', '.'));
-const out = resolve(opt('out', join(project, '..', 'site-factory', 'reports', 'latest')));
+const here = dirname(fileURLToPath(import.meta.url));
+const repo = resolve(here, '..', '..');
+// Relatorio sempre em site-factory/reports/latest do repositorio, onde o status.mjs procura (nao depende de onde o projeto mora).
+const out = resolve(opt('out', join(here, '..', 'reports', 'latest')));
+
+// Spec do cliente dono deste projeto (--spec ou descoberto em site-factory/clients/*/site-spec.json pelo build.projectDir).
+function findSpec() {
+  const explicit = opt('spec');
+  if (explicit) return { file: resolve(explicit), spec: JSON.parse(readFileSync(resolve(explicit), 'utf8')) };
+  const clients = join(here, '..', 'clients');
+  if (!existsSync(clients)) return null;
+  for (const id of readdirSync(clients)) {
+    const file = join(clients, id, 'site-spec.json');
+    if (!existsSync(file)) continue;
+    const spec = JSON.parse(readFileSync(file, 'utf8'));
+    if (spec.build?.projectDir && resolve(repo, spec.build.projectDir) === project) return { file, spec };
+  }
+  return null;
+}
+const owner = findSpec();
 const viewports = opt('viewports', '375,768,1440').split(',').map(Number);
 const localeFilter = opt('locales', '')?.split(',').filter(Boolean);
 const themes = ['light', 'dark'];
@@ -65,6 +86,36 @@ async function checkTests() {
   add('unit-tests', warnings ? 'warn' : 'pass', warnings ? `${warnings} warning(s)` : 'ok');
   const lint = await run('npx', ['ng', 'lint'], project);
   add('lint', lint.code === 0 ? 'pass' : 'fail', lint.code === 0 ? 'ok' : `exit ${lint.code}`, lint.code === 0 ? [] : [lint.output.slice(-3000)]);
+}
+
+// ---------- 2b. vulnerabilidades de dependencias ----------
+// Critica = falha; alta/moderada = aviso (o agente resolved-vulnerability corrige via overrides).
+async function checkAudit() {
+  if (flag('skip-audit')) return add('npm-audit', 'skipped', '--skip-audit');
+  let raw;
+  const from = opt('audit-from');
+  if (from) raw = await readFile(resolve(from), 'utf8');
+  else {
+    if (!existsSync(join(project, 'package-lock.json'))) return add('npm-audit', 'warn', 'sem package-lock.json: nada a auditar (versione o lockfile)');
+    raw = (await run('npm', ['audit', '--json'], project)).output;
+  }
+  let data;
+  try {
+    data = JSON.parse(raw.slice(raw.indexOf('{')));
+  } catch {
+    return add('npm-audit', 'warn', 'nao consegui auditar (registro indisponivel ou saida invalida do npm audit)', [raw.slice(0, 300)]);
+  }
+  if (data.error) return add('npm-audit', 'warn', `auditoria indisponivel: ${data.error.summary ?? data.error.code ?? 'erro do npm'}`);
+  const v = data.metadata?.vulnerabilities ?? {};
+  const items = Object.entries(data.vulnerabilities ?? {})
+    .filter(([, i]) => ['critical', 'high', 'moderate'].includes(i.severity))
+    .sort((a, b) => ['critical', 'high', 'moderate'].indexOf(a[1].severity) - ['critical', 'high', 'moderate'].indexOf(b[1].severity))
+    .slice(0, 15)
+    .map(([name, i]) => `${i.severity}: ${name}${i.isDirect ? ' (direta)' : ' (transitiva)'}${i.fixAvailable ? (i.fixAvailable === true ? ' - correcao disponivel' : ` - correcao em ${i.fixAvailable.name}@${i.fixAvailable.version}${i.fixAvailable.isSemVerMajor ? ' (MAJOR)' : ''}`) : ' - sem correcao'}`);
+  const summary = `critica ${v.critical ?? 0}, alta ${v.high ?? 0}, moderada ${v.moderate ?? 0}, baixa ${v.low ?? 0}`;
+  if (v.critical) return add('npm-audit', 'fail', `${summary}. Acione o agente resolved-vulnerability (overrides, sem --force)`, items);
+  if (v.high || v.moderate) return add('npm-audit', 'warn', `${summary}`, items);
+  add('npm-audit', 'pass', `sem vulnerabilidades altas ou criticas (${summary})`);
 }
 
 // ---------- 3. guarda de plataforma (heuristica; o build com prerender e a prova real) ----------
@@ -153,15 +204,17 @@ async function checkBrowser() {
     return add('browser', 'fail', `nao consegui abrir o Chrome: ${error.message.split('\n')[0]}`);
   }
 
+  const seoNotes = new Set();
   const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [], placeholder: [] };
   const shots = join(out, 'screenshots');
+  await rm(shots, { recursive: true, force: true }); // so as desta execucao (a pasta e gerada e ignorada pelo git)
   await mkdir(shots, { recursive: true });
 
   for (const locale of locales) {
     const url = locale === '.' ? `${base}/` : `${base}/${locale}/`;
     for (const theme of themes) {
       for (const width of viewports) {
-        const tag = `${locale}/${theme}/${width}`;
+        const tag = `${locale === '.' ? 'default' : locale}/${theme}/${width}`;
         const context = await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme });
         const page = await context.newPage();
         page.on('console', (m) => m.type() === 'error' && problems.console.push(`${tag}: ${m.text().slice(0, 200)}`));
@@ -172,7 +225,16 @@ async function checkBrowser() {
         await page.evaluate(() => document.fonts.ready);
 
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-        if (overflow > 1) problems.overflow.push(`${tag}: ${overflow}px de rolagem horizontal`);
+        if (overflow > 1) {
+          // Elementos mais externos que passam do viewport (os filhos deles so herdam o problema).
+          const culprits = await page.evaluate(() => {
+            const vw = document.documentElement.clientWidth;
+            const over = new Set([...document.body.querySelectorAll('*')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.right > vw + 1 || r.left < -1); }));
+            const name = (e) => `${e.tagName.toLowerCase()}${e.id ? `#${e.id}` : ''}${[...e.classList].slice(0, 2).map((c) => `.${c}`).join('')}`;
+            return [...over].filter((e) => !over.has(e.parentElement)).slice(0, 3).map((e) => { const r = e.getBoundingClientRect(); return `${name(e)} (esquerda ${Math.round(r.left)}, direita ${Math.round(r.right)}, largura ${Math.round(r.width)})`; });
+          });
+          problems.overflow.push(`${tag}: ${overflow}px de rolagem horizontal${culprits.length ? `; elemento(s) mais externo(s) que passa(m) do viewport: ${culprits.join(' | ')}` : ''}`);
+        }
 
         const broken = await page.evaluate(() => [...document.images].filter((i) => i.complete && i.naturalWidth === 0).map((i) => i.currentSrc || i.src));
         broken.forEach((src) => problems.images.push(`${tag}: ${src}`));
@@ -197,7 +259,8 @@ async function checkBrowser() {
           if (!seo.title) problems.seo.push(`${locale}: <title> vazio`);
           if (!seo.description) problems.seo.push(`${locale}: meta description ausente`);
           if (seo.h1 !== 1) problems.seo.push(`${locale}: ${seo.h1} <h1> (esperado 1)`);
-          if (!seo.canonical) problems.seo.push(`${locale}: link canonical ausente`);
+          if (!seo.canonical && (!owner || owner.spec.project?.domain)) problems.seo.push(`${locale}: link canonical ausente`);
+          else if (!seo.canonical) seoNotes.add('canonical ausente: pendencia por design, o spec do cliente ainda nao tem project.domain');
         }
 
         if (theme === 'light') await keyboardCheck(page, tag, problems.keyboard);
@@ -219,7 +282,7 @@ async function checkBrowser() {
   report('horizontal-overflow', problems.overflow, 'fail', 'sem rolagem horizontal');
   report('broken-images', problems.images, 'fail', 'todas as imagens carregaram');
   report('a11y-axe', problems.axe, 'fail', `axe WCAG A/AA sem violacoes (${scope})`);
-  report('seo-basics', problems.seo, 'warn', 'lang, title, description, h1 unico e canonical presentes');
+  report('seo-basics', problems.seo, 'warn', `lang, title, description e h1 unico presentes${seoNotes.size ? ` (${[...seoNotes].join('; ')})` : ' e canonical presente'}`);
   report('placeholder-content', problems.placeholder, 'warn', 'sem Lorem Ipsum no texto visivel');
   report('keyboard-focus', problems.keyboard, 'fail', 'Tab so pousa em elementos visiveis e nao-inert');
   add('screenshots', 'pass', shots);
@@ -254,10 +317,11 @@ console.log(`Verificando ${project}\n`);
 await checkBuild();
 checkPlatformGuards();
 await checkTests();
+await checkAudit();
 await checkBrowser();
 
 await mkdir(out, { recursive: true });
-const summary = { project, at: new Date().toISOString(), failed: checks.filter((c) => c.status === 'fail').length, checks };
+const summary = { project, spec: owner?.file ?? null, at: new Date().toISOString(), failed: checks.filter((c) => c.status === 'fail').length, checks };
 await writeFile(join(out, 'report.json'), JSON.stringify(summary, null, 2));
 const icon = { pass: 'OK', fail: 'FALHA', warn: 'AVISO', skipped: 'PULADO' };
 const md = [
