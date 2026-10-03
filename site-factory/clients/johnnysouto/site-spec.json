@@ -16,6 +16,7 @@
       "fileKey": "9z2dzCKhlXWqVynN5SEeEM"
     },
     "themes": ["light", "dark"],
+    "docRef": "docs/design-system.md",
     "tokensRef": "docs/design-tokens.css"
   },
   "seo": { "title": "Johnny Souto | Engenheiro de Software" },

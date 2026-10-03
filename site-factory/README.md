@@ -6,12 +6,13 @@ Motor reutilizável para criar sites (hoje: landing pages) em Angular a partir d
 site-factory/
   templates/brief.template.md     formato do brief
   spec/                           site-spec.schema.json + validate.mjs (contrato entre as etapas)
+  ROADMAP.md                      fases e status
   verifier/                       checks executáveis (build, a11y, SEO, layout, teclado)
   clients/<id>/                   brief.md, site-spec.json (um por cliente)
   reports/                        saída do verifier (ignorado pelo git)
 ```
 
-Pipeline: `intake → designer → strategist → builder → verifier` (agentes em `.claude/agents/`). Hoje existem `intake` e `verifier`.
+Pipeline: `intake → designer → strategist → builder → verifier` (agentes em `.claude/agents/`, conhecimento em `.claude/skills/`). Hoje existem `intake`, `designer`, `builder` e `verifier`; o `strategist` ainda é decisão em aberto. Status das fases: `ROADMAP.md`.
 
 ```bash
 cd site-factory/spec && npm install          # primeira vez

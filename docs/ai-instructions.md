@@ -22,7 +22,7 @@ Vulnerabilidades reportadas por `npm audit` devem ser resolvidas preferencialmen
 
 ## Design e Figma
 
-Specs de design (cores, tipografia, espaçamento, sombras, estrutura de seções) vêm de um arquivo Figma fornecido pelo Johnny e são documentadas em `docs/design-system.md`, atualizado por merge incremental (nunca regerado do zero, para não perder notas e pendências já registradas). Procedimento completo de extração via MCP do Figma em `docs/agent-rules/designer.md`.
+Specs de design (cores, tipografia, espaçamento, sombras, estrutura de seções) vêm de um arquivo Figma e são documentadas em `docs/design-system.md`, atualizado por merge incremental (nunca regerado do zero, para não perder notas e pendências já registradas). A extração via MCP do Figma é feita pelo agente `designer` (`.claude/agents/designer.md`).
 
 ## Lições da migração Angular
 
@@ -30,11 +30,11 @@ Bugs reais já ocorreram em `ThemeService` (SSR/prerender e estado persistido) e
 
 ## Migração Angular
 
-O plano de migração para Angular (`docs/PLANO-MIGRACAO-ANGULAR.md`) já está em andamento — decisões de arquitetura, versão e nome de diretório ficam registradas lá, não devem ser repetidas de memória. O scaffold inicial do projeto Angular **dentro deste repositório já existente** (Fase 1 do plano) é feito pelo procedimento em `docs/agent-rules/angular-scaffold.md`, não por um `ng new` avulso — ele garante versão de Node/Angular compatível, isolamento do site legado (sem repositório Git aninhado) e SCSS desde o início. A geração dos componentes Angular de cada seção do site (Fase 2), a partir do que já está documentado em `docs/design-system.md`, é feita pelo procedimento em `docs/agent-rules/angular-components.md` — ele só consome o design já extraído (pelo `designer`) e o projeto já criado (pelo `angular-scaffold`), não faz nenhum dos dois.
+O plano de migração para Angular (`docs/PLANO-MIGRACAO-ANGULAR.md`) já está em andamento — decisões de arquitetura, versão e nome de diretório ficam registradas lá, não devem ser repetidas de memória. Scaffold do projeto e geração dos componentes (a partir do `docs/design-system.md` e do `site-spec.json`) são feitos pelo agente `builder` (`.claude/agents/builder.md`), que consome o design já extraído pelo `designer`.
 
 ## Agentes personalizados
 
-Procedimentos reutilizáveis e mais específicos (não regras gerais) vivem em `docs/agent-rules/`, com pontes por ferramenta em `.github/agents/` (Copilot) e `.claude/agents/` (Claude Code). Lista completa e como adicionar novos agentes: `docs/agent-rules/README.md`.
+Dois grupos. **Pipeline de sites** (Claude Code, prompt direto em `.claude/agents/`): `intake`, `designer`, `builder`, `verifier`, com contratos e templates em `site-factory/` (ver `site-factory/README.md`) e conhecimento reutilizável em `.claude/skills/`. **Procedimentos compartilhados com o Copilot** (`atomics-commits`, `resolved-vulnerability`): conteúdo em `docs/agent-rules/`, com pontes em `.github/agents/` e `.claude/agents/`. Detalhes e como adicionar agentes desse segundo grupo: `docs/agent-rules/README.md`.
 
 ## Uso eficiente de tokens
 
@@ -42,7 +42,7 @@ Minimize o consumo de tokens em todas as interações, sem sacrificar corretude:
 
 - Respostas curtas e diretas — sem repetir informação que já foi dada na conversa, sem seções/resumos redundantes.
 - Ao ler arquivos, prefira ler só o trecho relevante (offset/limit, busca direcionada) em vez do arquivo inteiro, quando o arquivo for grande e a dúvida for pontual.
-- Ao consultar ferramentas com saída potencialmente grande (ex.: `get_metadata` do Figma, logs extensos), salve em arquivo e consulte com `grep`/`jq` em vez de carregar tudo no contexto de uma vez — mesmo princípio já usado em `docs/agent-rules/designer.md`.
+- Ao consultar ferramentas com saída potencialmente grande (ex.: `get_metadata` do Figma, logs extensos), salve em arquivo e consulte com `grep`/`jq` em vez de carregar tudo no contexto de uma vez — mesmo princípio já usado em `.claude/agents/designer.md`.
 - Não cole de volta pro usuário trechos grandes de arquivo/diff que ele já pode ver — referencie por caminho e número de linha.
 - Não gere documentação, comentários de código ou explicações não pedidas explicitamente.
 
