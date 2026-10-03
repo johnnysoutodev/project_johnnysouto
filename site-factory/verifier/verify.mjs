@@ -89,7 +89,7 @@ async function checkTests() {
 }
 
 // ---------- 2b. vulnerabilidades de dependencias ----------
-// Critica = falha; alta/moderada = aviso (o agente resolved-vulnerability corrige via overrides).
+// Critica = falha; alta/moderada = aviso (o agente resolved-vulnerability corrige: atualizacao compativel primeiro, overrides so se preciso).
 async function checkAudit() {
   if (flag('skip-audit')) return add('npm-audit', 'skipped', '--skip-audit');
   let raw;
@@ -113,7 +113,7 @@ async function checkAudit() {
     .slice(0, 15)
     .map(([name, i]) => `${i.severity}: ${name}${i.isDirect ? ' (direta)' : ' (transitiva)'}${i.fixAvailable ? (i.fixAvailable === true ? ' - correcao disponivel' : ` - correcao em ${i.fixAvailable.name}@${i.fixAvailable.version}${i.fixAvailable.isSemVerMajor ? ' (MAJOR)' : ''}`) : ' - sem correcao'}`);
   const summary = `critica ${v.critical ?? 0}, alta ${v.high ?? 0}, moderada ${v.moderate ?? 0}, baixa ${v.low ?? 0}`;
-  if (v.critical) return add('npm-audit', 'fail', `${summary}. Acione o agente resolved-vulnerability (overrides, sem --force)`, items);
+  if (v.critical) return add('npm-audit', 'fail', `${summary}. Acione o agente resolved-vulnerability (atualizacao compativel primeiro, sem --force)`, items);
   if (v.high || v.moderate) return add('npm-audit', 'warn', `${summary}`, items);
   add('npm-audit', 'pass', `sem vulnerabilidades altas ou criticas (${summary})`);
 }
