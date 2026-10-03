@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://site-factory.local/site-spec.schema.json",
+  "title": "site-spec",
+  "description": "Contrato entre intake, designer, builder e verifier. Uma landing page = um site-spec. Texto visivel fica no idioma-fonte (locales.source); traducoes seguem o fluxo de i18n nativo do Angular, nao moram aqui.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "client", "project", "locales", "design", "sections"],
+  "properties": {
+    "specVersion": { "const": "1" },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "slug; mesmo nome da pasta em site-factory/clients/" },
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "goal", "audience"],
+      "properties": {
+        "type": { "enum": ["landing-page"], "description": "Outros formatos (institucional, blog...) entram aqui quando avaliados." },
+        "goal": { "type": "string", "minLength": 1, "description": "A unica acao/resultado que o site existe para provocar." },
+        "audience": { "type": "string", "minLength": 1 },
+        "tone": { "type": "array", "items": { "type": "string" }, "description": "Ex.: profissional, direto, acolhedor." },
+        "domain": { "type": "string", "format": "uri" }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "framework": { "const": "angular" },
+        "projectDir": { "type": "string", "description": "Pasta do projeto Angular gerado, relativa a raiz do repositorio." }
+      }
+    },
+    "locales": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "$ref": "#/$defs/locale" },
+        "targets": { "type": "array", "items": { "$ref": "#/$defs/locale" }, "uniqueItems": true }
+      }
+    },
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["figma", "themes"],
+      "properties": {
+        "figma": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["url", "fileKey"],
+          "properties": {
+            "url": { "type": "string", "pattern": "^https://www\\.figma\\.com/(design|file)/" },
+            "fileKey": { "type": "string", "pattern": "^[A-Za-z0-9]+$", "description": "Extraido da URL pelo intake." }
+          }
+        },
+        "themes": { "type": "array", "items": { "enum": ["light", "dark"] }, "minItems": 1, "uniqueItems": true },
+        "tokensRef": { "type": "string", "description": "Caminho do artefato de tokens gerado pelo designer." }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "ogImage": { "type": "string" }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": { "enum": ["none", "ga4"] },
+        "consentBanner": { "type": "boolean" }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/section" }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Lacunas que o intake nao conseguiu resolver; devem estar vazias antes do builder rodar."
+    }
+  },
+  "$defs": {
+    "locale": { "type": "string", "pattern": "^[a-z]{2}-[A-Z]{2}$", "description": "BCP 47 com regiao, ex.: pt-BR" },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "status"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Vira a ancora (#id) e o nome do componente." },
+        "type": { "enum": ["header", "hero", "about", "skills", "timeline", "projects", "testimonials", "features", "pricing", "faq", "cta", "logos", "stats", "gallery", "contact", "footer"] },
+        "nav": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label"],
+          "properties": { "label": { "type": "string" } }
+        },
+        "figmaNode": { "type": ["string", "null"], "pattern": "^\\d+:\\d+$", "description": "null ate o designer mapear a secao." },
+        "variant": { "type": "string" },
+        "status": { "enum": ["draft", "ready", "migrated"], "description": "migrated = ja implementada antes do site-factory; builder nao regenera." },
+        "content": { "type": "object", "description": "Conteudo no idioma-fonte; forma depende do type (ver allOf)." },
+        "contentRef": { "type": "string", "description": "Alternativa a content: caminho onde o conteudo ja vive (ex.: arquivo .ts de dados)." },
+        "notes": { "type": "string" }
+      },
+      "anyOf": [{ "required": ["content"] }, { "required": ["contentRef"] }],
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "hero" } } }, "then": { "properties": { "content": { "type": "object", "required": ["headline"] } } } },
+        { "if": { "properties": { "type": { "const": "cta" } } }, "then": { "properties": { "content": { "type": "object", "required": ["headline", "action"] } } } },
+        { "if": { "properties": { "type": { "const": "faq" } } }, "then": { "properties": { "content": { "type": "object", "required": ["items"] } } } },
+        { "if": { "properties": { "type": { "const": "contact" } } }, "then": { "properties": { "content": { "type": "object", "required": ["channels"] } } } }
+      ]
+    }
+  }
+}
