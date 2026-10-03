@@ -7,20 +7,24 @@
 | 1 | `site-spec.schema.json`, validador, template de brief, agente `intake` | Feita |
 | 3 | `designer` e `builder` genéricos (substituem `angular-scaffold`/`angular-components`), skill `landing-sections`, formas de `content` por tipo no schema; `figma-map.mjs` (mapa de todas as páginas do Figma por API REST); campo `deploy` agnóstico de provedor; `CHANGELOG.md` + skill `changelog`; templates de deploy `vercel-static` e `aws-static` com `apply.mjs` (só o provedor escolhido); `figma-map.mjs check` (teste de obtenção de dados) | Feita; agentes ainda não exercitados de ponta a ponta |
 | 4 | Orquestração `/build-landing <cliente>`, `status.mjs`, `strategist` pequeno e opcional, modo `contentMode: placeholder` (Lorem Ipsum) e prova com uma segunda landing (fictícia, `studio-aurora`) do zero, sem editar o motor | Feita: prova executada e aprovada (ver resultado abaixo) |
-| 5 | **CI com Playwright:** rodar o `verifier` no GitHub Actions (Chrome já vem nos runners `ubuntu-latest`), bloqueando PR/deploy em falha; hoje o CI não faz build, teste nem lint | Em aberto — a conversar |
+| 5 | **QA visual assistido (local):** skill/agente que abre as páginas com o Playwright, tira as telas de cada seção por tamanho e tema, compara lado a lado com o frame do Figma (imagem do MCP) e mede estilos computados contra os tokens e medidas do documento de design; devolve o que diverge, o usuário decide e o agente ajusta e repete. Cobre o que os checks automáticos não pegam (ex.: texto quebrando no meio da palavra no mobile) e testes de interação por componente | Em aberto — a conversar |
 | 6 | **Regras de engenharia:** como escrever testes unitários e componentes, aprofundamento de clean code; provavelmente skills (`testing-conventions`, `clean-code`) consumidas por `builder` e `verifier` | Ideia — a conversar |
-| 7 | **Template:** duplicar este projeto em outro repositório e transformá-lo em template (motor sem cliente: `.claude/` + `site-factory/` + regras gerais; clientes e o site do johnnysouto ficam fora) | Ideia — a conversar |
+| 7 | **Template:** duplicar este projeto em outro repositório e transformá-lo em template (motor sem cliente: `.claude/` + `site-factory/` + regras gerais; clientes e o site do johnnysouto ficam fora). Inclui a **opção de CI por cliente** (não regra do motor): `verifier` no GitHub Actions e/ou CI leve de lint, testes e build sem navegador | Ideia — a conversar |
 
-## Pendências conhecidas do verifier (candidatas à fase 5 ou depois)
+## Pendências conhecidas do verifier (candidatas à fase 5)
 
 - Lighthouse (performance) e comparação visual com o frame do Figma.
 - Teste Playwright de interação por componente (ex.: abrir o menu mobile e checar foco); o check de teclado atual só vê o foco do Tab.
 
-## Pontos a decidir na fase 5
+## Pontos a decidir na fase 5 (QA visual assistido)
 
-- Em qual workflow roda (`Develop.yaml` no push, ou um workflow de PR), e se reprova o deploy ou só avisa.
-- Como publicar o relatório e os screenshots (artifact do Actions).
-- Tempo de execução: matriz completa (3 idiomas × 2 temas × 3 viewports) ou subconjunto no PR.
+- Ferramenta: Playwright dirigido por um agente/skill, ou as ferramentas do Claude in Chrome contra o `npm start` do usuário (que ele já mantém aberto).
+- O que comparar com o Figma: telas lado a lado vs. medição de estilos computados contra os tokens; pixel diff puro gera falso alarme (renderização de fonte, antialiasing) e não deve ser a base.
+- Como o agente propõe e aplica os ajustes (por seção, com o usuário aprovando cada rodada).
+
+## Decisão registrada (03/10/2026): sem fase de CI com Playwright
+
+O CI com Playwright deixou de ser fase. Para quem trabalha sozinho e já roda o `verifier` pelo pipeline (`/build-landing` o torna obrigatório), ele repetiria os mesmos checks no GitHub com custo recorrente (Chrome nos runners, minutos, falsos alarmes) e ganho pequeno. O deploy de produção já tem aprovação manual, portão de `npm audit` e o build da própria Vercel. Passa a **opção por cliente dentro da fase 7**: faz sentido quando houver mais gente no repositório ou quando o cliente quiser a verificação automática. Em separado e barato, quando fizer falta: CI leve de lint, testes e build sem navegador.
 
 ## Templates de deploy
 
@@ -63,7 +67,7 @@ O que a prova mostrou:
 - `npm audit` do projeto gerado: 0 vulnerabilidades.
 - Custo aproximado em tokens de subagente: intake 20 mil, designer 83 mil, strategist 18 mil, builder 58 mil (+65 mil na correção), verifier 15 mil + 11 mil.
 - Limites do que a prova prova: Figma duplicado do mesmo template (não prova variedade de design); 1 idioma; deploy nunca implantado; nenhuma interação testada.
-- Observação visual que nenhum check automático pega: no mobile o e-mail da seção de contato quebra no meio da palavra (`contato@studioa / urora.example`). Não é falha do verifier; é o tipo de coisa que a comparação visual com o Figma (fase 5/6) deveria cobrir.
+- Observação visual que nenhum check automático pega: no mobile o e-mail da seção de contato quebra no meio da palavra (`contato@studioa / urora.example`). Não é falha do verifier; é o tipo de coisa que o QA visual assistido (fase 5) deveria cobrir.
 
 ## Estado das lacunas da prova (atualizado em 03/10/2026)
 
@@ -77,6 +81,6 @@ O que a prova mostrou:
 **Ainda abertas:**
 
 - Os ajustes do `builder` foram validados passo a passo num projeto novo, mas **não** por uma nova execução completa de `/build-landing`.
-- Comparação visual com o Figma e testes de interação (menu, foco programático): fases 5/6.
+- Comparação visual com o Figma e testes de interação (menu, foco programático): fase 5 (QA visual assistido).
 - ~~`angular-app` com 2 críticas e 3 altas~~ **Resolvido em 03/10/2026** pelo `resolved-vulnerability` reescrito: `npm update` da família `@angular/*` (22.1.x → 22.2.1, dentro da faixa) + `npm audit fix` sem `--force`; `npm audit` 0, só o `package-lock.json` mudou, lint/test/build e `verifier` completo (3 idiomas) aprovados.
 - Ruído do npm 12 na instalação (`npm warn install-scripts ... fsevents`): não vem do build; reportado, não corrigido.
