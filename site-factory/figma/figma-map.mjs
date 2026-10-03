@@ -4,14 +4,18 @@
 //   node figma-map.mjs find --file <file.json> --name <regex> [--type FRAME,COMPONENT]
 //                                                                            busca nos nos ja baixados
 //   node figma-map.mjs node --url <url|fileKey> --ids 316:588,316:194 [--depth 4] [--out <dir>]
-//   node figma-map.mjs check --spec <site-spec.json>                         confere se cada figmaNode do spec existe no Figma
+//   node figma-map.mjs layout --url <url|fileKey> --ids 316:229 [--depth 4]   geometria e auto-layout de cada bloco, relativos ao no (x, y, largura, altura, layoutGrow, espaco, padding)
+//   node figma-map.mjs variants --url <url|fileKey> [--out <dir>]            variantes do design (desktop/mobile x light/dark) e as secoes de cada uma
+//   node figma-map.mjs image --spec <site-spec.json> --variant desktop-light [--scale 1] [--out <dir>]
+//                                                                            renderiza em PNG o frame de cada secao (referencia para QA visual)
+//   node figma-map.mjs check --spec <site-spec.json>                         confere se cada figmaNode (e figmaVariants) do spec existe no Figma
 //   (map/node aceitam --from-file <json> para trabalhar offline com uma resposta ja salva)
 // Token: variavel de ambiente FIGMA_TOKEN ou, se ela nao existir, o arquivo
 // ~/.config/site-factory/.env (fora do repositorio, chmod 600), com a linha FIGMA_TOKEN=...
 // (Figma > Settings > Security > Personal access tokens, escopo file_content:read).
 // Nunca grave o token em arquivo do repositorio.
 import { existsSync, statSync } from 'node:fs';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -189,6 +193,122 @@ async function cmdNode() {
   }
 }
 
+// ---------- geometria e auto-layout (fonte da verdade escrita para comparar com o DOM) ----------
+async function cmdLayout() {
+  const id = normalizeId(opt('ids', ''));
+  const depth = Number(opt('depth', 4));
+  const src = await load('layout');
+  if (!id) {
+    console.error('layout: informe --ids <node> (uma secao)');
+    process.exit(2);
+  }
+  const data = src.fetch ? await api(`/files/${src.key}/nodes?ids=${encodeURIComponent(id)}&depth=${depth}`) : { nodes: { [id]: { document: [...walk(src.document ?? src)].find((w) => w.node.id === id)?.node } } };
+  const root = data.nodes?.[id]?.document;
+  if (!root) {
+    console.error(`layout: no ${id} nao encontrado`);
+    process.exit(1);
+  }
+  const ox = root.absoluteBoundingBox.x;
+  const oy = root.absoluteBoundingBox.y;
+  console.log(`${root.name} [${root.id}] ${Math.round(root.absoluteBoundingBox.width)}x${Math.round(root.absoluteBoundingBox.height)}  (x,y relativos ao no)`);
+  const lines = [];
+  (function visit(n, d) {
+    const b = n.absoluteBoundingBox;
+    if (b && d > 0 && ['FRAME', 'TEXT', 'GROUP', 'INSTANCE', 'COMPONENT', 'RECTANGLE'].includes(n.type)) {
+      const bits = [`x=${Math.round(b.x - ox)}`, `y=${Math.round(b.y - oy)}`, `w=${Math.round(b.width)}`, `h=${Math.round(b.height)}`];
+      if (n.layoutMode && n.layoutMode !== 'NONE') bits.push(`layout=${n.layoutMode.toLowerCase()}`);
+      if (n.layoutGrow) bits.push(`grow=${n.layoutGrow}`);
+      if (n.layoutMode && n.layoutMode !== 'NONE' && n.itemSpacing) bits.push(`gap=${n.itemSpacing}`);
+      const pad = [n.paddingTop, n.paddingRight, n.paddingBottom, n.paddingLeft].map((v) => v ?? 0);
+      if (pad.some(Boolean)) bits.push(`padding=${pad.join('/')}`);
+      if (n.layoutAlign && n.layoutAlign !== 'INHERIT') bits.push(`align=${n.layoutAlign.toLowerCase()}`);
+      if (n.counterAxisAlignItems && n.layoutMode && n.layoutMode !== 'NONE') bits.push(`cross=${n.counterAxisAlignItems.toLowerCase()}`);
+      lines.push(`${'  '.repeat(d - 1)}${n.name.slice(0, 26).padEnd(26)} ${bits.join(' ')}`);
+    }
+    if (d < depth) for (const c of n.children ?? []) visit(c, d + 1);
+  })(root, 0);
+  console.log(lines.join('\n'));
+}
+
+// ---------- variantes do design ----------
+// Um arquivo de design costuma ter a mesma pagina em varias variantes (desktop/mobile x light/dark), lado a lado
+// na pagina de conteudo. Infere o dispositivo e o tema pelo nome do frame (e pela largura) e lista as secoes de cada um.
+function variantOf(frame) {
+  const n = frame.name.toLowerCase();
+  const w = frame.absoluteBoundingBox?.width ?? 0;
+  const device = /mobile|iphone|android|phone|celular/.test(n) ? 'mobile' : /tablet|ipad/.test(n) ? 'tablet' : /desktop|laptop|web|notebook/.test(n) ? 'desktop' : w <= 480 ? 'mobile' : w <= 1024 ? 'tablet' : 'desktop';
+  const theme = /dark|escuro/.test(n) ? 'dark' : 'light';
+  const overlay = /\b(menu|modal|overlay|drawer)\b/.test(n) ? '-menu' : '';
+  return `${device}-${theme}${overlay}`;
+}
+
+async function cmdVariants() {
+  const src = await load('variants');
+  const file = src.fetch ? await api(`/files/${src.key}?depth=3`) : src;
+  const key = src.key ?? fileKeyOf(opt('url')) ?? 'offline';
+  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', key)));
+  await mkdir(out, { recursive: true });
+  const frames = file.document.children.flatMap((p) => pageLikeFrames(p).map((f) => ({ page: p.name, frame: f })));
+  const ids = frames.map((x) => x.frame.id);
+  // Um so pedido com profundidade 2 para ter os filhos diretos (as secoes) de todos os frames.
+  const detail = src.fetch && ids.length ? await api(`/files/${src.key}/nodes?ids=${encodeURIComponent(ids.join(','))}&depth=2`) : null;
+  const result = { fileKey: key, name: file.name, variants: {} };
+  // Frames com dispositivo E tema escritos no nome tem prioridade na chave (um "Group" de capa nao pode tomar `desktop-light`).
+  const explicit = (f) => Number(/mobile|iphone|android|phone|celular|tablet|ipad|desktop|laptop|web|notebook/i.test(f.name)) + Number(/dark|escuro|light|claro/i.test(f.name));
+  const ordered = frames.map((x) => ({ ...x, full: detail?.nodes?.[x.frame.id]?.document ?? x.frame })).sort((a, b) => explicit(b.full) - explicit(a.full));
+  for (const { page, frame, full } of ordered) {
+    let v = variantOf(full);
+    while (result.variants[v]) v += '+';
+    result.variants[v] = {
+      inferred: explicit(full) < 2, frameId: frame.id, frameName: full.name, page, width: Math.round(full.absoluteBoundingBox?.width ?? 0), height: Math.round(full.absoluteBoundingBox?.height ?? 0),
+      sections: (full.children ?? []).map((c) => ({ name: c.name, id: c.id, type: c.type, width: Math.round(c.absoluteBoundingBox?.width ?? 0), height: Math.round(c.absoluteBoundingBox?.height ?? 0) })),
+    };
+  }
+  await writeFile(join(out, 'variants.json'), JSON.stringify(result, null, 2));
+  console.log(`${file.name}: ${Object.keys(result.variants).length} variante(s)\n`);
+  for (const [k, v] of Object.entries(result.variants)) {
+    console.log(`${k.padEnd(18)} ${v.frameId.padEnd(9)} ${v.width}x${v.height}  "${v.frameName}"  (pagina "${v.page}")${v.inferred ? '  [inferido: nome sem dispositivo/tema explicitos]' : ''}`);
+    console.log(`  secoes: ${v.sections.map((s) => `${s.name} [${s.id} ${s.height}px]`).join(', ') || '(nenhuma no nivel direto)'}`);
+  }
+  console.log(`\nJSON: ${join(out, 'variants.json')}`);
+}
+
+// ---------- imagem de referencia (render do Figma) ----------
+async function cmdImage() {
+  const specPath = opt('spec');
+  const variant = opt('variant', 'desktop-light');
+  if (!specPath) {
+    console.error('image: informe --spec <site-spec.json> [--variant desktop-light] [--scale 1]');
+    process.exit(2);
+  }
+  const spec = JSON.parse(await readFile(resolve(specPath), 'utf8'));
+  const key = spec.design.figma.fileKey;
+  const pick = (s) => (s.figmaVariants ?? {})[variant] ?? (variant === 'desktop-light' ? s.figmaNode : null);
+  const wanted = spec.sections.map((s) => ({ id: s.id, node: pick(s) })).filter((w) => w.node);
+  if (!wanted.length) {
+    console.error(`image: nenhuma secao do spec tem node para a variante "${variant}" (figmaVariants).`);
+    process.exit(1);
+  }
+  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', key, 'ref', variant)));
+  await rm(out, { recursive: true, force: true });
+  await mkdir(out, { recursive: true });
+  const scale = opt('scale', '1');
+  const data = await api(`/images/${key}?ids=${encodeURIComponent(wanted.map((w) => w.node).join(','))}&format=png&scale=${scale}`);
+  let missing = 0;
+  for (const w of wanted) {
+    const url = data.images?.[w.node];
+    if (!url) {
+      missing++;
+      console.log(`FALTA  ${w.id.padEnd(14)} ${w.node} (o Figma nao renderizou)`);
+      continue;
+    }
+    const res = await fetch(url); // URL pre-assinada de curta duracao: sem o token
+    await writeFile(join(out, `${w.id}.png`), Buffer.from(await res.arrayBuffer()));
+    console.log(`OK     ${w.id.padEnd(14)} ${w.node}  -> ${join(out, `${w.id}.png`)}`);
+  }
+  if (missing) process.exit(1);
+}
+
 // Teste de obtencao de dados: cada `figmaNode` do spec precisa existir no arquivo do cliente.
 // Sai com codigo 1 se algum faltar; nos que existem mostra nome e tamanho para conferencia humana.
 async function cmdCheck() {
@@ -199,7 +319,7 @@ async function cmdCheck() {
   }
   const spec = JSON.parse(await readFile(resolve(specPath), 'utf8'));
   const key = spec.design?.figma?.fileKey;
-  const wanted = spec.sections.filter((x) => x.figmaNode).map((x) => ({ section: x.id, id: x.figmaNode }));
+  const wanted = spec.sections.flatMap((x) => [...(x.figmaNode ? [{ section: x.id, id: x.figmaNode }] : []), ...Object.entries(x.figmaVariants ?? {}).filter(([, id]) => id !== x.figmaNode).map(([v, id]) => ({ section: `${x.id}:${v}`, id }))]);
   const meta = await api(`/files/${key}?depth=1`);
   console.log(`Arquivo ${key}: "${meta.name}" (${meta.document.children.length} pagina(s)), ultima modificacao ${meta.lastModified}`);
   if (!wanted.length) {
@@ -221,9 +341,9 @@ async function cmdCheck() {
   if (missing) process.exit(1);
 }
 
-const commands = { map: cmdMap, find: cmdFind, node: cmdNode, check: cmdCheck };
+const commands = { map: cmdMap, find: cmdFind, node: cmdNode, layout: cmdLayout, variants: cmdVariants, image: cmdImage, check: cmdCheck };
 if (!commands[command]) {
-  console.error('Uso: node figma-map.mjs <map|find|node|check> [opcoes]  (ver cabecalho do arquivo)');
+  console.error('Uso: node figma-map.mjs <map|find|node|layout|variants|image|check> [opcoes]  (ver cabecalho do arquivo)');
   process.exit(2);
 }
 await commands[command]();

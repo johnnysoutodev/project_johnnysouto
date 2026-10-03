@@ -364,6 +364,14 @@
         },
         "notes": {
           "type": "string"
+        },
+        "figmaVariants": {
+          "type": "object",
+          "description": "Node do frame desta secao em cada variante do design do Figma. Chaves: <dispositivo>-<tema> (desktop-light, desktop-dark, mobile-light, mobile-dark, tablet-light...), com sufixo -menu para overlays. figmaNode continua sendo a variante principal (desktop-light).",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^I?\\d+:\\d+(;\\d+:\\d+)*$"
+          }
         }
       },
       "allOf": [

@@ -5,13 +5,13 @@
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
 // Exit code 1 se qualquer check falhar; `warn` nao falha mas aparece no relatorio.
 import { spawn } from 'node:child_process';
-import { createServer } from 'node:http';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { dirname, extname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import AxeBuilder from '@axe-core/playwright';
+import { findDist, findLocales, findOwnerSpec, serve } from './lib/site.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -26,21 +26,7 @@ const repo = resolve(here, '..', '..');
 // Relatorio sempre em site-factory/reports/latest do repositorio, onde o status.mjs procura (nao depende de onde o projeto mora).
 const out = resolve(opt('out', join(here, '..', 'reports', 'latest')));
 
-// Spec do cliente dono deste projeto (--spec ou descoberto em site-factory/clients/*/site-spec.json pelo build.projectDir).
-function findSpec() {
-  const explicit = opt('spec');
-  if (explicit) return { file: resolve(explicit), spec: JSON.parse(readFileSync(resolve(explicit), 'utf8')) };
-  const clients = join(here, '..', 'clients');
-  if (!existsSync(clients)) return null;
-  for (const id of readdirSync(clients)) {
-    const file = join(clients, id, 'site-spec.json');
-    if (!existsSync(file)) continue;
-    const spec = JSON.parse(readFileSync(file, 'utf8'));
-    if (spec.build?.projectDir && resolve(repo, spec.build.projectDir) === project) return { file, spec };
-  }
-  return null;
-}
-const owner = findSpec();
+const owner = findOwnerSpec(project, opt('spec'));
 const viewports = opt('viewports', '375,768,1440').split(',').map(Number);
 const localeFilter = opt('locales', '')?.split(',').filter(Boolean);
 const themes = ['light', 'dark'];
@@ -144,54 +130,14 @@ function checkPlatformGuards() {
   add('platform-guards', 'pass', 'nenhum acesso a globals de navegador sem guarda');
 }
 
-// ---------- 4. servidor estatico do dist ----------
-const TYPES = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.woff': 'font/woff', '.txt': 'text/plain', '.xml': 'application/xml', '.pdf': 'application/pdf',
-};
-
-function findDist() {
-  const dist = join(project, 'dist');
-  if (!existsSync(dist)) return null;
-  for (const name of readdirSync(dist)) {
-    const browser = join(dist, name, 'browser');
-    if (existsSync(browser)) return browser;
-  }
-  return null;
-}
-
-async function serve(root) {
-  const server = createServer(async (req, res) => {
-    const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    const candidates = [path, `${path}.html`, join(path, 'index.html')];
-    for (const c of candidates) {
-      const file = join(root, c);
-      if (!file.startsWith(root)) break;
-      try {
-        if (statSync(file).isFile()) {
-          res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' });
-          return res.end(await readFile(file));
-        }
-      } catch { /* tenta o proximo */ }
-    }
-    res.writeHead(404, { 'content-type': 'text/plain' });
-    res.end('not found');
-  });
-  await new Promise((ok) => server.listen(0, '127.0.0.1', ok));
-  return { server, base: `http://127.0.0.1:${server.address().port}` };
-}
-
 // ---------- 5. checks no navegador ----------
 const IGNORED_REQUESTS = /google-analytics|googletagmanager|gtag|analytics/i; // sem rede de terceiros no verificador
 
 async function checkBrowser() {
   if (flag('skip-browser')) return add('browser', 'skipped', '--skip-browser');
-  const dist = findDist();
+  const dist = findDist(project);
   if (!dist) return add('browser', 'fail', 'dist nao encontrado - rode sem --skip-build');
-  let locales = readdirSync(dist).filter((n) => statSync(join(dist, n)).isDirectory() && existsSync(join(dist, n, 'index.html')));
-  if (!locales.length && existsSync(join(dist, 'index.html'))) locales = ['.'];
+  let locales = findLocales(dist);
   if (localeFilter?.length) locales = locales.filter((l) => localeFilter.includes(l));
   if (!locales.length) return add('browser', 'fail', 'nenhuma pagina (index.html) encontrada no dist');
 
