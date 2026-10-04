@@ -21,6 +21,6 @@ node verify.mjs --project ../../angular-app
 | `placeholder-content` | (aviso) "Lorem ipsum" no texto visível |
 | `keyboard-focus` | Tab pousando em elemento oculto/inert |
 
-Idiomas são descobertos pelas pastas de `dist/*/browser/<locale>/index.html`; temas via `prefers-color-scheme`. Relatório e screenshots em `site-factory/reports/latest/` para qualquer projeto (ignorado pelo git); as telas são limpas a cada execução e, com um idioma só, levam o prefixo `default_`.
+Idiomas são descobertos pelas pastas de `dist/*/browser/<locale>/index.html`; temas via `prefers-color-scheme`. Relatório e screenshots em `site-factory/reports/latest/` para qualquer projeto, mais uma cópia do relatório por cliente em `site-factory/reports/by-client/<cliente>/report.json` (ignorados pelo git); as telas são limpas a cada execução e, com um idioma só, levam o prefixo `default_`.
 
 Fora do escopo por enquanto: Lighthouse e comparação visual com o Figma.

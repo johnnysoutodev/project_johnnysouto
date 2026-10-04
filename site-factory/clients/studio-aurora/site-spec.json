@@ -32,7 +32,13 @@
       "light",
       "dark"
     ],
-    "docRef": "site-factory/clients/studio-aurora/design-system.md"
+    "docRef": "site-factory/clients/studio-aurora/design-system.md",
+    "variants": [
+      "desktop-light",
+      "desktop-dark",
+      "mobile-light",
+      "mobile-dark"
+    ]
   },
   "seo": {
     "title": "Studio Aurora | Fotografia de retratos e famílias",

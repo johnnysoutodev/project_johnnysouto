@@ -69,6 +69,18 @@ const docRef = spec.design.docRef;
 if (noNode.length) finish('designer', `rodar o agente designer (client-id: ${id}); precisa do token do Figma`, [`secoes sem figmaNode: ${noNode.join(', ')}`]);
 if (todo.length && (!docRef || !existsSync(join(repo, docRef)))) finish('designer', `rodar o agente designer (client-id: ${id}) para gerar o documento de design`, [docRef ? `${docRef} nao existe` : 'design.docRef ausente no spec']);
 
+// 3b. variantes: o designer registra design.variants (o que o Figma tem no escopo); cada secao a construir precisa de figmaVariants
+// para todas e o documento de design de medidas mobile/dark. Sem isso o builder inventaria os valores dessas variantes.
+if (todo.length) {
+  const variants = spec.design.variants ?? [];
+  if (!variants.length) finish('designer', `rodar o agente designer (client-id: ${id}) para registrar design.variants e mapear figmaVariants`, ['design.variants ausente: nao ha registro de quais variantes (desktop/mobile, light/dark) o design tem']);
+  const missingVariants = todo.flatMap((s) => variants.filter((v) => !s.figmaVariants?.[v] && !(v === 'desktop-light' && s.figmaNode)).map((v) => `${s.id}:${v}`));
+  if (missingVariants.length) finish('designer', `rodar o agente designer (client-id: ${id}) para mapear as variantes que faltam`, [`figmaVariants ausentes: ${missingVariants.join(', ')}`]);
+  const doc = readFileSync(join(repo, docRef), 'utf8');
+  const noMeasures = [variants.some((v) => v.startsWith('mobile')) && !/mobile/i.test(doc) && 'mobile', variants.some((v) => v.endsWith('dark')) && !/dark|escuro/i.test(doc) && 'dark', variants.some((v) => v.startsWith('tablet')) && !/tablet/i.test(doc) && 'tablet'].filter(Boolean);
+  if (noMeasures.length) finish('designer', `rodar o agente designer (client-id: ${id}) para extrair as medidas das variantes`, [`documento de design sem nenhuma mencao a: ${noMeasures.join(', ')} (heuristica: procura a palavra no documento)`]);
+}
+
 // 4. strategist: secoes ainda draft (conteudo ou estrutura por definir)
 const drafts = todo.filter((s) => s.status === 'draft').map((s) => s.id);
 if (drafts.length) {
@@ -84,7 +96,8 @@ for (const s of todo) if (!existsSync(folderOf(s))) missing.push(`componente da 
 if (missing.length) finish('builder', `rodar o agente builder (client-id: ${id})`, missing);
 
 // 6. verifier: relatorio do mesmo projeto, sem falhas, sem checks pulados, mais novo que o codigo
-const reportFile = join(here, 'reports', 'latest', 'report.json');
+const byClientFile = join(here, 'reports', 'by-client', id, 'report.json');
+const reportFile = existsSync(byClientFile) ? byClientFile : join(here, 'reports', 'latest', 'report.json');
 const reportBlockers = [];
 if (!existsSync(reportFile)) reportBlockers.push('nenhum relatorio do verifier');
 else {

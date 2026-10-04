@@ -167,6 +167,15 @@
         "docRef": {
           "type": "string",
           "description": "Documento de design-system gerado/mantido pelo designer (ex.: site-factory/clients/<id>/design-system.md)."
+        },
+        "variants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(desktop|tablet|mobile)-(light|dark)$"
+          },
+          "description": "Variantes do design do Figma dentro do escopo, registradas pelo designer (sem overlays -menu nem frames inferidos). Cada secao a construir precisa de figmaVariants para todas elas, e o documento de design de medidas dessas variantes, antes do builder rodar."
         }
       }
     },
