@@ -219,9 +219,30 @@
     "openQuestions": {
       "type": "array",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blocking": {
+                "type": "boolean",
+                "description": "false = pergunta opcional: nao trava o intake nem o --ready. Omitido ou true = bloqueante."
+              }
+            }
+          }
+        ]
       },
-      "description": "Lacunas que o intake nao conseguiu resolver; devem estar vazias antes do builder rodar."
+      "description": "Lacunas que o intake nao conseguiu resolver. Texto simples ou {text, blocking:false} para pergunta opcional. As bloqueantes devem estar vazias antes do builder rodar."
     },
     "deploy": {
       "type": "object",
@@ -373,9 +394,10 @@
           "enum": [
             "draft",
             "ready",
-            "migrated"
+            "migrated",
+            "deferred"
           ],
-          "description": "draft = so estrutura (sem conteudo exigido; bloqueia o builder), ready = aprovada e com conteudo (o builder gera), migrated = ja existe, nao e regenerada."
+          "description": "draft = so estrutura (sem conteudo exigido; bloqueia o builder), ready = aprovada e com conteudo (o builder gera), migrated = ja existe, nao e regenerada, deferred = adiada pelo dono (build parcial): o builder, o status e o verifier a ignoram."
         },
         "content": {
           "type": "object",

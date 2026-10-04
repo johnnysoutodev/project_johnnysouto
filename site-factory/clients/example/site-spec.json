@@ -1,0 +1,61 @@
+{
+  "specVersion": "1",
+  "client": {
+    "id": "example",
+    "name": "Estúdio Exemplo",
+    "email": "contato@exemplo.example"
+  },
+  "project": {
+    "type": "landing-page",
+    "goal": "Levar quem visita a pedir um orçamento pelo e-mail.",
+    "audience": "Pessoas da cidade que comparam opções e ainda não conhecem o estúdio.",
+    "tone": [
+      "acolhedor",
+      "direto"
+    ],
+    "contentMode": "placeholder"
+  },
+  "locales": {
+    "source": "pt-BR"
+  },
+  "design": {
+    "figma": {
+      "url": "https://www.figma.com/design/AbC123xyz/exemplo",
+      "fileKey": "AbC123xyz"
+    },
+    "themes": [
+      "light"
+    ]
+  },
+  "deploy": {
+    "provider": "vercel",
+    "outputMode": "static",
+    "environments": [
+      {
+        "name": "Preview",
+        "branch": "develop"
+      },
+      {
+        "name": "Production",
+        "branch": "main"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "status": "draft"
+    },
+    {
+      "id": "contato",
+      "type": "cta",
+      "status": "draft"
+    }
+  ],
+  "openQuestions": [],
+  "build": {
+    "framework": "angular",
+    "projectDir": "site-factory/sandbox/example"
+  }
+}

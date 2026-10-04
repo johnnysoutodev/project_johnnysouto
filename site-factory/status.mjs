@@ -52,14 +52,22 @@ if (!existsSync(join(dir, 'brief.md'))) {
 if (!existsSync(specFile)) finish('intake', `rodar o agente intake (client-id: ${id})`, ['site-spec.json nao existe']);
 const validate = spawnSync('node', [join(here, 'spec', 'validate.mjs'), specFile], { encoding: 'utf8' });
 if (validate.status !== 0) {
-  finish('intake', `rodar o agente intake para corrigir o spec (client-id: ${id})`, (validate.stderr || validate.stdout).split('\n').filter((l) => l.startsWith('- ')).map((l) => l.slice(2)));
+  const lines = (validate.stderr || validate.stdout).split('\n');
+  const reasons = lines.filter((l) => l.startsWith('- ')).map((l) => l.slice(2));
+  if (!reasons.length) reasons.push(`o validador falhou sem listar erros do spec: ${lines.find((l) => /Error|Cannot find|nao encontrado/i.test(l)) ?? lines.find(Boolean) ?? 'sem saida'} (dependencias instaladas? rode node site-factory/bootstrap.mjs)`);
+  finish('intake', `rodar o agente intake para corrigir o spec (client-id: ${id})`, reasons);
 }
 const spec = JSON.parse(readFileSync(specFile, 'utf8'));
-if (spec.openQuestions?.length) {
-  finish('intake', 'GATE 1: levar as perguntas ao cliente e rodar o intake de novo com as respostas', spec.openQuestions);
+const questions = spec.openQuestions ?? [];
+const questionText = (q) => (typeof q === 'string' ? q : q.text);
+const blockingQuestions = questions.filter((q) => typeof q === 'string' || q.blocking !== false);
+if (blockingQuestions.length) {
+  finish('intake', 'GATE 1: levar as perguntas ao cliente e rodar o intake de novo com as respostas', blockingQuestions.map(questionText));
 }
+questions.filter((q) => typeof q !== 'string' && q.blocking === false).forEach((q) => result.notes.push(`pergunta opcional em aberto: ${questionText(q)}`));
 
-const todo = spec.sections.filter((s) => s.status !== 'migrated');
+const todo = spec.sections.filter((s) => !['migrated', 'deferred'].includes(s.status));
+spec.sections.filter((s) => s.status === 'deferred').forEach((s) => result.notes.push(`secao adiada pelo dono (fora do build): ${s.id}`));
 const projectDir = spec.build?.projectDir;
 if (spec.project.contentMode === 'placeholder') result.notes.push('conteudo em Lorem Ipsum (contentMode placeholder): nao publicar em producao');
 

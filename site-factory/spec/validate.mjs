@@ -42,13 +42,16 @@ const hasLorem = /lorem ipsum/i.test(JSON.stringify(spec.sections ?? []));
 if (hasLorem && spec.project?.contentMode !== 'placeholder') errors.push('/sections: contem "Lorem ipsum" mas project.contentMode nao e "placeholder"');
 
 const open = spec.openQuestions ?? [];
+const blocking = open.filter((q) => typeof q === 'string' || q.blocking !== false);
 const strict = process.argv.includes('--ready');
-if (strict && open.length) errors.push(`--ready: ${open.length} pergunta(s) em aberto em openQuestions`);
-if (strict) spec.sections?.filter((s) => s.status === 'draft').forEach((s) => errors.push(`--ready: secao "${s.id}" ainda e draft`));
+if (strict && blocking.length) errors.push(`--ready: ${blocking.length} pergunta(s) bloqueante(s) em aberto em openQuestions`);
+if (strict) spec.sections?.filter((s) => s.status === 'draft').forEach((s) => errors.push(`--ready: secao "${s.id}" ainda e draft (aprove como ready ou adie como deferred)`));
+if (strict && !spec.sections?.some((s) => s.status === 'ready')) errors.push('--ready: nenhuma secao ready para o builder gerar');
 
 if (errors.length) {
   console.error(`site-spec INVALIDO (${file}):\n- ${errors.join('\n- ')}`);
   process.exit(1);
 }
+const deferred = spec.sections.filter((s) => s.status === 'deferred').length;
 const mode = spec.project?.contentMode === 'placeholder' ? ' [conteudo placeholder]' : '';
-console.log(`site-spec valido: ${spec.sections.length} secao(oes)${open.length ? `, ${open.length} pergunta(s) em aberto` : ''}${mode}${strict ? ' [pronto para o builder]' : ''}`);
+console.log(`site-spec valido: ${spec.sections.length} secao(oes)${open.length ? `, ${open.length} pergunta(s) em aberto (${blocking.length} bloqueante(s))` : ''}${deferred ? `, ${deferred} secao(oes) adiada(s)` : ''}${mode}${strict ? ' [pronto para o builder]' : ''}`);
