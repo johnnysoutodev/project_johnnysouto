@@ -5,7 +5,9 @@ const BEM = '^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+
 const RAW_PX = '/(^|[^\\w.-])\\d*\\.?\\d+px\\b/';
 
 module.exports = {
-  extends: ['stylelint-config-standard-scss'],
+  // Base `recommended` (so previne erro). A `standard` traz regras de FORMATACAO (linha em branco, notacao de cor) que o Prettier
+  // ja cobre e que gerariam retrabalho sem ganho de qualidade.
+  extends: ['stylelint-config-recommended-scss'],
   rules: {
     'selector-class-pattern': [BEM, { resolveNestedSelectors: true, message: 'Use BEM: .bloco, .bloco__elemento, .bloco--modificador.' }],
     'selector-max-id': 0,
@@ -32,7 +34,7 @@ module.exports = {
   overrides: [
     { files: ['src/styles/_tokens.scss'], rules: { 'color-no-hex': null, 'function-disallowed-list': null, 'declaration-property-value-disallowed-list': null, 'selector-class-pattern': null } },
     { files: ['src/styles/_breakpoints.scss'], rules: { 'at-rule-disallowed-list': null } },
-    // Reset e elementos globais (`*, *::before, *::after`, `html`, `body`) sao exatamente o papel do _base.scss.
-    { files: ['src/styles/_base.scss'], rules: { 'selector-max-universal': null, 'selector-max-type': null } },
+    // Reset e elementos globais (`*, *::before, *::after`, `html`, `body`) sao exatamente o papel do _base.scss (ou do styles.scss global).
+    { files: ['src/styles/_base.scss', 'src/styles.scss'], rules: { 'selector-max-universal': null, 'selector-max-type': null } },
   ],
 };

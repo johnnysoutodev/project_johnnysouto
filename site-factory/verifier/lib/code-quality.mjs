@@ -7,6 +7,7 @@
 //  - Nada solto: token usado e nao definido, componente sem arquivo, logica sem spec.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { join, relative } from 'node:path';
 
 const MAX_UI_BRANCHES = 3;
@@ -58,7 +59,7 @@ function lintCheck(project) {
 
 function stylelintCheck(project) {
   if (!existsSync(join(project, 'node_modules', '.bin', 'stylelint')) || !['stylelint.config.cjs', 'stylelint.config.js', '.stylelintrc.json'].some((f) => existsSync(join(project, f)))) {
-    return { id: 'stylelint', status: 'fail', detail: 'Stylelint nao configurado (aplique templates/angular/stylelint.config.cjs e instale stylelint + stylelint-config-standard-scss)', items: [] };
+    return { id: 'stylelint', status: 'fail', detail: 'Stylelint nao configurado (aplique templates/angular/stylelint.config.cjs e instale stylelint + stylelint-config-recommended-scss)', items: [] };
   }
   const r = run('npx', ['stylelint', 'src/**/*.scss', '--formatter', 'json'], project);
   let results = [];
@@ -134,17 +135,68 @@ function componentFiles(project, ui) {
 
 
 // BEM de verdade: toda classe do SCSS de um componente leva o nome do bloco (o nome do arquivo): .hero, .hero__texto, .hero--destaque.
-function bemBlocks(project) {
+// Resolve o aninhamento (`&__texto`, `&--destaque`) com o parser de SCSS do proprio Stylelint: sem isso, BEM errado escrito
+// com `&` ficaria invisivel (a regra do Stylelint e uma regex por texto nao resolvem o `&`). Sem o parser, cai na regex.
+function resolvedSelectors(project, file) {
+  let postcssScss;
+  try {
+    postcssScss = createRequire(join(project, 'package.json'))('postcss-scss');
+  } catch {
+    return null;
+  }
+  const root = postcssScss.parse(readFileSync(file, 'utf8'));
+  const out = [];
+  const visit = (node, parents, ctx) => {
+    for (const child of node.nodes ?? []) {
+      if (child.type === 'rule') {
+        const own = child.selectors.map((s) => s.trim());
+        const full = parents.length
+          ? own.flatMap((s) => parents.map((p) => (s.includes('&') ? s.replaceAll('&', p) : `${p} ${s}`)))
+          : own;
+        const list = [...full].sort().join(', ');
+        out.push(...full.map((selector) => ({ selector, list, line: child.source?.start?.line, ctx })));
+        visit(child, full, ctx);
+      } else if (child.type === 'atrule') visit(child, parents, `${ctx}@${child.name} ${child.params};`);
+    }
+  };
+  visit(root, [], '');
+  return out;
+}
+
+export function bemBlocks(project) {
   const bad = [];
   const files = walk(join(project, 'src', 'app'), (p) => p.endsWith('.scss'));
+  let resolved = true;
   for (const f of files) {
     const block = f.split('/').pop().replace(/\.scss$/, '');
     const ok = new RegExp(`^${block}(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$`);
-    const text = strip(readFileSync(f, 'utf8')).replace(/@(use|forward|import)[^;]*;/g, '').replace(/url\([^)]*\)/g, '').replace(/['"][^'"]*['"]/g, '');
-    const classes = new Set([...text.matchAll(/(?<![\w\d.-])\.([a-z][a-z0-9_-]*)/gi)].map((m) => m[1]));
-    for (const c of classes) if (!ok.test(c)) bad.push(`${relative(project, f)}: .${c} (esperado .${block}, .${block}__elemento ou .${block}--modificador)`);
+    const rel = relative(project, f);
+    const sels = resolvedSelectors(project, f);
+    let found;
+    if (sels) {
+      found = sels.flatMap(({ selector, line }) => [...selector.matchAll(/\.([A-Za-z][\w-]*)/g)].map((m) => ({ cls: m[1], line, selector })));
+      const seen = new Map();
+      for (const { list, line, ctx } of sels) {
+        // Duplicata = a LISTA inteira de seletores de duas regras igual, no MESMO contexto (como o no-duplicate-selectors do Stylelint):
+        // `.a, .b { ... }` seguido de `.a { ... }` e idioma legitimo, e o mesmo seletor dentro de @include mobile-only e a versao mobile.
+        const key = `${ctx}|${list}`;
+        if (seen.has(key) && seen.get(key) !== line) bad.push(`${rel}:${line}: regra duplicada ${list}${ctx ? ` (em ${ctx.replace(/;$/, '')})` : ''} (agrupe as declaracoes)`);
+        if (!seen.has(key)) seen.set(key, line);
+      }
+    } else {
+      resolved = false;
+      const text = strip(readFileSync(f, 'utf8')).replace(/@(use|forward|import)[^;]*;/g, '').replace(/url\([^)]*\)/g, '').replace(/['"][^'"]*['"]/g, '');
+      found = [...new Set([...text.matchAll(/(?<![\w\d.-])\.([a-z][a-z0-9_-]*)/gi)].map((m) => m[1]))].map((cls) => ({ cls }));
+    }
+    const reported = new Set();
+    for (const { cls, line } of found) {
+      if (ok.test(cls) || reported.has(cls)) continue;
+      reported.add(cls);
+      bad.push(`${rel}${line ? `:${line}` : ''}: .${cls} (esperado .${block}, .${block}__elemento ou .${block}--modificador, minusculas)`);
+    }
   }
-  return bad.length ? { id: 'bem-block', status: 'fail', detail: `${bad.length} classe(s) fora do bloco BEM do componente`, items: items(bad, 40) } : { id: 'bem-block', status: 'pass', detail: `todas as classes de ${files.length} SCSS de componente seguem o bloco BEM do arquivo`, items: [] };
+  const how = resolved ? 'aninhamento resolvido' : 'sem o parser de SCSS: so classes escritas por inteiro (instale o stylelint)';
+  return bad.length ? { id: 'bem-block', status: 'fail', detail: `${bad.length} problema(s) de BEM ou duplicacao (${how})`, items: items(bad, 40) } : { id: 'bem-block', status: 'pass', detail: `todas as classes de ${files.length} SCSS de componente seguem o bloco BEM do arquivo, sem seletor duplicado (${how})`, items: [] };
 }
 
 function tokenChecks(project) {
