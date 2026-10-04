@@ -23,6 +23,10 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - `design.variants` no `site-spec`; o `status.mjs` não libera o `builder` enquanto faltar variante mapeada ou medida de mobile/dark no documento de design.
 - Relatório do verifier também por cliente (`reports/by-client/`); o `status.mjs` passa a ler o do cliente certo.
 - Convenção de contato na skill `landing-sections`: telefone sem quebra; e-mail quebra só antes do `@`.
+- Fase 7a: template de repositório. `site-factory/template/` (manifesto, arquivos genéricos e `export.mjs`, que gera e verifica o template contra vazamento e referência quebrada), `site-factory/bootstrap.mjs` (pré-requisitos e dependências), cliente `example`, CI opcional `templates/ci/code-quality.yaml` e `templates/angular/i18n-multilocale.md`. O template passa a ser a fonte do motor; a prova com outro Figma é a fase 7b.
+- Agentes, skills e docs do motor generalizados (sem referência ao site e ao cliente pessoais).
+- Fase 7b (prova do template com o Figma do OrangeBank, cópia descartável): `figma-map.mjs assets` exporta ícones, logos e imagens listados em `clients/<id>/assets.json` para `public/assets/`; `figma/contrast.mjs` confere o contraste WCAG dos pares de cor do Figma antes do `builder` (o `designer` passa a entregar a seção "Contraste"); seção `status: deferred` e `openQuestions` opcionais (`{text, blocking:false}`) permitem build parcial e não travam o `status.mjs`; `validate.mjs --ready` exige ao menos uma seção `ready`; `apply.mjs` cria o `.nvmrc`; a receita do `builder` cobre `outputMode: static` (remove as sobras do `--ssr`) e a fonte self-hosted. Testes: `node --test site-factory/spec/validate.test.mjs site-factory/figma/lib/*.test.mjs`.
+- `intake` deixa de perguntar ao usuário o que é do pipeline (quem extrai e aprova os textos).
 - Campo `deploy` no `site-spec` (provedor, formato do build, ambientes), para o pipeline ser agnóstico de provedor.
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
