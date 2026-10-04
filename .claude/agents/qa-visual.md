@@ -14,6 +14,7 @@ Você é o `qa-visual` do site-factory. É a etapa de **olhar**: compara o site 
 
 1. Referências do Figma: `node site-factory/figma/figma-map.mjs image --spec site-factory/clients/<id>/site-spec.json --variant <variante>` (renderiza cada seção na largura real do design; precisa do token, que o script lê sozinho).
 2. Captura: `node site-factory/verifier/qa-capture.mjs --project <build.projectDir> --variant <variante> [--sections a,b]`. Gera, em `site-factory/reports/qa/<id>/<variante>/`, o recorte de cada seção, `measures.json` e `summary.md` (altura renderizada vs. altura no Figma e achados automáticos: palavra quebrada, texto cortado, imagem deformada, alvo pequeno).
+3. **Lado a lado** (é o que o dono abre): `node site-factory/verifier/qa-compose.mjs --ref site-factory/reports/figma/<fileKey>/ref/<variante> --shots site-factory/reports/qa/<id>/<variante> --out site-factory/reports/qa/<id> [--bg '#16181a' em variante dark]`. Gera `<secao>-lado-a-lado.png` (Figma à esquerda, site à direita, sobre o fundo do tema). Sem este passo o relatório não tem como o dono ver; não improvise outra ferramenta.
 
 ## Análise, seção por seção
 
@@ -23,9 +24,15 @@ Você é o `qa-visual` do site-factory. É a etapa de **olhar**: compara o site 
 3. **Divergência intencional não é bug.** Leia no documento de design a parte de decisões e divergências intencionais (conteúdo real vs. Figma, decisões já aprovadas). O que estiver lá vai para "Esperado", não para a lista de problemas.
 4. **Conteúdo placeholder muda a altura** (`project.contentMode: placeholder`): diferença de altura sozinha não é defeito. Só reporte se a composição, o espaçamento ou a quebra de linha diferirem de forma visível. Ignore diferenças menores que ~4px.
 
+## Capturas novas em toda rodada
+
+Gere sempre capturas novas (`qa-capture`) e confirme que o md5 dos PNGs das seções alteradas mudou; reaproveitar a captura da rodada anterior faz o "antes e depois" ficar idêntico. Uma variante que você NÃO recapturou (ex.: `mobile-light` de uma rodada antiga) fica velha na pasta: apague-a ou marque no relatório que é de rodada anterior, para ninguém abrir captura velha achando que é a atual.
+
+**Com imagens reais** (depois que os assets entram) o foco muda: proporção e enquadramento das fotos, tamanho de mockup, efeitos (brilho, blend, saturação, rotação: peça os valores ao `designer` com `figma-map.mjs fx`), recorte de fundos e aparência de qualquer gradiente sob texto (faixa com borda reta, hero mais escuro que o Figma). Confira também as capturas de página inteira do `verifier` (menor viewport e tema escuro) por áreas em branco.
+
 ## Relatório
 
-Grave (merge incremental; cada execução é uma "Rodada" nova, nunca apague as anteriores; notas válidas só para uma rodada ficam dentro dela, não no topo do arquivo; itens refutados ou já resolvidos não contam no limite de itens) em `site-factory/clients/<id>/qa-report.md`, com itens numerados e estáveis (`QA-1`, `QA-2`...):
+Grave em **`site-factory/reports/qa/<id>/report.md`** (um arquivo por rodada; **antes de gravar, preserve a rodada anterior** com `cp -R site-factory/reports/qa/<id> site-factory/reports/qa/<id>-rodada-N`; notas válidas só para uma rodada ficam nela). A numeração dos itens é estável **entre rodadas** (`QA-1`, `QA-2`... nunca reinicie; item que voltou como "depende do usuário" já respondido pelo dono não volta como pergunta: leia as respostas registradas no documento de design e no `build-log`). Estrutura:
 
 - **Bugs objetivos:** achados automáticos e defeitos visíveis (rolagem horizontal, texto cortado ou quebrado no meio da palavra, sobreposição, elemento ausente, cor fora do token). Cada um com seção, evidência (valores medidos) e arquivo provável (`<projectDir>/src/app/features/<id>/`).
 - **Diferenças do design:** onde o renderizado foge do Figma sem estar em "decisões intencionais". Evidência: esperado X (fonte), renderizado Y. Severidade: alta (muda a composição), média (espaçamento ou tipografia perceptível), baixa (detalhe).
@@ -56,7 +63,7 @@ Caminho do relatório, contagem por grupo, e os 3 itens mais importantes. **Não
 
 ## Limites
 
-- Não edita código, `docs/` nem o spec; só grava o `qa-report.md`.
+- Não edita código, `docs/` nem o spec; só grava em `site-factory/reports/qa/<id>/`.
 - Comparação é lado a lado e por medição; não faz pixel diff (renderização de fonte e antialiasing geram falso alarme).
 - Só analisa as variantes que têm referência no Figma. Para `desktop-light`, o `figmaNode` da seção basta (é a variante principal); para qualquer outra, é preciso `figmaVariants` no spec: sem ele, reporte a lacuna (é do `designer`) e não improvise.
 - Se o documento de design não tem a parte de "Decisões e divergências intencionais", diga isso no relatório e monte o "Esperado" só com o que o documento e o spec afirmam; nunca trate como aprovada uma divergência que ninguém registrou.
