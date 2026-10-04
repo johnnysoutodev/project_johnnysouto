@@ -15,7 +15,15 @@ Conteúdo do template (nome "Sagar", textos, fotos, e-mail, telefone) é placeho
 | sobre | About | `316:229` | `327:1830` | 962px |
 | contato | Contact me | `316:537` | `327:2116` | 560px |
 
-`figmaNode` no spec = node Light. Seções empilhadas sem gap. Mobile existe no Figma (`327:417` light) mas não foi extraído (fora do escopo).
+`figmaNode` no spec = node Light. Seções empilhadas sem gap. Variantes mobile/dark mapeadas em `figmaVariants` (ver tabela abaixo e seção 6.1).
+
+| Seção | desktop-light | desktop-dark | mobile-light (375px) | mobile-dark (375px) | Altura mobile |
+| --- | --- | --- | --- | --- | --- |
+| hero | `316:194` | `327:1807` | `327:419` | `327:2149` | 880px |
+| sobre | `316:229` | `327:1830` | `327:442` | `327:2172` | 1690px |
+| contato | `316:537` | `327:2116` | `327:728` | `327:2463` | 472px |
+
+Frames: mobile-light `327:417`, mobile-dark `327:2147` ("Home / Mobile (iPhone 8)"). Overlays `-menu` não se aplicam (site sem header/menu).
 
 ## 2. Layout
 
@@ -34,7 +42,7 @@ Conteúdo do template (nome "Sagar", textos, fotos, e-mail, telefone) é placeho
 | Borda da foto (8px) | igual ao fundo da seção | igual ao fundo da seção |
 | Ponto "disponível" | `#10b981` (fixo) | idem (assumido: não há variável) |
 
-Dark verificado nas variáveis dos frames Hero, About (`327:1807`, `327:1830`); Contact dark (`327:2116`) não foi lido separadamente, assume a mesma troca de tokens do hero (fundo Default).
+Dark verificado por `get_variable_defs` em Hero, About e Contact (desktop e mobile): Contact dark (`327:2116`/`327:2463`) usa Gray/Dark/Default, 200, 600 e 900, igual ao mapeamento acima.
 
 ## 4. Tipografia (Inter; Google Font, sem arquivo local)
 
@@ -82,6 +90,46 @@ Nenhuma sombra nestas 3 seções.
 - Coluna de contatos (gap 16, centralizada): linhas Email e Telefone, cada uma: ícone 32 + texto H2 Gray/900 + Icon Button 44 (ícone externo/copiar 32), gap 20. Alturas 44. Para o cliente: e-mail `contato@studioaurora.example` e WhatsApp (ícone phone, link `wa.me`) em vez de telefone.
 - Social: texto Body2 Gray/600 ("Você também me encontra...") + Links (3 Icon Buttons 36, gap 4), gap 8.
 
+## 6.1 Mobile (375px) e Dark: o que muda
+
+Medidas extraídas de `figma-map.mjs layout` nos frames mobile (`327:419`, `327:442`, `327:728`); fontes via MCP. Tema dark do mobile usa exatamente os mesmos tokens do dark desktop (confirmado por `get_variable_defs` em `327:2149`, `327:2172`, `327:2463`); o mobile-dark só troca as cores.
+
+**Global mobile:** padding de seção **64px vertical / 16px lateral** (desktop: 96/80); Container sem os 32px extras, largura útil 343px. Tag, Icon Button 36x36 e demais componentes iguais ao desktop. Foto com moldura menor (veja por seção). Tudo empilha em uma coluna.
+
+### Hero mobile (`327:419`, 375x880)
+- Container coluna, gap 48, largura 343. **A foto vem ANTES do texto** (desktop: texto à esquerda, foto à direita).
+- Pic Container centralizado, 280x300: Background 280x280 em offset (esq 0, topo 20); Pic 240x280 em offset (esq 20, topo 0). Borda 8px na cor do fundo. (Desktop: ambos 280x320, offset 40/40.)
+- Coluna de texto (gap 48, 343 de largura): Content (gap 8) com H1 + parágrafo; Group (gap 8): Location e Hire (linha 24px, gap 8); Actions: Links (Icon Buttons 36, gap 4), alinhados à esquerda.
+- **Tipografia:** H1 = Heading/H1/Semi Bold Mobile **600, 36/40, letter-spacing 0**, não quebra linha no template (desktop: 700, 60/72, -0.02em). Parágrafo Body2 16/24 (igual). Alturas: Content 216 (placeholder), Group 56, Actions 36.
+- Dark: fundo `#030712`; H1 `#f9fafb`; parágrafo/localização/disponibilidade/ícones `#d1d5db`; borda da foto `#030712`; Background da foto `#374151`; ponto `#10b981` fixo.
+
+### Sobre mobile (`327:442`, 375x1690)
+- Container coluna centralizada, gap **24** (desktop: 48). Linha 1: Tag centralizada (28px). Linha 2: coluna, gap 48.
+- **Foto vem ANTES do texto.** Pic Container centralizado 320x380: Background 320x360 (esq 0, topo 20), Pic 280x360 (esq 20, topo 0). Borda 8px na cor do fundo (Gray/50). (Desktop: 400x480.)
+- Texto (gap 24): H3 = Heading/H3 Semi Bold Tablet & Mobile **600, 24/32, letter-spacing -0.02em** (desktop: 30/36). Content (gap 16): parágrafos Body2 16/24, links sublinhados; **checklist continua em 2 colunas** (gap 10, `list-disc` recuo 24).
+- Dark: fundo `#111827` (Gray/Dark/50); H3 `#f9fafb`; texto `#d1d5db`; Tag fundo `#374151` texto `#d1d5db`; Background da foto `#374151`; borda da foto `#111827`.
+
+### Contato mobile (`327:728`, 375x472)
+- Container coluna centralizada, gap **24** (desktop: 48). Cabeçalho (gap 16): Tag (28) + parágrafo centralizado.
+- Parágrafo: Subtitle/Normal 400, **20/28** (igual ao desktop), largura 343, placeholder quebra em 4 linhas (h112).
+- Linhas de contato (Email 36px, Phone 36px, **sem gap entre elas**): ícone **24** (desktop: 32) + texto + Icon Button **36** (desktop: 44), gap **16** (desktop: 20). Texto = Heading/H2 Tablet & Mobile **600, 18/28, letter-spacing -0.02em** (desktop: 36/40). Colunas centralizadas (x 22 / 67).
+- Social (gap 8): texto Body2 Gray/600 + Links (3 Icon Buttons 36, gap 4), centralizados, largura 312.
+- Dark: fundo `#030712`; e-mail/telefone `#f9fafb`; parágrafo, Body2 e ícones `#d1d5db`; Tag fundo `#374151`.
+
+### Resumo de diferenças desktop -> mobile
+| Item | Desktop | Mobile |
+| --- | --- | --- |
+| Padding de seção | 80 lat / 96 vert | 16 lat / 64 vert |
+| Altura hero / sobre / contato | 552 / 962 / 560 | 880 / 1690 / 472 |
+| Hero e Sobre: ordem | texto + foto lado a lado | foto acima, texto abaixo, gap 48 |
+| Foto hero | 280x320, offset 40/40 | 240x280 + bg 280x280, offset 20/20 |
+| Foto sobre | 400x480 | 280x360 + bg 320x360 |
+| H1 hero | 700 60/72 | 600 36/40, sem letter-spacing |
+| H3 sobre | 600 30/36 | 600 24/32 |
+| Texto e-mail/telefone | H2 600 36/40 | 600 18/28 |
+| Ícone / Icon Button contato | 32 / 44 | 24 / 36 |
+| Gap do container (sobre, contato) | 48 | 24 |
+
 ## 7. Assets exportados
 
 Salvos em `site-factory/sandbox/studio-aurora/public/assets/icons/`. SVGs vêm com `stroke="#4B5563"` (tema light). Para dark (`#D1D5DB`), usar CSS `mask-image` com `background-color: currentColor` ou inline SVG; não usar `<img>` direto.
@@ -101,13 +149,15 @@ Origem dos arquivos: URLs de assets do get_design_context (SVG limpo do ícone, 
 ## 8. Pendências
 
 - [ ] Estados hover/focus dos Icon Buttons não definidos no Figma.
-- [ ] Variantes mobile (`327:417`) e breakpoints: fora do escopo desta execução.
+- [x] Variantes mobile e dark mapeadas e documentadas (2026-10-03). [ ] Breakpoints intermediários (tablet) não existem no Figma (só 375 e 1440); definir ponto de troca no builder.
 - [ ] Ícones de Instagram/WhatsApp não existem no template.
-- [ ] Contact dark (`327:2116`) não inspecionado individualmente.
+- [x] Contact dark inspecionado (2026-10-03).
 
 ## 9. Log
 
 - 2026-10-03: criação do documento (hero, sobre, contato; tokens light/dark; 7 ícones).
+
+- 2026-10-03: variantes mobile (375px) e dark mapeadas em `figmaVariants`; medidas mobile e tokens dark das 3 seções documentados (seção 6.1); pendências de mobile e Contact dark resolvidas.
 
 ## 10. Decisões e divergências intencionais
 

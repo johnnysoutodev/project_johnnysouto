@@ -50,3 +50,22 @@ Correção (só no sandbox): `photo-frame.scss` com `max-width: 100%` no host e 
 
 **QA-10 resolvido (seção "sobre").** Causa: no Figma a Row interna tem duas colunas iguais (w=584, grow=1, gap 48), mas no código só a coluna do texto crescia (`flex: 1 1 444px`) e a moldura da foto (440px) era item direto do flex sem crescer; o texto ocupava 728px a partir de x=600 em vez de 584px a partir de x=744.
 Correção (`features/sobre/`): a moldura ganhou uma coluna própria `.pic` (template) e `.pic`/`.text` compartilham `flex: 1 1 584px; min-width: 0`; `.pic` alinha a moldura à esquerda. No mobile ambas com `flex-basis: 100%` (empilhadas, sem rolagem horizontal). QA-1/QA-2 preservados (container e `align-items: flex-start` intactos). Sem divergência intencional nova.
+
+## 2026-10-03: correções automáticas, mobile lote 1 (QA-11, 12, 13, 15, 17)
+
+Fonte: qa-report.md Rodada 4 e design-system.md 6.1. Só abaixo de 768px; desktop inalterado.
+- QA-11: o mixin `content-container` mantinha `padding-inline: 32px` no mobile. Agora usa `--space-4` (16px) abaixo de 768px (conteúdo 343 em 375). Arquivo: `src/styles/_layout.scss`.
+- QA-12: no mobile o `.container` do hero vira coluna (sem wrap, `.text` com `flex: none`, sem max-width) e `app-photo-frame` recebe `order: -1`. Arquivo: `hero.scss`.
+- QA-13/QA-15: `photo-frame` ganhou inputs `mobileWidth`/`mobileHeight` e, abaixo de 768px, offset de 20px com geometria espelhada (bloco em (0,20) com largura total, foto em (20,0)). Hero: container 280x300, bloco 280x280, foto 240x280. Sobre: 320x380, bloco 320x360, foto 280x360, `.pic` centralizado. Arquivos: `photo-frame.ts`, `photo-frame.scss`, `hero.html`, `sobre.html`, `sobre.scss`.
+- QA-17: `.container` do sobre com `gap: var(--space-6)` (24) no mobile; `.columns` mantém 48. Arquivo: `sobre.scss`.
+- Fora do lote (lote 2): QA-14, 16, 18, 19, 20, 21.
+- Validação: lint, test (9 passed) e `npx ng build` sem warnings/erros.
+
+## 2026-10-03 correções automáticas, mobile lote 2 (QA-14, 16, 18, 19, 20)
+
+- QA-14: `hero.scss` mobile: `font: 600 36px/40px var(--font-family); letter-spacing: 0` (medido 600, 36/40, normal).
+- QA-16: `sobre.scss` mobile: h2 24/32 (medido 24px 600).
+- QA-18: `contato.scss` mobile: `.container` gap 24 (medido 24/24).
+- QA-19: `Icon` passou a dimensionar por `--icon-size` (fallback 24; `size` numérico segue funcionando; `null` delega ao CSS). `icon-button` large: 44/32 no desktop, 36/24 no mobile; ícone do canal 32 desktop, 24 mobile; `.channels` gap 0, `li` gap 16 e min-height 36; `.value` 18/28. Medido: linhas 36px (e-mail 56 por quebra), ícone 24, botão 36.
+- QA-20: telefone resolvido (152px, 1 linha; Figma 149). E-mail AINDA quebra: `span.value` 251x56 (2 linhas); não tratado (QA-21, decisão do usuário).
+- Desktop conferido por captura (ícone 32, botão 44; sem achados). Lint, test (9) e `ng build` sem warnings/erros.

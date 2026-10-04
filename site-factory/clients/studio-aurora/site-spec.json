@@ -62,6 +62,12 @@
       "type": "hero",
       "status": "ready",
       "figmaNode": "316:194",
+      "figmaVariants": {
+        "desktop-light": "316:194",
+        "desktop-dark": "327:1807",
+        "mobile-light": "327:419",
+        "mobile-dark": "327:2149"
+      },
       "notes": "Frame \"Hero\" do Figma: apresentação do estúdio e botão de contato. Conteúdo placeholder a cargo do strategist.",
       "content": {
         "tag": "Lorem ipsum",
@@ -90,6 +96,12 @@
       "type": "about",
       "status": "ready",
       "figmaNode": "316:229",
+      "figmaVariants": {
+        "desktop-light": "316:229",
+        "desktop-dark": "327:1830",
+        "mobile-light": "327:442",
+        "mobile-dark": "327:2172"
+      },
       "notes": "Frame \"About\" do Figma: quem é a fotógrafa e como é um ensaio. Conteúdo placeholder a cargo do strategist.",
       "content": {
         "tag": "Lorem ipsum",
@@ -114,6 +126,12 @@
       "type": "contact",
       "status": "ready",
       "figmaNode": "316:537",
+      "figmaVariants": {
+        "desktop-light": "316:537",
+        "desktop-dark": "327:2116",
+        "mobile-light": "327:728",
+        "mobile-dark": "327:2463"
+      },
       "notes": "Frame \"Contact me\" do Figma: e-mail (contato@studioaurora.example) e WhatsApp. Número de WhatsApp não informado: usar placeholder. Conteúdo a cargo do strategist.",
       "content": {
         "tag": "Lorem ipsum",
