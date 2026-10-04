@@ -1,6 +1,6 @@
 // Verificador generico de sites Angular. Uso:
 //   node verify.mjs --project ../../angular-app [--out <dir>] [--skip-build] [--skip-tests]
-//                   [--skip-browser] [--skip-audit] [--skip-interactions] [--skip-quality] [--audit-from <npm-audit.json>]
+//                   [--skip-browser] [--skip-audit] [--skip-interactions] [--skip-quality] [--audit-dev-from <json>] [--audit-from <npm-audit.json>]
 //                   [--spec <site-spec.json>] [--locales pt-br,en-us] [--viewports 375,768,1440]
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
 // Exit code 1 se qualquer check falhar; `warn` nao falha mas aparece no relatorio.
@@ -79,10 +79,12 @@ async function checkAudit() {
   if (flag('skip-audit')) return add('npm-audit', 'skipped', '--skip-audit');
   const from = opt('audit-from');
   if (!from && !existsSync(join(project, 'package-lock.json'))) return add('npm-audit', 'warn', 'sem package-lock.json: nada a auditar (versione o lockfile)');
-  // Dois olhares: o que vai para producao (dependencias de execucao) decide o portao; ferramenta de desenvolvimento
-  // (stylelint, eslint, vitest...) nunca chega ao artefato publicado e so avisa, para nao enterrar o sinal real.
+  // Dois olhares, para um aviso fixo de ferramenta nao enterrar o sinal de producao: dependencias de execucao (vao para o site)
+  // e ferramentas de desenvolvimento (stylelint, eslint, vitest...). Em AMBOS a critica reprova (ferramenta de build comprometida
+  // executa codigo na maquina e no CI); alta e moderada so avisam. Decisao do dono do projeto.
   audit('npm-audit', 'dependencias de producao', from ?? (await run('npm', ['audit', '--json', '--omit=dev'], project)).output, true, from);
-  if (!from) audit('npm-audit-dev', 'ferramentas de desenvolvimento', (await run('npm', ['audit', '--json', '--include=dev'], project)).output, false);
+  const fromDev = opt('audit-dev-from');
+  if (!from || fromDev) audit('npm-audit-dev', 'ferramentas de desenvolvimento', fromDev ? '' : (await run('npm', ['audit', '--json', '--include=dev'], project)).output, true, fromDev);
 }
 
 function audit(id, label, rawOutput, gate, fromFile) {
@@ -103,7 +105,7 @@ function audit(id, label, rawOutput, gate, fromFile) {
     .map(([name, i]) => `${i.severity}: ${name}${i.isDirect ? ' (direta)' : ' (transitiva)'}${i.fixAvailable ? (i.fixAvailable === true ? ' - correcao disponivel' : ` - correcao em ${i.fixAvailable.name}@${i.fixAvailable.version}${i.fixAvailable.isSemVerMajor ? ' (MAJOR)' : ''}`) : ' - sem correcao publicada'}`);
   const summary = `critica ${v.critical ?? 0}, alta ${v.high ?? 0}, moderada ${v.moderate ?? 0}, baixa ${v.low ?? 0}`;
   if (v.critical && gate) return add(id, 'fail', `${label}: ${summary}. Acione o agente resolved-vulnerability (atualizacao compativel primeiro, sem --force)`, listing);
-  if (v.critical || v.high || v.moderate) return add(id, 'warn', `${label}: ${summary}${gate ? '' : ' (so ferramenta de desenvolvimento: nao vai para producao)'}`, listing);
+  if (v.critical || v.high || v.moderate) return add(id, 'warn', `${label}: ${summary}${id === 'npm-audit-dev' ? ' (ferramenta de desenvolvimento: nao vai para o site, mas critica barra)' : ''}`, listing);
   add(id, 'pass', `${label}: sem vulnerabilidades altas ou criticas (${summary})`);
 }
 

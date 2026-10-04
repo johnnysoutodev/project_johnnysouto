@@ -27,7 +27,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 
 ### Alterado
 - `builder`: padrão `clean-code-angular` obrigatório (vence o `CLAUDE.md` gerado pelo Angular), testes só na lógica com teste primeiro, modo adoção de qualidade para projetos existentes.
-- `verifier`: auditoria separada em dependências de produção (barra com crítica) e ferramentas de desenvolvimento (só avisa).
+- `verifier`: auditoria separada em dependências de produção e ferramentas de desenvolvimento; vulnerabilidade crítica em qualquer uma reprova, alta ou moderada avisa.
 - `designer` passa a tratar mobile, dark e menus como variantes de design (`figmaVariants`), não só desktop; `builder` ganha o modo ajustes (QA).
 - `verifier`: servidor estático e descoberta do spec extraídos para `verifier/lib/site.mjs` (compartilhados com o QA).
 - Agente `resolved-vulnerability` reescrito: escada de preferência (atualização compatível com a família `@angular/*` junta, depois faixa de pacote direto, `overrides` só para transitivo sem correção do pai), nunca `--force`, major e "sem correção" reportados e não aplicados. Ensaiado e executado no `angular-app`.
