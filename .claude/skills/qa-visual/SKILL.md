@@ -24,7 +24,7 @@ Variante padrão: `desktop-light` (economia de tokens). `dark`, `mobile` e `tabl
 3. **Reanalisar só o que mudou:** reconstrua (`npx ng build`) e rode o `qa-visual` apenas nas seções alteradas (`--sections`). Se surgirem novos itens automáticos, volte ao passo 2.
 4. **Portão do usuário (uma vez, no fim do laço automático):** apresente só o que **depende dele**, agrupado e com a sua recomendação para cada item, mais a lista do que foi corrigido sozinho e do que foi ignorado (uma linha cada, para ele poder contestar ou pedir para desfazer). O usuário decide e responde as dúvidas; o que ele classificar como divergência intencional vira decisão registrada.
 5. **Aplicar as decisões:** `builder` em modo ajustes com a lista aprovada; volte ao passo 3 para as seções alteradas.
-6. **Fechar:** quando não restar item aberto, rode o agente `verifier` completo uma vez (não pode regredir) e relate o resultado.
+6. **Fechar:** quando não restar item aberto, rode o agente `verifier` completo uma vez (não pode regredir; ele inclui o smoke de interação: menus, foco, âncoras) e relate o resultado.
 
 ## Regras
 

@@ -15,6 +15,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Prova do pipeline com o cliente fictício `studio-aurora` (landing de 3 seções, deploy AWS estático, textos em Lorem Ipsum): verifier completo aprovado sem alterar o motor. Resultado e lacunas em `site-factory/ROADMAP.md`.
 - QA visual assistido: agente `qa-visual`, skill `/qa-visual`, `verifier/qa-capture.mjs` (recortes, estilos medidos, altura vs. Figma e achados automáticos como palavra quebrada) e `figma-map.mjs variants`/`image`. Campo `figmaVariants` no `site-spec` (desktop/mobile x light/dark). O QA classifica cada achado como automático (fonte da verdade escrita, correção local e reversível), dependente do usuário ou ignorado, e só leva ao usuário o que depende dele.
 - QA visual de mobile e dark na `studio-aurora`: 21 itens corrigidos, geometria e cores conferidas contra o Figma.
+- Smoke de interação no `verifier` (checks `interaction-toggles`, `interaction-anchors`, `focus-indicator`): menus e diálogos (foco, Escape, painel fechado), `aria-pressed`, âncoras e indicador de foco, validado com 12 defeitos plantados e nos dois sites.
 - `design.variants` no `site-spec`; o `status.mjs` não libera o `builder` enquanto faltar variante mapeada ou medida de mobile/dark no documento de design.
 - Relatório do verifier também por cliente (`reports/by-client/`); o `status.mjs` passa a ler o do cliente certo.
 - Convenção de contato na skill `landing-sections`: telefone sem quebra; e-mail quebra só antes do `@`.

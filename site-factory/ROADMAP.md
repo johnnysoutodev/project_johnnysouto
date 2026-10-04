@@ -7,20 +7,21 @@
 | 1 | `site-spec.schema.json`, validador, template de brief, agente `intake` | Feita |
 | 3 | `designer` e `builder` genéricos (substituem `angular-scaffold`/`angular-components`), skill `landing-sections`, formas de `content` por tipo no schema; `figma-map.mjs` (mapa de todas as páginas do Figma por API REST); campo `deploy` agnóstico de provedor; `CHANGELOG.md` + skill `changelog`; templates de deploy `vercel-static` e `aws-static` com `apply.mjs` (só o provedor escolhido); `figma-map.mjs check` (teste de obtenção de dados) | Feita; agentes ainda não exercitados de ponta a ponta |
 | 4 | Orquestração `/build-landing <cliente>`, `status.mjs`, `strategist` pequeno e opcional, modo `contentMode: placeholder` (Lorem Ipsum) e prova com uma segunda landing (fictícia, `studio-aurora`) do zero, sem editar o motor | Feita: prova executada e aprovada (ver resultado abaixo) |
-| 5 | **QA visual assistido (local):** `figma-map.mjs variants`/`image`/`layout`, `verifier/qa-capture.mjs` (recortes, medidas, achados automáticos, geometria do DOM), agente `qa-visual` e skill `/qa-visual` (corrige o automático, o usuário decide só o que depende dele). Playwright sobre um build | Feita para desktop-light, mobile-light, desktop-dark e mobile-dark na `studio-aurora` (QA-1 a QA-21 resolvidos). Pendente: smoke de interação por componente e tablet (o Figma só tem 375 e 1440) |
+| 5 | **QA visual assistido (local):** `figma-map.mjs variants`/`image`/`layout`, `verifier/qa-capture.mjs` (recortes, medidas, achados automáticos, geometria do DOM), agente `qa-visual` e skill `/qa-visual` (corrige o automático, o usuário decide só o que depende dele). Playwright sobre um build | Feita para desktop-light, mobile-light, desktop-dark e mobile-dark na `studio-aurora` (QA-1 a QA-21 resolvidos). Smoke de interação feito (mora no `verifier`). Pendente: tablet (o Figma só tem 375 e 1440) |
 | 6 | **Regras de engenharia:** como escrever testes unitários e componentes, aprofundamento de clean code; provavelmente skills (`testing-conventions`, `clean-code`) consumidas por `builder` e `verifier` | Ideia — a conversar |
 | 7 | **Template:** duplicar este projeto em outro repositório e transformá-lo em template (motor sem cliente: `.claude/` + `site-factory/` + regras gerais; clientes e o site do johnnysouto ficam fora). Inclui a **opção de CI por cliente** (não regra do motor): `verifier` no GitHub Actions e/ou CI leve de lint, testes e build sem navegador | Ideia — a conversar |
 
 ## Pendências conhecidas do verifier (candidatas à fase 5)
 
 - Lighthouse (performance) e comparação visual com o frame do Figma.
-- Teste Playwright de interação por componente (ex.: abrir o menu mobile e checar foco); o check de teclado atual só vê o foco do Tab.
+- Testes Playwright de interação específicos por componente (ex.: fluxos de formulários e carrosséis); o smoke genérico não cobre a lógica própria de cada componente.
 
 ## Pontos a decidir na fase 5 (QA visual assistido)
 
 - Ferramenta: Playwright dirigido por um agente/skill, ou as ferramentas do Claude in Chrome contra o `npm start` do usuário (que ele já mantém aberto).
 - O que comparar com o Figma: telas lado a lado vs. medição de estilos computados contra os tokens; pixel diff puro gera falso alarme (renderização de fonte, antialiasing) e não deve ser a base.
 - Como o agente propõe e aplica os ajustes (por seção, com o usuário aprovando cada rodada).
+
 
 ## Decisão registrada (03/10/2026): sem fase de CI com Playwright
 
@@ -117,3 +118,11 @@ O QA não deve pedir aprovação para tudo. O que tem fonte da verdade escrita (
 - **`/build-landing` não libera o `builder` sem variantes:** o `designer` registra `design.variants` (o que o Figma tem no escopo) e mapeia `figmaVariants` de cada seção; o documento de design precisa ter medidas de mobile e dark. O `status.mjs` volta para `designer` se algo faltar (testado com 4 cenários).
 - **Relatório do verifier por cliente:** `reports/by-client/<cliente>/report.json`, além do `reports/latest/` (que guarda só a última execução). Antes, verificar um projeto fazia o `status.mjs` de outro voltar para a etapa `verifier`.
 - **Lição sobre minha própria redação:** o QA-21 foi implementado literalmente pela opção que eu descrevi com um exemplo contraditório. Opções apresentadas ao usuário devem ter o resultado esperado medível ou mostrado de forma consistente.
+
+## Fase 5: smoke de interação (03/10/2026)
+
+- **Onde mora:** no agente `verifier` (script `verifier/verify.mjs` + `verifier/lib/interactions.mjs`), porque é um teste objetivo (passou ou falhou), repetível e sem julgamento de design. O `qa-visual` compara design com você no meio; menu abrir ou não abrir não é gosto. Entra no workflow em dois pontos que já existiam: etapa `verifier` do `/build-landing` e fechamento do `/qa-visual`; falha volta ao `builder` pelo mesmo ciclo (G3).
+- **Validação:** página-modelo correta passa nos 3 checks; 12 variantes com um defeito plantado cada (aria-expanded que não muda, painel que não aparece, foco que não entra, **reprodução do bug do `inert`**, Escape que não fecha, foco que não volta, sem trap, painel fechado ainda focável, âncora sem alvo, âncora que não rola, `aria-pressed` parado, sem indicador de foco) são todas reprovadas com mensagem correta.
+- **Dois falsos positivos meus corrigidos antes de acusar um site:** painel aberto por um bug cobria a página e gerava falhas em cascata (agora a página é recarregada antes das âncoras); e a espera fixa de 900ms acusou o `AnchorScrollService` do `angular-app` por animação lenta sob carga (agora espera a rolagem estabilizar). Três execuções seguidas limpas no site real.
+- **Resultado nos sites reais:** `angular-app`: menu mobile (diálogo, foco, Escape, devolução do foco), tema e âncoras passam; `studio-aurora` passa.
+- **Limites:** só tema claro, menor e maior viewport; hover não testado; fluxos próprios de um componente (formulário, carrossel) pedem teste dele.

@@ -15,6 +15,10 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 3. Não suba dev server e não use a porta 4200 — o script serve o `dist` numa porta própria.
 4. Leia `site-factory/reports/latest/report.md` (e `report.json` se precisar de detalhe). Screenshots ficam em `site-factory/reports/latest/screenshots/` — abra os que ajudem a explicar uma falha visual.
 
+## O que o smoke de interação cobre (checks `interaction-toggles`, `interaction-anchors`, `focus-indicator`)
+
+Genérico, pela semântica do DOM, sem seletores do site: gatilhos `aria-expanded`+`aria-controls` (abrem; diálogo modal recebe e prende o foco; Escape fecha e devolve o foco ao gatilho; painel fechado não recebe foco pelo Tab: é a classe do bug de `focus()` antes de o painel deixar de ser `inert`); botões `aria-pressed` (clique inverte); âncoras internas (alvo existe e o clique leva até ele, esperando a rolagem estabilizar); indicador de foco (aviso). Falha de interação volta ao `builder`; é defeito observável, não gosto.
+
 ## Como reportar
 
 - Comece pelo veredito (APROVADO/REPROVADO) e o número de falhas.
@@ -25,7 +29,8 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 
 ## O que o verifier não cobre (limites conhecidos)
 
-- Interações que exigem abrir/clicar (menus, modais): o check de teclado só vê o foco do Tab, não pega `.focus()` programático que falha em elemento `inert`. Esses casos ficam para o QA visual assistido (fase 5 do `site-factory/ROADMAP.md`).
+- Interações específicas de um componente (fluxos de formulário, carrossel, arrastar): o smoke de interação cobre só o que o DOM declara de forma padrão (`aria-expanded`/`aria-controls`, `aria-pressed`, âncoras `#id`, indicador de foco). Fluxo próprio de um componente pede teste dele.
+- O smoke roda só no tema claro, no menor e no maior viewport (o menu mobile só existe no estreito). Hover não é testado (o Figma costuma não definir).
 - Lighthouse (performance) e comparação visual com o frame do Figma ainda não estão implementados (a comparação visual também pegaria defeitos como texto quebrando no meio da palavra no mobile).
 - `npm-audit` depende do registro do npm: sem rede vira aviso ("auditoria indisponível"), não aprovação silenciosa. Critica = falha; alta/moderada = aviso.
 - `platform-guards` é uma heurística (aviso); o build com prerender é a prova real de segurança de SSR.
