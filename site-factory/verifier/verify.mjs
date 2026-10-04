@@ -10,6 +10,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
+import { primeLazyImages, unloadedImages } from './lib/lazy-images.mjs';
 import AxeBuilder from '@axe-core/playwright';
 import { findDist, findLocales, findOwnerSpec, serve } from './lib/site.mjs';
 import { runCodeQuality } from './lib/code-quality.mjs';
@@ -156,7 +157,7 @@ async function checkBrowser() {
   }
 
   const seoNotes = new Set();
-  const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [], placeholder: [], toggles: [], anchors: [], focusRing: [] };
+  const problems = { console: [], network: [], overflow: [], images: [], axe: [], axeIncomplete: [], seo: [], keyboard: [], placeholder: [], toggles: [], anchors: [], focusRing: [] };
   const shots = join(out, 'screenshots');
   await rm(shots, { recursive: true, force: true }); // so as desta execucao (a pasta e gerada e ignorada pelo git)
   await mkdir(shots, { recursive: true });
@@ -187,7 +188,8 @@ async function checkBrowser() {
           problems.overflow.push(`${tag}: ${overflow}px de rolagem horizontal${culprits.length ? `; elemento(s) mais externo(s) que passa(m) do viewport: ${culprits.join(' | ')}` : ''}`);
         }
 
-        const broken = await page.evaluate(() => [...document.images].filter((i) => i.complete && i.naturalWidth === 0).map((i) => i.currentSrc || i.src));
+        await primeLazyImages(page);
+        const broken = await unloadedImages(page);
         broken.forEach((src) => problems.images.push(`${tag}: ${src}`));
 
         if (theme === 'light' && width === viewports[viewports.length - 1]) {
@@ -197,6 +199,8 @@ async function checkBrowser() {
 
         const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
         axe.violations.forEach((v) => problems.axe.push(`${tag}: [${v.impact}] ${v.id} (${v.nodes.length}x) ${v.nodes[0]?.target?.join(' ')}`));
+        // O axe nao consegue medir texto sobre imagem ou gradiente e os marca como "incomplete" (nao como violacao): sem isto o OK do axe seria falso conforto.
+        axe.incomplete.filter((v) => v.id === 'color-contrast').forEach((v) => problems.axeIncomplete.push(`${tag}: contraste nao medido pelo axe (${v.nodes.length}x, texto sobre imagem ou fundo variavel), ex.: ${v.nodes[0]?.target?.join(' ')}`));
 
         if (theme === 'light' && width === viewports[viewports.length - 1]) {
           const seo = await page.evaluate(() => ({
@@ -220,6 +224,7 @@ async function checkBrowser() {
           await runInteractions(page, tag, problems);
           await runFocusIndicator(page, tag, problems.focusRing);
         }
+        await primeLazyImages(page); // o smoke de interacao recarrega a pagina: as imagens lazy voltam a nao carregadas
         await page.screenshot({ path: join(shots, `${tag.replaceAll('/', '_')}.png`), fullPage: true });
         await context.close();
       }
@@ -236,8 +241,9 @@ async function checkBrowser() {
   report('console-errors', problems.console, 'fail', `sem erros de console (${scope})`);
   report('network-errors', problems.network, 'fail', 'sem respostas 4xx/5xx');
   report('horizontal-overflow', problems.overflow, 'fail', 'sem rolagem horizontal');
-  report('broken-images', problems.images, 'fail', 'todas as imagens carregaram');
+  report('broken-images', problems.images, 'fail', 'todas as imagens visiveis carregaram (a pagina e rolada ate o fim antes de conferir)');
   report('a11y-axe', problems.axe, 'fail', `axe WCAG A/AA sem violacoes (${scope})`);
+  report('a11y-contrast-manual', problems.axeIncomplete, 'warn', 'axe mediu todo o contraste de texto (nada ficou como incompleto)');
   report('seo-basics', problems.seo, 'warn', `lang, title, description e h1 unico presentes${seoNotes.size ? ` (${[...seoNotes].join('; ')})` : ' e canonical presente'}`);
   report('placeholder-content', problems.placeholder, 'warn', 'sem Lorem Ipsum no texto visivel');
   if (flag('skip-interactions')) add('interactions', 'skipped', '--skip-interactions');

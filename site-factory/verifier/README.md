@@ -24,6 +24,7 @@ node verify.mjs --project ../../<projeto>
 | `tokens-undefined`, `tokens-unused` | `var(--x)` sem definição falha; token definido sem uso avisa |
 | `logic-specs`, `ui-specs`, `ui-thin` | arquivo de lógica sem spec falha; teste de componente e componente com lógica demais avisam |
 | `a11y-axe` | axe WCAG 2.0/2.1 A e AA, em todos os idiomas, temas e viewports |
+| `a11y-contrast-manual` | Aviso: contraste que o axe não conseguiu medir (texto sobre imagem ou fundo variável; lista `incomplete` do axe). O OK do `a11y-axe` não cobre esses trechos: meça à mão com `figma/contrast.mjs` |
 | `seo-basics` | (aviso) `lang`, `title`, description, h1 único, canonical. O canonical só é exigido se o spec do cliente (descoberto por `build.projectDir`) tem `project.domain` |
 | `placeholder-content` | (aviso) "Lorem ipsum" no texto visível |
 | `interaction-toggles` | menus/diálogos/disclosures (`aria-expanded`+`aria-controls`): abrem, diálogo modal move e prende o foco, Escape fecha e devolve o foco, painel fechado não recebe foco; botões `aria-pressed` invertem |
