@@ -67,18 +67,23 @@ function inspect(root) {
   const rect = root.getBoundingClientRect();
   const visible = (el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
 
-  // Palavra longa sem espaco que ocupa mais de uma linha = quebrada no meio.
+  // Palavra longa sem espaco cujo trecho ocupa mais de uma linha = quebrada no meio. Quebrar DEPOIS de um hifen
+  // ("front-end", "Coca-Cola") e quebra legitima: cada trecho entre hifens e avaliado separadamente.
   const brokenWords = [];
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
     if (!n.parentElement || !visible(n.parentElement)) continue;
     const re = /\S{9,}/g;
     for (let m = re.exec(n.textContent); m; m = re.exec(n.textContent)) {
-      const r = document.createRange();
-      r.setStart(n, m.index);
-      r.setEnd(n, m.index + m[0].length);
-      const lines = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top / 3)));
-      if (lines.size > 1) brokenWords.push({ word: m[0], lines: lines.size, element: describe(n.parentElement) });
+      let offset = m.index;
+      for (const segment of m[0].split(/(?<=-)/)) {
+        const r = document.createRange();
+        r.setStart(n, offset);
+        r.setEnd(n, offset + segment.length);
+        const lines = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top / 3)));
+        if (lines.size > 1) brokenWords.push({ word: m[0], lines: lines.size, element: describe(n.parentElement) });
+        offset += segment.length;
+      }
     }
   }
   // Texto cortado: contentor com overflow oculto cujo conteudo e maior que a caixa.
@@ -86,7 +91,7 @@ function inspect(root) {
     const o = getComputedStyle(e).overflowX;
     return (o === 'hidden' || o === 'clip') && e.scrollWidth > e.clientWidth + 1 && e.textContent.trim();
   }).map((e) => ({ element: describe(e), scrollWidth: e.scrollWidth, clientWidth: e.clientWidth }));
-  const stretched = [...root.querySelectorAll('img')].filter((i) => i.naturalWidth && i.clientWidth && Math.abs(i.naturalWidth / i.naturalHeight - i.clientWidth / i.clientHeight) > 0.05)
+  const stretched = [...root.querySelectorAll('img')].filter((i) => !/contain|cover|scale-down/.test(getComputedStyle(i).objectFit) && i.naturalWidth && i.clientWidth && Math.abs(i.naturalWidth / i.naturalHeight - i.clientWidth / i.clientHeight) > 0.05)
     .map((i) => ({ element: describe(i), natural: `${i.naturalWidth}x${i.naturalHeight}`, rendered: `${i.clientWidth}x${i.clientHeight}` }));
   const smallTargets = [...root.querySelectorAll('a[href], button, [role="button"]')].filter((e) => visible(e)).map((e) => ({ e, r: e.getBoundingClientRect() }))
     .filter(({ r }) => r.width > 0 && (r.width < 24 || r.height < 24)).map(({ e, r }) => ({ element: describe(e), size: `${Math.round(r.width)}x${Math.round(r.height)}` }));
@@ -139,13 +144,21 @@ await page.evaluate(() => document.fonts.ready);
 
 const measures = {};
 for (const s of sections) {
-  const handle = (await page.$(`#${s.id}`)) ?? (await page.$(`app-${s.id}`));
+  let handle = (await page.$(`#${s.id}`)) ?? (await page.$(`app-${s.id}`));
   if (!handle) {
     measures[s.id] = { missing: true };
     continue;
   }
+  // Host com `display: contents` (padrao para raiz com position: sticky) nao tem caixa propria: usa o primeiro elemento filho.
+  if (await handle.evaluate((el) => getComputedStyle(el).display === 'contents' && !!el.firstElementChild)) {
+    handle = (await handle.evaluateHandle((el) => el.firstElementChild)).asElement();
+  }
   measures[s.id] = await handle.evaluate(inspect);
-  await handle.screenshot({ path: join(out, `${s.id}.png`) });
+  try {
+    await handle.screenshot({ path: join(out, `${s.id}.png`) });
+  } catch (error) {
+    measures[s.id].unrenderable = String(error.message).split('\n')[0].slice(0, 120);
+  }
 }
 await browser.close();
 server.close();

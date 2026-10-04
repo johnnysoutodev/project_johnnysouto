@@ -15,7 +15,7 @@ node verify.mjs --project ../../angular-app
 | `platform-guards` | (aviso) globals de navegador sem guarda de plataforma |
 | `console-errors`, `network-errors` | erros de console e respostas 4xx/5xx em cada página |
 | `horizontal-overflow`, `broken-images` | layout quebrado em 375/768/1440 px; o overflow nomeia o elemento mais externo que passa do viewport |
-| `npm-audit` | `npm audit`: crítica = falha, alta/moderada = aviso (lista pacotes e correção); sem rede = aviso. `--skip-audit` pula; `--audit-from <json>` usa uma saída salva |
+| `npm-audit`, `npm-audit-dev` | `npm audit` separado em dependências de **produção** (vão para o site) e **ferramentas de desenvolvimento** (stylelint, eslint, vitest; não vão para o site). Em ambas, **crítica = falha** (ferramenta de build comprometida executa código na máquina e no CI) e alta/moderada = aviso (lista pacotes e correção); sem rede = aviso. `--skip-audit` pula; `--audit-from` e `--audit-dev-from` usam saídas salvas |
 | `lint` | ESLint com limites de clean code (função até 50 linhas, arquivo até 150, complexidade 8, sem `any`) e HTML/SCSS sempre separados |
 | `stylelint` | SCSS em BEM, sem hex/`rgb()`/px de espaçamento-tipografia fora de token, sem `@media` cru, `!important`, `::ng-deep` nem seletor de tag |
 | `unit-tests`, `coverage` | `ng test --coverage`: **100%** de linhas, ramos, funções e instruções **só na lógica** (não conta componente, dado, rota nem config) |

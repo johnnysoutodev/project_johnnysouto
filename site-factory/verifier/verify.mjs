@@ -286,7 +286,8 @@ await mkdir(out, { recursive: true });
 const summary = { project, spec: owner?.file ?? null, at: new Date().toISOString(), failed: checks.filter((c) => c.status === 'fail').length, checks };
 await writeFile(join(out, 'report.json'), JSON.stringify(summary, null, 2));
 // Copia por cliente: reports/latest guarda so a ultima execucao (de qualquer projeto); o status.mjs le a do cliente certo.
-if (owner) {
+// So o projeto-dono do spec grava o relatorio por cliente: verificar uma COPIA (sandbox) nao pode sobrescrever o do site oficial.
+if (owner && owner.spec.build?.projectDir && resolve(here, '..', '..', owner.spec.build.projectDir) === project) {
   const byClient = join(here, '..', 'reports', 'by-client', owner.spec.client.id);
   await mkdir(byClient, { recursive: true });
   await writeFile(join(byClient, 'report.json'), JSON.stringify(summary, null, 2));

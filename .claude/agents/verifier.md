@@ -36,5 +36,5 @@ Padrão da skill `clean-code-angular`: testes **só na lógica com 100% de cober
 - Interações específicas de um componente (fluxos de formulário, carrossel, arrastar): o smoke de interação cobre só o que o DOM declara de forma padrão (`aria-expanded`/`aria-controls`, `aria-pressed`, âncoras `#id`, indicador de foco). Fluxo próprio de um componente pede teste dele.
 - O smoke roda só no tema claro, no menor e no maior viewport (o menu mobile só existe no estreito). Hover não é testado (o Figma costuma não definir).
 - Lighthouse (performance) e comparação visual com o frame do Figma ainda não estão implementados (a comparação visual também pegaria defeitos como texto quebrando no meio da palavra no mobile).
-- `npm-audit` depende do registro do npm: sem rede vira aviso ("auditoria indisponível"), não aprovação silenciosa. Critica = falha; alta/moderada = aviso.
+- `npm-audit` (produção) e `npm-audit-dev` (ferramentas de desenvolvimento) dependem do registro do npm: sem rede vira aviso ("auditoria indisponível"), não aprovação silenciosa. Em ambos, crítica = falha e alta/moderada = aviso. Achado de auditoria não se analisa à mão: vai para o agente `resolved-vulnerability`.
 - `platform-guards` é uma heurística (aviso); o build com prerender é a prova real de segurança de SSR.
