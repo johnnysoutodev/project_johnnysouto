@@ -173,4 +173,8 @@ if (skippedWorkflows.length) console.log(`  pulado   ${skippedWorkflows.join(', 
 if (stale.length) console.log(`\nArquivos de OUTRO provedor presentes (nada foi apagado; remova se nao forem mais usados):\n${stale.map((s) => `  - ${s}`).join('\n')}`);
 if (manifest.notes) console.log(`\nNota: ${manifest.notes}`);
 if (manifest.afterApply?.length) console.log(`\nDepois de aplicar (configuracao fora do codigo):\n${manifest.afterApply.map((s, i) => `  ${i + 1}. ${render(s, ctx, 'template.json')}`).join('\n')}`);
-if (!existsSync(join(root, projectDir, '.nvmrc'))) console.log(`\nAviso: ${projectDir}/.nvmrc nao existe e os workflows usam node-version-file; crie-o com a versao de Node do projeto.`);
+const nvmrc = join(root, projectDir, '.nvmrc');
+if (!existsSync(nvmrc) && !dry) {
+  await writeFile(nvmrc,`${process.versions.node.split('.')[0]}\n`);
+  console.log(`\ncriado  ${projectDir}/.nvmrc (Node ${process.versions.node.split('.')[0]}, o que gerou o projeto): os workflows usam node-version-file.`);
+}
