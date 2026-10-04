@@ -23,8 +23,8 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 | `stats` | `items [{value, label}]` | Números fornecidos pelo cliente. |
 | `gallery` | `items [{src, alt}]` | `alt` obrigatório. |
 | `contact` | `channels [{type, value, href?}]` | `type`: email, phone, whatsapp, linkedin, github etc. |
-| `header` | derivado de `nav.label` das seções | Menu mobile dedicado; ver sticky em `angular-conventions`. |
-| `footer` | `copyright?`, `links?` | |
+| `header` | derivado de `nav.label` das seções; `menu? [{label, href}]` quando o Figma tem itens que não são seção; `cta? {label, href}` | Menu mobile dedicado; ver sticky em `angular-conventions`. Item de menu sem seção correspondente entra com `href` real ou `"#"` registrado como pendência; pergunte ao dono, não invente página. |
+| `footer` | `copyright?`, `address?`, `columns? [{title, links [{label, href}]}]`, `socials? [{type, href}]`, `stores? [{store, href}]`, `locales?` | Texto de endereço e dados legais (CNPJ) vêm do Figma ou do cliente e só entram depois de o dono confirmar que são reais. Seletor de idioma/cidade só é interativo se o spec definir a ação. |
 
 ## Convenções de componente
 
@@ -36,6 +36,14 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 - Status: `draft` (conteúdo incompleto, bloqueia o builder), `ready` (aprovada, o builder gera), `migrated` (já existe, não é regenerada).
 - **Valores de contato nunca quebram no meio da palavra:** telefone com `white-space: nowrap`; e-mail com ponto de quebra (`<wbr>`) **só antes do `@`** ("contato" / "@dominio.com"; quebra depois de ponto faz a linha cair em "contato@dominio." / "com", pior). `overflow-wrap: anywhere` só como último recurso, para um trecho sozinho mais largo que a linha. Implemente como utilitário genérico (função ou pipe), não como remendo para um e-mail.
 - Lógica não trivial leva teste Vitest. Regras de SSR, `effect()` e CSS: skill `angular-conventions`.
+
+## Texto com estilo parcial (destaque de cor, negrito)
+
+Quando o Figma tem trecho do texto com cor, peso ou tamanho próprios (o `designer` lista com `figma-map.mjs fx`, com os índices do trecho), o dado da seção carrega a estrutura, nunca HTML solto:
+
+- **Título com destaque:** `title` mais `titleHighlight` (o trecho exato, que precisa ser substring do `title`); o componente compartilhado divide o texto por uma função pura testada.
+- **Item com trecho em negrito:** `parts: [{ text, strong? }]` em vez de uma string única; cada trecho passa por `$localize` com ID próprio.
+- **Quebra de linha do design:** `\n` no `title` quando o Figma quebra de forma explícita; abaixo do viewport do design a quebra pode ceder à natural.
 
 ## Modo placeholder (`project.contentMode: "placeholder"`)
 

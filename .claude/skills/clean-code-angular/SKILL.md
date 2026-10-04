@@ -106,3 +106,9 @@ body { overflow-x: hidden; }   // some a barra, o conteúdo continua estourando
 **h) Token mentiroso (errado):** usar `var(--space-9)` sem definir `--space-9` (o navegador ignora em silêncio). **Certo:** definir em `_tokens.scss`; o check `tokens-undefined` pega.
 
 **i) Espaçamento fora da escala (errado):** `padding: 4px 20px`. **Certo:** `padding: var(--space-1) var(--space-5)`. Se a escala não tem o valor que o design pede, acrescente o token à escala.
+
+**j) Controle que não faz nada (errado):** `<button type="button">Português</button>` sem ação definida: passa em todos os checks e é um botão morto para quem usa leitor de tela. **Certo:** sem ação no spec, elemento estático; com ação, o spec diz qual (e o `verifier` a exercita).
+
+**k) Imagem pesada ou fora do enquadramento (errado):** `<img src="foto.jpg">` com 6,6 MB e sem dimensões. **Certo:** WebP no tamanho de uso, `NgOptimizedImage` com `width`/`height` e `priority` só na imagem da primeira dobra; `loading="lazy"` (o padrão) nas demais, e o `verifier` rola a página para conferir que carregam.
+
+**l) Gradiente que resolve contraste destruindo o design (errado):** escurecer 20% a área inteira do hero e criar uma faixa de borda reta no header. **Certo:** o mínimo de gradiente, só sob o texto, que alcance 4,5:1 (3:1 para texto grande), medido com `figma/contrast.mjs` contra a cor mais clara sob o texto.
