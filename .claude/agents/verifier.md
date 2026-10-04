@@ -19,6 +19,10 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 
 Genérico, pela semântica do DOM, sem seletores do site: gatilhos `aria-expanded`+`aria-controls` (abrem; diálogo modal recebe e prende o foco; Escape fecha e devolve o foco ao gatilho; painel fechado não recebe foco pelo Tab: é a classe do bug de `focus()` antes de o painel deixar de ser `inert`); botões `aria-pressed` (clique inverte); âncoras internas (alvo existe e o clique leva até ele, esperando a rolagem estabilizar); indicador de foco (aviso). Falha de interação volta ao `builder`; é defeito observável, não gosto.
 
+## O que o portão `code-quality` cobre (checks `lint`, `stylelint`, `unit-tests`, `coverage`, `component-files`, `bem-block`, `tokens-*`, `logic-specs`, `ui-*`)
+
+Padrão da skill `clean-code-angular`: testes **só na lógica com 100% de cobertura**, HTML e SCSS sempre separados, SCSS em BEM amarrado a tokens e a breakpoints, ESLint com limites numéricos, e "nada solto" (token usado e não definido, componente sem arquivo, lógica sem spec). Falha volta ao `builder`; é critério objetivo. Em `quality.mode: "report"` (projeto legado) as falhas aparecem como aviso: reporte-as, mas não as trate como reprovação. Roda sozinho, sem navegador: `node site-factory/verifier/code-quality.mjs --project <dir>`.
+
 ## Como reportar
 
 - Comece pelo veredito (APROVADO/REPROVADO) e o número de falhas.

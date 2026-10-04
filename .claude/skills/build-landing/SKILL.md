@@ -26,6 +26,7 @@ Você é o orquestrador. Os agentes (`.claude/agents/`) não falam com o usuári
 
 ## Regras
 
+- **Vulnerabilidade não se analisa à mão:** achado do `npm-audit` (ou do `npm audit` depois de instalar qualquer dependência) vai para o agente `resolved-vulnerability`, que faz a triagem, percorre a escada e reporta. O orquestrador não roda `npm view`, não lê advisory nem decide degrau: só aciona o agente e repassa o resultado.
 - Cada chamada de agente leva só o `client-id` e o que a etapa pede (respostas do usuário, relatório do verifier); eles leem o resto dos arquivos. Não cole documentos grandes no prompt.
 - Cliente de teste ou fictício: `build.projectDir` em `site-factory/sandbox/<id>` (ignorado pelo git).
 - Nunca `git commit`/`git push`: o usuário comita pelo fluxo dele. Deixe tudo no working tree.

@@ -15,6 +15,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Prova do pipeline com o cliente fictício `studio-aurora` (landing de 3 seções, deploy AWS estático, textos em Lorem Ipsum): verifier completo aprovado sem alterar o motor. Resultado e lacunas em `site-factory/ROADMAP.md`.
 - QA visual assistido: agente `qa-visual`, skill `/qa-visual`, `verifier/qa-capture.mjs` (recortes, estilos medidos, altura vs. Figma e achados automáticos como palavra quebrada) e `figma-map.mjs variants`/`image`. Campo `figmaVariants` no `site-spec` (desktop/mobile x light/dark). O QA classifica cada achado como automático (fonte da verdade escrita, correção local e reversível), dependente do usuário ou ignorado, e só leva ao usuário o que depende dele.
 - QA visual de mobile e dark na `studio-aurora`: 21 itens corrigidos, geometria e cores conferidas contra o Figma.
+- Fase 6: skill `clean-code-angular` (padrão de código com exemplos de como não fazer) e portão `code-quality` (`verifier/code-quality.mjs`, sem navegador): ESLint com limites numéricos, Stylelint com BEM e tokens, testes só na lógica com 100% de cobertura, `.html`/`.scss` separados, tokens sem ponta solta. Templates em `templates/angular/` (ESLint, Stylelint, `_breakpoints.scss`). Campo `quality.mode` (`enforce`/`report`) no spec. Provado na `studio-aurora` (refatorada sem mudar o visual).
 - Smoke de interação no `verifier` (checks `interaction-toggles`, `interaction-anchors`, `focus-indicator`): menus e diálogos (foco, Escape, painel fechado), `aria-pressed`, âncoras e indicador de foco, validado com 12 defeitos plantados e nos dois sites.
 - `design.variants` no `site-spec`; o `status.mjs` não libera o `builder` enquanto faltar variante mapeada ou medida de mobile/dark no documento de design.
 - Relatório do verifier também por cliente (`reports/by-client/`); o `status.mjs` passa a ler o do cliente certo.
@@ -23,6 +24,8 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Servidor MCP `angular-cli` no `.mcp.json` da raiz.
 
 ### Alterado
+- `builder`: padrão `clean-code-angular` obrigatório (vence o `CLAUDE.md` gerado pelo Angular), testes só na lógica com teste primeiro, modo adoção de qualidade para projetos existentes.
+- `verifier`: auditoria separada em dependências de produção (barra com crítica) e ferramentas de desenvolvimento (só avisa).
 - `designer` passa a tratar mobile, dark e menus como variantes de design (`figmaVariants`), não só desktop; `builder` ganha o modo ajustes (QA).
 - `verifier`: servidor estático e descoberta do spec extraídos para `verifier/lib/site.mjs` (compartilhados com o QA).
 - Agente `resolved-vulnerability` reescrito: escada de preferência (atualização compatível com a família `@angular/*` junta, depois faixa de pacote direto, `overrides` só para transitivo sem correção do pai), nunca `--force`, major e "sem correção" reportados e não aplicados. Ensaiado e executado no `angular-app`.

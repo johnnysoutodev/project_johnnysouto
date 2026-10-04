@@ -76,3 +76,15 @@ Fonte: qa-report.md Rodada 4 e design-system.md 6.1. Só abaixo de 768px; deskto
 - Correção genérica: `shared/contact-break.ts` (`contactBreakParts`, divide só antes de `@`; spec com 5 testes, incluindo `joao.silva@empresa.com.br`) e template do contato com `<wbr>` entre os trechos; texto e `href` originais intactos. Um primeiro ajuste também quebrava depois de pontos, mas o resultado era "contato@studioaurora." / "example"; removido. `.value` mantém `overflow-wrap: anywhere` só como último recurso (age apenas se um trecho sozinho não couber); canais que não são e-mail (telefone) recebem `.nowrap` (`white-space: nowrap`, `overflow-wrap: normal`). Arquivos: `contato.ts`, `contato.html`, `contato.scss`.
 - Medido no navegador (linhas reais): 375 claro e escuro ["contato","@studioaurora.example"] (251x56); 390 e 430 1 linha (264x28); desktop 1440 1 linha (529x40, ícone 32, gap 20). `brokenWords` sumiu em mobile-light, mobile-dark; desktop-light sem achados. Sem rolagem horizontal.
 - Lint, test (14 passed) e `npx ng build` sem warnings/erros.
+
+## 2026-10-03 adoção do padrão clean-code-angular (refatoração, sem mudança visual)
+
+Versões: Node 24.18.0, Angular 22.2, vitest 5.0.3 (+ `@vitest/coverage-v8@5.0.3`), stylelint + stylelint-config-standard-scss.
+- Ferramentas: `eslint.config.js`, `stylelint.config.cjs`, `src/styles/_breakpoints.scss` copiados de `templates/angular/`; `stylePreprocessorOptions.includePaths: ["src/styles"]`. Local: removido um comentário vazio em `_breakpoints.scss` (reprovado por `scss/comment-no-empty`) e acrescentados os mixins `prefers-dark` e `prefers-reduced-motion` (os dois `@media` não-largura precisavam de casa, pois `at-rule-disallowed-list` só libera `_breakpoints.scss`).
+- Arquivos: `app`, `tag`, `icon`, `icon-button`, `photo-frame` ganharam `.html`/`.scss` separados (`icon.html` vazio).
+- BEM: classes renomeadas no `.scss` e `.html` (hero, sobre, contato, icon-button, photo-frame); seletores de tag viraram classes; `<body class="page">` recebe o estilo que era de `body`; `html` virou `:root`; `margin: 0` dos títulos/parágrafos (antes `h1,h2,h3,p` global) foi para cada classe; `app-root {display:block}` virou `:host` de `app.scss`.
+- Tokens novos (mesmo valor): `--space-1-5: 6px`, `--section-padding-y-mobile: 64px`, `--text-h1-mobile`, `--text-h3-mobile`, `--text-value-mobile`.
+- `@media` cru substituído por `breakpoints.mobile-only`/`prefers-dark`/`prefers-reduced-motion`.
+- Testes: `app.spec.ts` removido (comportamento de âncora é do smoke do verifier); `social.spec.ts` e `contact-break.spec.ts` mantidos (100% em 2 arquivos de lógica).
+- Medidas antes/depois (4 variantes): geometria e medidas idênticas (só mudaram os nomes de classe).
+- Pendência: 3 violações `selector-max-universal` no reset `*, *::before, *::after { box-sizing: border-box }` de `_base.scss`; regra do portão sem saída que preserve o visual (reportado ao orquestrador).
