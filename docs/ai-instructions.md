@@ -22,7 +22,7 @@ Registre toda mudança relevante (`feat`, `fix`, remoções, mudanças de proces
 
 ## Segurança de dependências
 
-Vulnerabilidades reportadas por `npm audit` são resolvidas **sem forçar**, nesta ordem: (1) atualização compatível (`npm audit fix` sem `--force`, inclusive versão nova do Angular dentro da faixa do `package.json`); (2) subir a faixa de um pacote direto (patch/minor), com a família `@angular/*` inteira na mesma versão; (3) `overrides` só para dependência transitiva sem correção do pacote pai, limitado ao major seguro. Major e "sem correção" são reportados ao dono do projeto, não aplicados. Nunca `--force`, nunca apagar o lockfile. Procedimento completo em `docs/agent-rules/resolved-vulnerability.md`.
+Vulnerabilidades reportadas por `npm audit` são resolvidas **sem forçar**, nesta ordem: (1) atualização compatível (`npm audit fix` sem `--force`, inclusive versão nova do Angular dentro da faixa do `package.json`); (2) subir a faixa de um pacote direto (patch/minor), com a família `@angular/*` inteira na mesma versão; (3) `overrides` só para dependência transitiva sem correção do pacote pai, limitado ao major seguro. Quando a biblioteca não tem correção publicada, o agente tem autoridade para trocá-la por outra que passe nos critérios (audit limpo, mantida, cobre o que usamos, protótipo isolado equivalente). Major sem alternativa é reportado ao dono, não aplicado. Nunca `--force`, nunca apagar o lockfile. Procedimento completo em `docs/agent-rules/resolved-vulnerability.md`.
 
 ## Design e Figma
 
