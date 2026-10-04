@@ -42,6 +42,15 @@ node site-factory/figma/contrast.mjs '#ffffff' '#ff823d' text '#1d232a' '#ff823d
 
 `assets.json` lista `{ id, node, category, format }`; os arquivos vão para `<projectDir>/public/assets/<categoria>/`. O `contrast.mjs` é como o designer confere, antes do `builder`, as cores do Figma.
 
+## Efeitos do Figma e lado a lado (designer e QA)
+
+```bash
+node site-factory/figma/figma-map.mjs fx --url <figma> --ids <no> --depth 4     # rotação, blend, filtros, blur e trechos de texto com cor/peso próprios
+node site-factory/verifier/qa-compose.mjs --ref <refs do Figma> --shots <capturas> --out <pasta>   # Figma × site lado a lado, por seção
+```
+
+O `designer` usa o `fx` para o `builder` não adivinhar (título com destaque colorido, negrito parcial, brilho, saturação, rotação). O `qa-compose` gera o que o dono abre para decidir.
+
 ## Build parcial e perguntas opcionais
 
 - Seção `status: deferred`: adiada pelo dono; o `builder`, o `status.mjs` e o `verifier` a ignoram. Serve para o dono aprovar só parte do conteúdo.

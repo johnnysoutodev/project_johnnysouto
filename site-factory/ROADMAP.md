@@ -210,3 +210,47 @@ Lacunas achadas e **corrigidas na fonte** (com teste onde há lógica):
 | Portão G2 deixa tudo em `draft` e parece travamento | skill `build-landing` explica e oferece `deferred` |
 
 Lacunas que **continuam abertas**: o `status.mjs` não mede `contentRef` com sufixo `(id)` (formato do `designer`); o anel de foco de dois tons foi calculado, não visto no navegador; o brilho do hero depende do QA visual mobile; assets reais ainda não foram plugados no `orangebank` pelo `builder` (marcadores continuam).
+
+## Fase 7b: fechamento da prova (OrangeBank, 04/10/2026)
+
+**Resultado:** o pipeline completo rodou com outro Figma (`OrangeBank`, só desktop/light, 10 seções, textos finais incompletos aprovados) até `verifier` APROVADO, com 46 assets reais exportados do Figma, 5 rodadas de QA visual (rodada 1 com marcadores; rodadas 2 a 5 com correções), 22 decisões do dono respondidas por uma página de QA lado a lado (artifact com `db`) e `code-quality` 0/0. Pendências do cliente de prova (não do motor): licença das fotos de banco de imagem, URLs de loja e redes (`href="#"`), ação dos seletores de idioma e cidade, domínio (canonical), texto e logos de "Tecnologias", glow do hero abaixo do Figma (o contraste do título não permitiu mais).
+
+Lacunas achadas depois do primeiro fechamento (rodadas de assets e QA) e **corrigidas na fonte**:
+
+| Lacuna | Correção |
+|---|---|
+| O OK do axe escondia texto sobre imagem (o `verify.mjs` descartava `incomplete`) | novo check `a11y-contrast-manual` (aviso); validado contra o site real |
+| `assets` re-exportava tudo e sobrescrevia imagens otimizadas | pula arquivo existente; `--force` sobrescreve (lib testada) |
+| Coordenadas do Figma lidas como relativas ao grupo, não à seção (recorte deslocado 96 px) | regra no `builder` e no `designer` (dizer o nó de referência) |
+| `button` sem ação definida passa em todos os checks | regra no `builder`: sem ação no spec, sem controle interativo; lista no relatório |
+| Gradiente escuro para contraste exagerou (hero 20 a 30% mais escuro, faixa no header) | regra no `builder`: scrim mínimo, só sob o texto, sem borda reta; `designer` mede contra a imagem exportada |
+| QA reaproveitou capturas da rodada anterior (antes e depois idênticos) | regra no `qa-visual`: capturas novas e md5 conferido |
+| Otimização de imagem não estava no processo | regra no `builder` (WebP no tamanho de uso, antes e depois no build-log) |
+
+**Lacunas ainda abertas no motor:**
+- Pergunta ao dono sobre decisões recorrentes: o formulário por página (artifact com `db`) funcionou bem; falta transformá-lo em ferramenta do orquestrador (`/qa-visual` gera a página) em vez de montagem manual.
+- O `figma-map.mjs` grava arquivos temporários em caminho relativo ao diretório atual quando chamado de dentro de `site-factory/` (o QA limpou `site-factory/site-factory/`).
+- O `designer` não lê rotação nem filtros (saturação, blend) por padrão; foram pedidos caso a caso.
+- Verificação de licença de imagem não existe: continua decisão do dono.
+- Fluxo inverso (motor -> repositório template -> cliente) ainda manual (`export.mjs`, depois `git checkout template/main -- <caminhos>`).
+
+## Refino de agentes e skills depois da prova (04/10/2026)
+
+Pedido do dono: capturas do `verifier` sem imagens, `assets-extra.json` como remendo e decisões que se contradizem. Causas encontradas e correções:
+
+| Problema | Causa real | Correção |
+|---|---|---|
+| Capturas de página inteira do `verifier` com áreas em branco (mobile e tema escuro) | 42 de 44 imagens eram `loading="lazy"`; o script não rolava a página antes de fotografar, e o smoke de interação recarrega a página antes da captura. O desktop claro só saía completo por acaso (a ordem dos checks já tinha rolado). **Não foi erro do `builder`** (lazy é o padrão correto do `NgOptimizedImage`) **nem do QA** (o recorte por elemento rola até ele) | `lib/lazy-images.mjs` (testado com Chrome): rola até o fim antes do check de imagem e antes da captura; verificado no site real |
+| `broken-images: OK` sem prova | o check só olhava `complete && naturalWidth === 0`; imagem lazy que nem começou a carregar passava | o check agora rola, espera e lista imagem visível não carregada; imagem escondida por CSS não conta |
+| Ninguém abria as capturas | `screenshots: OK` só dizia que o arquivo existia | o agente `verifier` abre ao menos o menor viewport e um tema escuro; `build-landing` e `docs/ai-instructions.md` do template dizem que check não substitui olhar |
+| `assets-extra.json` | remendo meu: o comando antigo re-exportava tudo e sobrescreveria os WebP otimizados; contornei com um manifesto paralelo em vez de corrigir o comando | removido; o comando pula o que existe e reconhece webp/avif como a versão otimizada de jpg/png; regra explícita: **um manifesto por cliente**, o `builder` não cria manifestos nem exporta por conta própria, arquivos derivados vão para o build-log |
+| `builder` rodou antes dos assets, o site nasceu com marcadores e precisou de outro ciclo | nada barrava | `status.mjs` exige `assets.json` e os arquivos antes de liberar o `builder` de um projeto novo (`{ "assets": [] }` declara design sem imagem) |
+| Decisões D-16 (reproduzir brilho) e D-17 (gradiente escuro) se anulavam | o orquestrador viu o risco, avisou no chat e aplicou as duas | passo novo na skill `qa-visual`: conferir conflito entre decisões antes de aplicar e devolver ao dono com o efeito previsto |
+| QA improvisava o lado a lado | nenhum script o gerava | `verifier/qa-compose.mjs` (Chrome do verifier, sem dependência nova) e passo no agente `qa-visual`; relatório em um lugar só (`reports/qa/<id>/report.md`) com a rodada anterior preservada |
+| `designer` descobria rotação, blend, filtros e trechos de texto à mão a cada rodada | não havia ferramenta | `figma-map.mjs fx` (lib testada, reproduz os valores levantados à mão no OrangeBank) |
+| `designer` ainda mandava usar o MCP do Figma | resíduo da primeira versão | agente reescrito: só scripts (REST), sem as ferramentas MCP; exige a seção "Decisões e divergências intencionais" e o nó de referência das coordenadas |
+| `figma-map.mjs` gravava em `site-factory/site-factory/` | saída padrão relativa ao diretório atual | saída padrão sempre na raiz do repositório |
+| Aviso do `npm-audit-dev` repetido a cada verificação, mandando triar de novo | risco já aceito e registrado | o agente `verifier` confere o `CHANGELOG.md` e reporta "risco aceito registrado" |
+| `status.mjs` escondia a causa quando o validador não rodava | só lia linhas `- ` do erro | mostra a causa e manda rodar o `bootstrap` |
+
+Lacunas abertas: a página de decisões com formulário (artifact + `db`) é montada à mão a cada rodada (falta uma ferramenta/modelo); `qa-capture` das variantes mobile/tablet não é refeito nas rodadas de desktop (a skill manda apagar ou marcar como antigo).
