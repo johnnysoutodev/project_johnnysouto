@@ -1,5 +1,5 @@
 // Verificador generico de sites Angular. Uso:
-//   node verify.mjs --project ../../angular-app [--out <dir>] [--skip-build] [--skip-tests]
+//   node verify.mjs --project ../../<projeto> [--out <dir>] [--skip-build] [--skip-tests]
 //                   [--skip-browser] [--skip-audit] [--skip-interactions] [--skip-quality] [--audit-dev-from <json>] [--audit-from <npm-audit.json>]
 //                   [--spec <site-spec.json>] [--locales pt-br,en-us] [--viewports 375,768,1440]
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
