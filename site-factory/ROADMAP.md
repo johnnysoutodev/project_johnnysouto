@@ -175,3 +175,38 @@ O QA não deve pedir aprovação para tudo. O que tem fonte da verdade escrita (
 - **Pontos a conhecer antes de aplicar:** `about.html` não passa no `prettier --check` porque duas linhas `<li i18n>` foram mantidas em uma linha para não alterar o texto das traduções; o `extract-i18n` futuro reordena `messages.json` (cosmético, os IDs e textos não mudam); `package.json` ganha 3 devDependencies e o script `stylelint`, então depois de aplicar é preciso `npm ci`/`npm install`.
 - **`quality.mode` do `johnnysouto` continua `report`:** passa a `enforce` só depois que o patch for aplicado ao oficial (hoje o oficial não cumpriria o portão).
 - **Correção no motor:** o `verifier` só grava o relatório por cliente quando o projeto verificado é o dono do spec; verificar uma cópia não sobrescreve o relatório do site oficial.
+
+## Decisão do dono do projeto (04/10/2026): o que fica como está
+
+- Os avisos que restam no `angular-app` depois da adoção (17 specs de componente, 3 componentes com lógica demais na classe, 2 tokens sem uso) **ficam como estão**. O patch `site-factory/sandbox/johnnysouto-quality-adoption.patch` permanece guardado, **não aplicado**, até o dono pedir.
+- Fases 0 a 6 concluídas. Resta a **fase 7** (template de repositório) e as opções por cliente que ela absorve (CI com `code-quality` e `verifier`). Tablet continua sem referência no Figma (breakpoint por conta do `builder`).
+
+## Fase 7a: template de repositório preparado (04/10/2026)
+
+- Decisão do dono: **o template é a fonte do motor**. Este repositório vira mais um cliente e recebe atualizações do template (`git remote add template <url>` + `git checkout template/main -- <caminhos do motor>`, ver `docs/template-setup.md` do template).
+- `site-factory/template/export.mjs --out <dir vazio>` gera o template (75 arquivos, 316 KB) e o verifica: sem vazamento de dados do projeto pessoal, sem referência quebrada nos `.md`, arquivos obrigatórios presentes. `--verify <dir>` confere um template existente. Teste negativo: defeitos plantados são reprovados.
+- `site-factory/bootstrap.mjs [--check]`: confere Node, Git, Chrome e a existência do token do Figma (sem ler o conteúdo), instala as dependências do verifier e do spec e valida o cliente `example`.
+- Rodado a partir do template exportado: `bootstrap` ok, `status.mjs example` (etapa designer), `verify.mjs` com navegador, axe e smoke de interação aprovado numa página de teste, `figma-map.mjs map --from-file`, `code-quality.mjs` aprovado sobre um projeto Angular externo, `bootstrap --check` sem dependências só avisa (exit 0).
+- Não provado ainda: CI opcional (`templates/ci/code-quality.yaml`) em repositório real, e o ciclo completo com outro Figma. Isso é a **fase 7b**, no repositório novo.
+
+## Fase 7b: prova do template com outro Figma (OrangeBank, 04/10/2026)
+
+Prova rodada numa **cópia descartável** gerada por `export.mjs`, com os agentes do pipeline (sem o MCP do Figma) e o Figma `OrangeBank` (só desktop/light, 10 seções, textos finais incompletos aprovados pelo dono). Resultado: pipeline completo até `verifier` APROVADO (build, `code-quality` 0/0, axe sem violação, smoke de interação, produção em 0 vulnerabilidades; 8 altas em dependência de desenvolvimento como aviso, risco aceito do `braces`). QA visual contra o Figma ainda não rodou. Documentos do cliente de prova: `site-factory/clients/orangebank/`; projeto: `site-factory/sandbox/orangebank/` (ignorado pelo git).
+
+Lacunas achadas e **corrigidas na fonte** (com teste onde há lógica):
+
+| Lacuna | Correção |
+|---|---|
+| O motor não exportava assets do Figma (35 marcadores no site) | `figma-map.mjs assets` + manifesto `assets.json` (lib testada); validado contra o Figma real |
+| `--ready` exigia todas as seções `ready`; sem build parcial | status `deferred`; `--ready` exige ao menos uma `ready` (testes) |
+| Pergunta opcional travava o `status.mjs` na etapa `intake` | `openQuestions` aceita `{text, blocking:false}` (testes) |
+| `intake` perguntava "quem extrai o texto do Figma" | instrução do `intake` corrigida |
+| Cores do Figma reprovavam WCAG AA e só apareciam no `verifier`, um ciclo por cor (5 ciclos) | `contrast.mjs` (lib testada) + seção "Contraste" do `designer` + o orquestrador leva ao dono antes do `builder` |
+| Receita do projeto: `outputMode: static` deixava `server.ts`/`express`/`ssr.entry`/`serve:ssr` sem uso | receita do `builder` remove as sobras |
+| Receita sem fonte | self-host por `@fontsource-variable` |
+| `apply.mjs` só avisava que faltava `.nvmrc` | cria o `.nvmrc` (não em `--dry-run`) |
+| Risco aceito do `braces` sem registro no template | registrado no `CHANGELOG` do template e no README do `verifier` |
+| `status.mjs` mostrava `intake` sem bloqueio quando o validador não rodava (dependências ausentes) | mostra a causa real e manda rodar o `bootstrap` |
+| Portão G2 deixa tudo em `draft` e parece travamento | skill `build-landing` explica e oferece `deferred` |
+
+Lacunas que **continuam abertas**: o `status.mjs` não mede `contentRef` com sufixo `(id)` (formato do `designer`); o anel de foco de dois tons foi calculado, não visto no navegador; o brilho do hero depende do QA visual mobile; assets reais ainda não foram plugados no `orangebank` pelo `builder` (marcadores continuam).

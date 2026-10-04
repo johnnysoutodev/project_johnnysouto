@@ -1,0 +1,10 @@
+{
+  "assets": [
+    { "id": "logotipo-marca-dagua", "node": "551:477", "category": "images", "format": "svg" },
+    { "id": "tech-html5", "node": "551:495", "category": "logos", "format": "svg" },
+    { "id": "selo-app-store", "node": "631:535", "category": "images", "format": "png" },
+    { "id": "selo-google-play", "node": "631:536", "category": "images", "format": "svg" },
+    { "id": "people-card", "node": "551:567", "category": "images", "format": "png" },
+    { "id": "fundo-cta", "node": "684:604", "category": "images", "format": "png" }
+  ]
+}
