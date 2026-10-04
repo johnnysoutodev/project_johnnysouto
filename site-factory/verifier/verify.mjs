@@ -1,6 +1,6 @@
 // Verificador generico de sites Angular. Uso:
 //   node verify.mjs --project ../../angular-app [--out <dir>] [--skip-build] [--skip-tests]
-//                   [--skip-browser] [--skip-audit] [--audit-from <npm-audit.json>]
+//                   [--skip-browser] [--skip-audit] [--skip-interactions] [--audit-from <npm-audit.json>]
 //                   [--spec <site-spec.json>] [--locales pt-br,en-us] [--viewports 375,768,1440]
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
 // Exit code 1 se qualquer check falhar; `warn` nao falha mas aparece no relatorio.
@@ -12,6 +12,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import AxeBuilder from '@axe-core/playwright';
 import { findDist, findLocales, findOwnerSpec, serve } from './lib/site.mjs';
+import { runFocusIndicator, runInteractions } from './lib/interactions.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(`--${name}`);
@@ -151,7 +152,7 @@ async function checkBrowser() {
   }
 
   const seoNotes = new Set();
-  const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [], placeholder: [] };
+  const problems = { console: [], network: [], overflow: [], images: [], axe: [], seo: [], keyboard: [], placeholder: [], toggles: [], anchors: [], focusRing: [] };
   const shots = join(out, 'screenshots');
   await rm(shots, { recursive: true, force: true }); // so as desta execucao (a pasta e gerada e ignorada pelo git)
   await mkdir(shots, { recursive: true });
@@ -210,6 +211,11 @@ async function checkBrowser() {
         }
 
         if (theme === 'light') await keyboardCheck(page, tag, problems.keyboard);
+        // Smoke de interacao so no tema claro, no menor e no maior viewport (o menu mobile existe so no estreito).
+        if (theme === 'light' && !flag('skip-interactions') && (width === viewports[0] || width === viewports[viewports.length - 1])) {
+          await runInteractions(page, tag, problems);
+          await runFocusIndicator(page, tag, problems.focusRing);
+        }
         await page.screenshot({ path: join(shots, `${tag.replaceAll('/', '_')}.png`), fullPage: true });
         await context.close();
       }
@@ -230,6 +236,12 @@ async function checkBrowser() {
   report('a11y-axe', problems.axe, 'fail', `axe WCAG A/AA sem violacoes (${scope})`);
   report('seo-basics', problems.seo, 'warn', `lang, title, description e h1 unico presentes${seoNotes.size ? ` (${[...seoNotes].join('; ')})` : ' e canonical presente'}`);
   report('placeholder-content', problems.placeholder, 'warn', 'sem Lorem Ipsum no texto visivel');
+  if (flag('skip-interactions')) add('interactions', 'skipped', '--skip-interactions');
+  else {
+    report('interaction-toggles', problems.toggles, 'fail', 'menus, dialogos e disclosures abrem, movem/prendem o foco, fecham com Escape e devolvem o foco');
+    report('interaction-anchors', problems.anchors, 'fail', 'todas as ancoras internas tem alvo e o clique leva a ele');
+    report('focus-indicator', problems.focusRing, 'warn', 'todo elemento alcancado pelo Tab mostra outline ou sombra');
+  }
   report('keyboard-focus', problems.keyboard, 'fail', 'Tab so pousa em elementos visiveis e nao-inert');
   add('screenshots', 'pass', shots);
 }
