@@ -142,5 +142,8 @@
       "contentRef": "angular-app/src/app/layout/footer/footer.ts"
     }
   ],
-  "openQuestions": []
+  "openQuestions": [],
+  "quality": {
+    "mode": "report"
+  }
 }

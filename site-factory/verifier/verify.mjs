@@ -1,6 +1,6 @@
 // Verificador generico de sites Angular. Uso:
 //   node verify.mjs --project ../../angular-app [--out <dir>] [--skip-build] [--skip-tests]
-//                   [--skip-browser] [--skip-audit] [--skip-interactions] [--audit-from <npm-audit.json>]
+//                   [--skip-browser] [--skip-audit] [--skip-interactions] [--skip-quality] [--audit-from <npm-audit.json>]
 //                   [--spec <site-spec.json>] [--locales pt-br,en-us] [--viewports 375,768,1440]
 // Nao usa o dev server do usuario: serve o `dist` do build numa porta efemera.
 // Exit code 1 se qualquer check falhar; `warn` nao falha mas aparece no relatorio.
@@ -12,6 +12,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { chromium } from 'playwright-core';
 import AxeBuilder from '@axe-core/playwright';
 import { findDist, findLocales, findOwnerSpec, serve } from './lib/site.mjs';
+import { runCodeQuality } from './lib/code-quality.mjs';
 import { runFocusIndicator, runInteractions } from './lib/interactions.mjs';
 
 const args = process.argv.slice(2);
@@ -66,43 +67,44 @@ async function checkBuild() {
 
 // ---------- 2. testes unitarios e lint ----------
 async function checkTests() {
-  if (flag('skip-tests')) return add('unit-tests', 'skipped', '--skip-tests');
-  const { code, output } = await run('npx', ['ng', 'test', '--watch=false'], project);
-  const warnings = countMatches(output, /\[WARNING\]|^\s*warning[: ]/gim);
-  if (code !== 0) return add('unit-tests', 'fail', `exit ${code}`, [output.slice(-3000)]);
-  add('unit-tests', warnings ? 'warn' : 'pass', warnings ? `${warnings} warning(s)` : 'ok');
-  const lint = await run('npx', ['ng', 'lint'], project);
-  add('lint', lint.code === 0 ? 'pass' : 'fail', lint.code === 0 ? 'ok' : `exit ${lint.code}`, lint.code === 0 ? [] : [lint.output.slice(-3000)]);
+  if (flag('skip-quality')) return add('code-quality', 'skipped', '--skip-quality');
+  // Lint, Stylelint, testes com 100% de cobertura na logica e checks de "ponta solta" (lib/code-quality.mjs).
+  const { checks: quality } = runCodeQuality(project, { mode: owner?.spec.quality?.mode ?? 'enforce', skipTests: flag('skip-tests') });
+  for (const c of quality) add(c.id, c.status, c.detail, c.items);
 }
 
 // ---------- 2b. vulnerabilidades de dependencias ----------
 // Critica = falha; alta/moderada = aviso (o agente resolved-vulnerability corrige: atualizacao compativel primeiro, overrides so se preciso).
 async function checkAudit() {
   if (flag('skip-audit')) return add('npm-audit', 'skipped', '--skip-audit');
-  let raw;
   const from = opt('audit-from');
-  if (from) raw = await readFile(resolve(from), 'utf8');
-  else {
-    if (!existsSync(join(project, 'package-lock.json'))) return add('npm-audit', 'warn', 'sem package-lock.json: nada a auditar (versione o lockfile)');
-    raw = (await run('npm', ['audit', '--json'], project)).output;
-  }
+  if (!from && !existsSync(join(project, 'package-lock.json'))) return add('npm-audit', 'warn', 'sem package-lock.json: nada a auditar (versione o lockfile)');
+  // Dois olhares: o que vai para producao (dependencias de execucao) decide o portao; ferramenta de desenvolvimento
+  // (stylelint, eslint, vitest...) nunca chega ao artefato publicado e so avisa, para nao enterrar o sinal real.
+  audit('npm-audit', 'dependencias de producao', from ?? (await run('npm', ['audit', '--json', '--omit=dev'], project)).output, true, from);
+  if (!from) audit('npm-audit-dev', 'ferramentas de desenvolvimento', (await run('npm', ['audit', '--json', '--include=dev'], project)).output, false);
+}
+
+function audit(id, label, rawOutput, gate, fromFile) {
+  const raw = fromFile ? readFileSync(resolve(fromFile), 'utf8') : rawOutput;
   let data;
   try {
     data = JSON.parse(raw.slice(raw.indexOf('{')));
   } catch {
-    return add('npm-audit', 'warn', 'nao consegui auditar (registro indisponivel ou saida invalida do npm audit)', [raw.slice(0, 300)]);
+    return add(id, 'warn', `nao consegui auditar ${label} (registro indisponivel ou saida invalida do npm audit)`, [raw.slice(0, 300)]);
   }
-  if (data.error) return add('npm-audit', 'warn', `auditoria indisponivel: ${data.error.summary ?? data.error.code ?? 'erro do npm'}`);
+  if (data.error) return add(id, 'warn', `auditoria de ${label} indisponivel: ${data.error.summary ?? data.error.code ?? 'erro do npm'}`);
   const v = data.metadata?.vulnerabilities ?? {};
-  const items = Object.entries(data.vulnerabilities ?? {})
-    .filter(([, i]) => ['critical', 'high', 'moderate'].includes(i.severity))
-    .sort((a, b) => ['critical', 'high', 'moderate'].indexOf(a[1].severity) - ['critical', 'high', 'moderate'].indexOf(b[1].severity))
+  const order = ['critical', 'high', 'moderate'];
+  const listing = Object.entries(data.vulnerabilities ?? {})
+    .filter(([, i]) => order.includes(i.severity))
+    .sort((a, b) => order.indexOf(a[1].severity) - order.indexOf(b[1].severity))
     .slice(0, 15)
-    .map(([name, i]) => `${i.severity}: ${name}${i.isDirect ? ' (direta)' : ' (transitiva)'}${i.fixAvailable ? (i.fixAvailable === true ? ' - correcao disponivel' : ` - correcao em ${i.fixAvailable.name}@${i.fixAvailable.version}${i.fixAvailable.isSemVerMajor ? ' (MAJOR)' : ''}`) : ' - sem correcao'}`);
+    .map(([name, i]) => `${i.severity}: ${name}${i.isDirect ? ' (direta)' : ' (transitiva)'}${i.fixAvailable ? (i.fixAvailable === true ? ' - correcao disponivel' : ` - correcao em ${i.fixAvailable.name}@${i.fixAvailable.version}${i.fixAvailable.isSemVerMajor ? ' (MAJOR)' : ''}`) : ' - sem correcao publicada'}`);
   const summary = `critica ${v.critical ?? 0}, alta ${v.high ?? 0}, moderada ${v.moderate ?? 0}, baixa ${v.low ?? 0}`;
-  if (v.critical) return add('npm-audit', 'fail', `${summary}. Acione o agente resolved-vulnerability (atualizacao compativel primeiro, sem --force)`, items);
-  if (v.high || v.moderate) return add('npm-audit', 'warn', `${summary}`, items);
-  add('npm-audit', 'pass', `sem vulnerabilidades altas ou criticas (${summary})`);
+  if (v.critical && gate) return add(id, 'fail', `${label}: ${summary}. Acione o agente resolved-vulnerability (atualizacao compativel primeiro, sem --force)`, listing);
+  if (v.critical || v.high || v.moderate) return add(id, 'warn', `${label}: ${summary}${gate ? '' : ' (so ferramenta de desenvolvimento: nao vai para producao)'}`, listing);
+  add(id, 'pass', `${label}: sem vulnerabilidades altas ou criticas (${summary})`);
 }
 
 // ---------- 3. guarda de plataforma (heuristica; o build com prerender e a prova real) ----------

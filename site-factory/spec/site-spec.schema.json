@@ -290,6 +290,20 @@
           "notes"
         ]
       }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "enforce",
+            "report"
+          ],
+          "default": "enforce",
+          "description": "enforce = o code-quality barra (falha reprova o verifier). report = projeto legado em adocao gradual: as falhas viram aviso."
+        }
+      }
     }
   },
   "$defs": {

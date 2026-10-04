@@ -7,6 +7,7 @@ site-factory/
   templates/                      brief.template.md (formato do brief), site-spec.example-minimal.json (site pequeno de 2 seções)
   figma/                          figma-map.mjs: mapa recursivo de todas as páginas de um arquivo Figma (token em ~/.config/site-factory/.env ou FIGMA_TOKEN)
   deploy-templates/               templates de deploy por provedor (vercel-static, aws-static) + apply.mjs
+  templates/angular/              eslint.config.js, stylelint.config.cjs e styles/_breakpoints.scss copiados para cada projeto
   spec/                           site-spec.schema.json + validate.mjs (contrato entre as etapas)
   status.mjs                      etapa do pipeline de um cliente, descoberta pelos artefatos (node status.mjs <id>)
   ROADMAP.md                      fases e status
@@ -54,3 +55,7 @@ node site-factory/verifier/qa-capture.mjs --project <projeto> --variant desktop-
 ```
 
 Saídas em `site-factory/reports/qa/<cliente>/<variante>/` e `site-factory/reports/figma/<fileKey>/ref/` (ignoradas pelo git); o relatório de análise fica em `clients/<cliente>/qa-report.md`.
+
+## Padrão de código
+
+A skill `.claude/skills/clean-code-angular` define o padrão obrigatório (testes só na lógica com 100% de cobertura, HTML e SCSS separados, SCSS em BEM, tokens e breakpoints centralizados). O portão que o impõe, sem navegador: `node site-factory/verifier/code-quality.mjs --project <projeto>`. Projeto legado entra com `quality.mode: "report"` no spec.
