@@ -15,6 +15,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - Prova do pipeline com o cliente fictício `studio-aurora` (landing de 3 seções, deploy AWS estático, textos em Lorem Ipsum): verifier completo aprovado sem alterar o motor. Resultado e lacunas em `site-factory/ROADMAP.md`.
 - QA visual assistido: agente `qa-visual`, skill `/qa-visual`, `verifier/qa-capture.mjs` (recortes, estilos medidos, altura vs. Figma e achados automáticos como palavra quebrada) e `figma-map.mjs variants`/`image`. Campo `figmaVariants` no `site-spec` (desktop/mobile x light/dark). O QA classifica cada achado como automático (fonte da verdade escrita, correção local e reversível), dependente do usuário ou ignorado, e só leva ao usuário o que depende dele.
 - QA visual de mobile e dark na `studio-aurora`: 21 itens corrigidos, geometria e cores conferidas contra o Figma.
+- Segurança: risco aceito do GHSA-vfj7-8cjw-p6xm (`braces <= 3.0.3` via Stylelint), sem correção publicada, só em dependência de desenvolvimento (produção em 0); revisar quando o upstream corrigir. A crítica em ferramenta de desenvolvimento passa a barrar, como em produção.
 - Agente `resolved-vulnerability`: degrau 4 (trocar a biblioteca quando a escolhida não tem correção publicada), com critérios, protótipo isolado e limite (nunca enfraquecer regra do projeto).
 - `bem-block` resolve BEM aninhado (`&__x`, `&--y`) com o parser de SCSS e detecta regra duplicada no mesmo contexto; template de Stylelint passa a estender `stylelint-config-recommended-scss` (a `standard` traz formatação que o Prettier cobre); `templates/angular/CLAUDE.md` substitui o gerado pelo Angular (template inline deixa de ser recomendado).
 - Fase 6: skill `clean-code-angular` (padrão de código com exemplos de como não fazer) e portão `code-quality` (`verifier/code-quality.mjs`, sem navegador): ESLint com limites numéricos, Stylelint com BEM e tokens, testes só na lógica com 100% de cobertura, `.html`/`.scss` separados, tokens sem ponta solta. Templates em `templates/angular/` (ESLint, Stylelint, `_breakpoints.scss`). Campo `quality.mode` (`enforce`/`report`) no spec. Provado na `studio-aurora` (refatorada sem mudar o visual).
@@ -27,6 +28,7 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 
 ### Alterado
 - `builder`: padrão `clean-code-angular` obrigatório (vence o `CLAUDE.md` gerado pelo Angular), testes só na lógica com teste primeiro, modo adoção de qualidade para projetos existentes.
+- Pipeline de site: experimentos, refatorações e QA em projetos oficiais ficam limitados a cópias em `site-factory/sandbox/`; mudanças no original exigem autorização explícita.
 - `verifier`: auditoria separada em dependências de produção e ferramentas de desenvolvimento; vulnerabilidade crítica em qualquer uma reprova, alta ou moderada avisa.
 - `designer` passa a tratar mobile, dark e menus como variantes de design (`figmaVariants`), não só desktop; `builder` ganha o modo ajustes (QA).
 - `verifier`: servidor estático e descoberta do spec extraídos para `verifier/lib/site.mjs` (compartilhados com o QA).
@@ -38,6 +40,9 @@ Todas as mudanças relevantes do projeto. Formato [Keep a Changelog](https://kee
 - `designer` e `builder` generalizados; `angular-scaffold` e `angular-components` foram fundidos no `builder`.
 - Lições de bugs de Angular e CSS saíram de `docs/ai-instructions.md` para a skill `angular-conventions`.
 - `docs/ai-instructions.md`: descreve o legado e o Angular convivendo e deixa de proibir Angular.
+
+### Corrigido
+- QA visual: palavras hifenizadas e imagens com `object-fit` não geram falsos positivos; capturas indisponíveis são registradas sem interromper a medição. Verificar uma cópia não sobrescreve o relatório do projeto oficial.
 
 ### Segurança
 - `angular-app`: atualizada a família `@angular/*` para 22.2.1 (dentro de `^22.1.0`) e aplicado `npm audit fix` sem `--force`, zerando o `npm audit` (antes: 2 críticas, 3 altas, 2 moderadas). Corrige DoS por SSR no `@angular/router` e no `@angular/platform-server`, prototype pollution/RCE no `piscina` (via `@angular/build`), DoS no `brace-expansion` e falhas no `fast-uri` e no `ip-address`. Só o `package-lock.json` mudou; sem `overrides`.
