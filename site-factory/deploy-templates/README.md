@@ -8,7 +8,7 @@ node site-factory/deploy-templates/apply.mjs --spec site-factory/clients/<id>/si
 
 | Template | Gera | Status |
 |---|---|---|
-| `vercel-static` | `<projectDir>/vercel.json` (redirects de idioma, `cleanUrls`) e dois workflows (preview e produção) | Não testado em repositório real. O `vercel.json` gerado foi comparado com o de produção do johnnysouto e equivale. |
+| `vercel-static` | `<projectDir>/vercel.json` (redirects de idioma, `cleanUrls`) e dois workflows (preview e produção) | Não testado em repositório real. O `vercel.json` gerado foi comparado com o de um site em produção e equivale. |
 | `aws-static` | CloudFormation (S3 privado + CloudFront + Function de idiomas/URLs limpas), role OIDC do GitHub, README de setup e dois workflows (o de produção tem portão de `npm audit` crítico, como o da Vercel) | Não implantado em conta real. Validado com `cfn-lint`, YAML e a Function executada localmente contra 15 eventos simulados. |
 
 Sem template (`azure`, `netlify`, `server`...): o script sai com código 3 sem gerar nada. O spec continua válido.

@@ -1,0 +1,23 @@
+{
+  "copy": [
+    ".claude/agents",
+    ".claude/skills",
+    ".github/agents",
+    ".mcp.json",
+    "docs/agent-rules/README.md",
+    "docs/agent-rules/resolved-vulnerability.md",
+    "site-factory/spec",
+    "site-factory/verifier",
+    "site-factory/figma",
+    "site-factory/deploy-templates",
+    "site-factory/templates",
+    "site-factory/clients/example",
+    "site-factory/status.mjs",
+    "site-factory/bootstrap.mjs",
+    "site-factory/README.md"
+  ],
+  "exclude": ["node_modules", ".DS_Store", "dist", "coverage", ".angular", "reports", "sandbox", "settings.local.json"],
+  "generatedFrom": "site-factory/template/files",
+  "leaks": ["johnnysouto", "johnny", "angular-app", "studio-aurora", "1F1ZjUONCn5jMuTdZVUHN6", "9z2dzCKhlXWqVynN5SEeEM", "johnnysoutodev", "/Users/", "Sagar"],
+  "runtimePaths": ["site-factory/sandbox", "site-factory/reports", "site-factory/clients/", ".github/workflows", "docs/design-system", "docs/PLANO"]
+}

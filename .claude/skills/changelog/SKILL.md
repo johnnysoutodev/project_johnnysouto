@@ -5,7 +5,7 @@ description: Como manter o CHANGELOG.md da raiz (Keep a Changelog, versões SemV
 
 # Manter o CHANGELOG.md
 
-Arquivo único na **raiz** do repositório (`CHANGELOG.md`). Não use `public/` nem `angular-app/public/`: o que está lá é publicado no site.
+Arquivo único na **raiz** do repositório (`CHANGELOG.md`). Não use a pasta `public/` (nem a `public/` do projeto Angular): o que está lá é publicado no site.
 
 ## Quando atualizar
 

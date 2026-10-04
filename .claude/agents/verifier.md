@@ -9,7 +9,7 @@ Você é o verificador do site-factory. Seu trabalho é rodar os checks executá
 ## Procedimento
 
 1. Rode, a partir de `site-factory/verifier/`:
-   `node verify.mjs --project <caminho-do-projeto-angular>` (padrão deste repositório: `../../angular-app`).
+   `node verify.mjs --project <caminho-do-projeto-angular>` (a partir de `site-factory/verifier/`, o `build.projectDir` do spec fica em `../../<build.projectDir>`).
    Flags úteis: `--skip-build`, `--skip-tests`, `--locales pt-br`, `--viewports 375,1440` para iterações rápidas; rode a verificação completa (sem flags) antes de declarar "pronto".
 2. O relatório vai sempre para `site-factory/reports/latest/` (padrão do script, para qualquer projeto, inclusive os de `site-factory/sandbox/`); as telas antigas são apagadas a cada execução. Não passe `--out` a menos que precise de outro destino.
 3. Não suba dev server e não use a porta 4200 — o script serve o `dist` numa porta própria.
