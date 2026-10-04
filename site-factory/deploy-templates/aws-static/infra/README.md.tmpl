@@ -1,0 +1,52 @@
+# Infraestrutura AWS de {{clientName}}
+
+S3 privado + CloudFront (acesso por OAC) + uma CloudFront Function que trata idiomas, URLs limpas e arquivos de raiz. Um stack por ambiente. Gerado pelo site-factory (`deploy-templates/aws-static`); status do template: **nao testado em conta real**, revise antes de usar em producao.
+
+Pre-requisitos: AWS CLI autenticado numa conta com permissao de criar IAM, S3, CloudFront e CloudFormation.
+
+## 1. Role do GitHub Actions (uma vez por conta)
+
+```bash
+aws cloudformation deploy \
+  --template-file {{projectDir}}/infra/github-oidc-role.yaml \
+  --stack-name {{clientId}}-github-oidc \
+  --capabilities CAPABILITY_NAMED_IAM \
+  --parameter-overrides GitHubRepo=ORGANIZACAO/REPOSITORIO
+```
+
+Se a conta ja tiver o provedor OIDC do GitHub, acrescente `CreateOidcProvider=false`. Anote o output `RoleArn`.
+
+## 2. Um stack do site por ambiente
+
+```bash
+aws cloudformation deploy \
+  --template-file {{projectDir}}/infra/site.yaml \
+  --stack-name {{clientId}}-{{previewEnvSlug}} \
+  --parameter-overrides Environment={{previewEnvSlug}}
+
+aws cloudformation deploy \
+  --template-file {{projectDir}}/infra/site.yaml \
+  --stack-name {{clientId}}-{{productionEnvSlug}} \
+  --parameter-overrides Environment={{productionEnvSlug}}
+```
+
+Os nomes dos stacks (`{{clientId}}-<ambiente>`) sao usados pelos workflows e pela policy da role; nao mude sem ajustar os dois.
+
+## 3. GitHub
+
+- Settings > Secrets and variables > Actions > **Variables**: `AWS_ROLE_ARN` (output do passo 1) e `AWS_REGION` (regiao dos stacks).
+- Settings > Environments: crie `{{previewEnv}}` e `{{productionEnv}}`; em `{{productionEnv}}` marque **Required reviewers** para aprovacao manual.
+- Push em `{{previewBranch}}` publica em {{previewEnv}}; push em `{{productionBranch}}` publica em {{productionEnv}}.
+
+## 4. Dominio proprio (opcional)
+
+1. Emita um certificado no ACM **na regiao us-east-1** (exigencia do CloudFront) e valide por DNS.
+2. Reaplique o stack com `--parameter-overrides Environment=<ambiente> DomainName=<dominio> CertificateArn=<arn>`.
+3. No seu DNS, aponte o dominio (CNAME ou ALIAS) para o output `DistributionDomain` do stack.
+
+## Comportamento
+
+- `/` redireciona (302) para o idioma pelo cookie `lang`, depois pelo `Accept-Language`, depois para o idioma de fallback.
+- `/x` e `/x/` servem `/x/index.html`. Caminho inexistente responde 404 com a pagina inicial.
+- Bundles `.js`/`.css` com hash ficam em cache por 1 ano; o resto revalida sempre. Cada deploy invalida o CloudFront.
+- O bucket tem `DeletionPolicy: Retain`: apagar o stack nao apaga o bucket.

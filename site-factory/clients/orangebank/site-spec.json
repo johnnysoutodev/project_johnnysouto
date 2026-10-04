@@ -1,0 +1,374 @@
+{
+  "specVersion": "1",
+  "client": {
+    "id": "orangebank",
+    "name": "Orange Bank"
+  },
+  "project": {
+    "type": "landing-page",
+    "goal": "Levar quem visita a página a abrir uma conta digital (baixar o app e pedir o cartão).",
+    "audience": "Não informado (pendente, ver openQuestions)",
+    "tone": [
+      "direto",
+      "simples",
+      "sem enrolação"
+    ],
+    "contentMode": "final"
+  },
+  "build": {
+    "framework": "angular",
+    "projectDir": "site-factory/sandbox/orangebank"
+  },
+  "locales": {
+    "source": "pt-BR"
+  },
+  "design": {
+    "figma": {
+      "url": "https://www.figma.com/design/7Faf4YNyYpe5fh0d3uWGD4/OrangeBank?node-id=0-1",
+      "fileKey": "7Faf4YNyYpe5fh0d3uWGD4"
+    },
+    "themes": [
+      "light"
+    ],
+    "docRef": "site-factory/clients/orangebank/design-system.md",
+    "variants": [
+      "desktop-light"
+    ]
+  },
+  "deploy": {
+    "provider": "vercel",
+    "outputMode": "static",
+    "environments": [
+      {
+        "name": "preview",
+        "branch": "develop"
+      },
+      {
+        "name": "production",
+        "branch": "main"
+      }
+    ],
+    "notes": "Domínio ainda não definido (opcional)."
+  },
+  "sections": [
+    {
+      "id": "header",
+      "type": "header",
+      "status": "ready",
+      "figmaNode": "551:430",
+      "figmaVariants": {
+        "desktop-light": "551:430"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (header)",
+      "content": {
+        "menu": [
+          {
+            "label": "Quem Somos",
+            "href": "#sobre-nos"
+          },
+          {
+            "label": "Conta Digital PJ",
+            "href": "#"
+          },
+          {
+            "label": "Cartão de crédito",
+            "href": "#cartao-de-credito"
+          },
+          {
+            "label": "Fale Conosco",
+            "href": "#"
+          }
+        ],
+        "cta": {
+          "label": "Vem ser Orange",
+          "href": "#baixar-o-app"
+        }
+      },
+      "notes": "DRAFT: item de menu \"Conta Digital PJ\" sem seção correspondente (href \"#\" provisório); aguardando dono."
+    },
+    {
+      "id": "hero",
+      "type": "hero",
+      "status": "ready",
+      "figmaNode": "551:431",
+      "figmaVariants": {
+        "desktop-light": "551:431"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (hero)",
+      "content": {
+        "headline": "Seu dinheiro, suas regras. Zero tarifas e sem enrolação.",
+        "badge": "Abra sua conta, é só baixar o app!",
+        "cta": {
+          "label": "Vem ser Orange",
+          "href": "#baixar-o-app"
+        },
+        "secondaryCta": {
+          "label": "Saiba mais",
+          "href": "#sobre-nos"
+        },
+        "highlights": [
+          "Cartão sem anuidade",
+          "Conta digital 100% grátis"
+        ]
+      },
+      "notes": "Proposta pronta; aguarda aprovação G2. Texto escondido (hidden) do Figma ignorado por decisão do dono."
+    },
+    {
+      "id": "sobre-nos",
+      "type": "about",
+      "status": "ready",
+      "figmaNode": "551:466",
+      "nav": {
+        "label": "Sobre nós"
+      },
+      "figmaVariants": {
+        "desktop-light": "551:466"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (sobre-nos)",
+      "content": {
+        "label": "Sobre Nós",
+        "title": "A conta digital Orange Bank é pelo app e tem cartão de débito Mastercard",
+        "subtitle": "Somos um banco digital que oferece uma experiência sem complicações para suas necessidades financeiras.",
+        "body": [
+          "Somos um banco digital que oferece uma experiência sem complicações para suas necessidades financeiras."
+        ],
+        "columns": [
+          {
+            "title": "O que é conta digital?",
+            "description": "As contas digitais também são alternativas menos burocráticas. É possível abrir uma conta de onde estiver, pelo smartphone."
+          }
+        ]
+      },
+      "notes": "DRAFT: coluna 1 tinha frases repetidas (proposta deduplica); coluna 2 (\"Como funciona uma Conta Digital?\") termina truncada em \"operações\" e ficou fora do content; aguardando dono."
+    },
+    {
+      "id": "tecnologias-utilizadas",
+      "type": "features",
+      "status": "ready",
+      "figmaNode": "551:490",
+      "nav": {
+        "label": "Tecnologias utilizadas"
+      },
+      "notes": "Tipo features por aproximação; designer/strategist confirmam. | DRAFT: sem content. Logos de linguagens/serviços (HTML5, React, Java, AWS...) parecem conteúdo de template; dono decide se a seção existe num site de banco.",
+      "figmaVariants": {
+        "desktop-light": "551:490"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (tecnologias-utilizadas)"
+    },
+    {
+      "id": "vantagens-da-conta",
+      "type": "features",
+      "status": "ready",
+      "figmaNode": "551:557",
+      "nav": {
+        "label": "Vantagens da conta"
+      },
+      "notes": "Tipo features por aproximação. | DRAFT: vantagem 02 (FDIC e $250,000) fora do content, incoerente com banco brasileiro; aguardando dono. Itens 01 e 03 sem dúvida; os títulos curtos deles são rótulos do strategist, sem fato novo.",
+      "figmaVariants": {
+        "desktop-light": "551:557"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (vantagens-da-conta)",
+      "content": {
+        "title": "Conheça as vantagens da nossa conta",
+        "items": [
+          {
+            "title": "Vida financeira global",
+            "description": "Tudo o que você precisa para ter uma vida financeira global em um único app"
+          },
+          {
+            "title": "Economia no cartão",
+            "description": "Até 10% de economia comparado a um cartão de crédito tradicional."
+          }
+        ],
+        "cta": {
+          "label": "Vem ser Orange",
+          "href": "#baixar-o-app"
+        }
+      }
+    },
+    {
+      "id": "investimentos",
+      "type": "features",
+      "status": "ready",
+      "figmaNode": "551:606",
+      "nav": {
+        "label": "Investimentos"
+      },
+      "notes": "Tipo features por aproximação. | Proposta pronta; aguarda aprovação G2. Marca grafada \"OrangeBank\" no Figma, mantida. Títulos dos itens são rótulos curtos do strategist.",
+      "figmaVariants": {
+        "desktop-light": "551:606"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (investimentos)",
+      "content": {
+        "title": "Na OrangeBank, seu dinheiro vale mais!",
+        "items": [
+          {
+            "title": "Investimentos a partir de R$1",
+            "description": "Investimentos a partir de R$1, com uma experiência fácil e que fala a sua língua. Você e seu dinheiro merecem a tranquilidade de uma experiência segura."
+          },
+          {
+            "title": "Duas experiências para investir",
+            "description": "E o jeito Orange de investir conta não só com uma, mas com duas experiências diferentes para você investir sem se preocupar, do seu jeito."
+          }
+        ],
+        "cta": {
+          "label": "Vem ser Orange",
+          "href": "#baixar-o-app"
+        }
+      }
+    },
+    {
+      "id": "cartao-de-credito",
+      "type": "features",
+      "status": "ready",
+      "figmaNode": "551:634",
+      "nav": {
+        "label": "Cartão de crédito"
+      },
+      "notes": "Tipo features por aproximação. | Proposta pronta; aguarda aprovação G2.",
+      "figmaVariants": {
+        "desktop-light": "551:634"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (cartao-de-credito)",
+      "content": {
+        "title": "O Banco com cartão de crédito do seu time",
+        "items": [
+          {
+            "title": "Cartão sem anuidade",
+            "description": "Cartão sem anuidade"
+          },
+          {
+            "title": "Aceito em compras internacionais",
+            "description": "Aceito em compras internacionais"
+          },
+          {
+            "title": "Saque em toda rede Banco 24 Horas",
+            "description": "Saque em toda rede Banco 24 Horas"
+          },
+          {
+            "title": "Acumule pontos no programa Mastercard",
+            "description": "Acumule pontos no programa Mastercard"
+          }
+        ]
+      }
+    },
+    {
+      "id": "perguntas-frequentes",
+      "type": "faq",
+      "status": "ready",
+      "figmaNode": "551:683",
+      "nav": {
+        "label": "Perguntas frequentes"
+      },
+      "notes": "6 itens e botão \"carregar mais\". | DRAFT: só os itens 1 e 2 têm resposta real; itens 3 a 6 (respostas em Lorem no Figma) ficam fora do content até o dono fornecer respostas.",
+      "figmaVariants": {
+        "desktop-light": "551:683"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (perguntas-frequentes)",
+      "content": {
+        "title": "Ficou com alguma dúvida?",
+        "loadMoreLabel": "Carregar mais perguntas",
+        "items": [
+          {
+            "question": "O que é a Conta Digital?",
+            "answer": "Uma conta digital é um serviço bancário que as instituições financeiras oferecem aos clientes e que permite que eles façam transações com seu dinheiro, como pagamentos, depósitos ou saques. Ao abrir uma conta digital, os clientes recebem acesso a vários recursos bancários, como cartão de débito e crédito. Ela pode ser acessada por meio de um site ou aplicativo da instituição financeira. Esse tipo de conta é muito popular, por ter tarifas mais baixas, ou até tarifa zero, além de ser muito prática para o dia a dia, permitindo ao cliente fazer transações bancárias em qualquer dia da semana e em qualquer horário, do dia ou da noite."
+          },
+          {
+            "question": "Como abrir uma conta Orange Bank?",
+            "answer": "A palavra-chave é comodidade. O processo de abertura de uma conta digital varia entre as instituições financeiras, mas a premissa de todas é a simplicidade. Afinal, alguém quer perder tempo indo até uma agência de banco? Para abrir uma, geralmente é preciso fazer um cadastro inicial – pelo site ou pelo aplicativo, dependendo do banco ou instituição. Neste momento, costumam pedir o nome completo, o CPF e o email do titular da conta. Caso você tenha o nome negativado não se preocupe, pois mesmo quem tem o nome sujo pode abrir uma conta digital."
+          }
+        ]
+      }
+    },
+    {
+      "id": "baixar-o-app",
+      "type": "cta",
+      "status": "ready",
+      "figmaNode": "684:606",
+      "figmaVariants": {
+        "desktop-light": "684:606"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (baixar-o-app)",
+      "content": {
+        "headline": "Pra ter tudo isso, baixe o app e peça seu cartão!",
+        "action": {
+          "label": "Baixar o app",
+          "href": "#"
+        },
+        "stores": [
+          "App Store",
+          "Google Play"
+        ]
+      },
+      "notes": "Proposta pronta; aguarda aprovação G2. Rótulo \"Baixar o app\" do action é do strategist (a partir do título); lojas são imagens sem texto; href \"#\" até haver link das lojas."
+    },
+    {
+      "id": "footer",
+      "type": "footer",
+      "status": "ready",
+      "figmaNode": "631:654",
+      "notes": "AVISO: o Figma tem \"Investimo\", provável erro de digitação de \"Investimentos\". Decisão do dono: manter o texto como está; apenas avisar, não corrigir. | DRAFT: endereço e CNPJ não confirmados como dados reais do cliente. AVISO: \"Investimo\" mantido como está por decisão do dono (provável erro de \"Investimentos\"). Hrefs ainda não definidos.",
+      "figmaVariants": {
+        "desktop-light": "631:654"
+      },
+      "contentRef": "site-factory/clients/orangebank/design-system.md#textos-reais-por-secao-para-o-strategist (footer)",
+      "content": {
+        "copyright": "© 2024 Orange Bank Tecnologia Ltda. Todos os direitos reservados.",
+        "address": "Orange Bank Tecnologia Ltda / Avenida Brigadeiro Faria Lima, n.º 949, Pinheiros, São Paulo/SP - CEP 05.426-200 / CNPJ: 17.895.646/0001-87",
+        "links": [],
+        "columns": [
+          {
+            "title": "Institucional",
+            "links": [
+              "Quem somos",
+              "O que oferecemos",
+              "Ética e Compliance",
+              "Carreiras"
+            ]
+          },
+          {
+            "title": "Soluções",
+            "links": [
+              "Conta Digital",
+              "Cartão de Crédito",
+              "Investimo"
+            ]
+          },
+          {
+            "title": "Conduta",
+            "links": [
+              "Segurança",
+              "Diversidade e inclusão",
+              "Sustentabilidade",
+              "Acessibilidade",
+              "Termos"
+            ]
+          },
+          {
+            "title": "Atendimento",
+            "links": [
+              "Central de ajuda",
+              "Canais de atendimento",
+              "Ouvidoria"
+            ]
+          }
+        ],
+        "socials": [
+          "Instagram",
+          "Facebook",
+          "YouTube"
+        ],
+        "bottom": {
+          "label": "Abra sua conta",
+          "language": "Português (Brasil)",
+          "region": "São Paulo"
+        }
+      }
+    }
+  ],
+  "openQuestions": [],
+  "seo": {
+    "title": "Orange Bank | Seu dinheiro, suas regras. Zero tarifas e sem enrolação.",
+    "description": "Abra sua conta, é só baixar o app! Conta digital 100% grátis e cartão sem anuidade."
+  }
+}

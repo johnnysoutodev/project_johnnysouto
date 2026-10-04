@@ -1,0 +1,172 @@
+{
+  "specVersion": "1",
+  "client": {
+    "id": "studio-aurora",
+    "name": "Studio Aurora",
+    "email": "contato@studioaurora.example"
+  },
+  "project": {
+    "type": "landing-page",
+    "goal": "Levar quem visita a página a pedir um orçamento de ensaio fotográfico pelo e-mail ou pelo WhatsApp.",
+    "audience": "Famílias e casais da cidade que procuram uma fotógrafa de confiança para um ensaio e ainda comparam opções.",
+    "tone": [
+      "acolhedor",
+      "caloroso",
+      "discreto"
+    ],
+    "contentMode": "placeholder"
+  },
+  "build": {
+    "framework": "angular",
+    "projectDir": "site-factory/sandbox/studio-aurora"
+  },
+  "locales": {
+    "source": "pt-BR"
+  },
+  "design": {
+    "figma": {
+      "url": "https://www.figma.com/design/1F1ZjUONCn5jMuTdZVUHN6/template_portfolio_website_duplicate?node-id=327-868&t=RlhQXBb1hiwq02U6-1",
+      "fileKey": "1F1ZjUONCn5jMuTdZVUHN6"
+    },
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "docRef": "site-factory/clients/studio-aurora/design-system.md",
+    "variants": [
+      "desktop-light",
+      "desktop-dark",
+      "mobile-light",
+      "mobile-dark"
+    ]
+  },
+  "seo": {
+    "title": "Studio Aurora | Fotografia de retratos e famílias",
+    "description": "Estúdio de fotografia de retratos e famílias. Peça um orçamento de ensaio pelo e-mail ou pelo WhatsApp."
+  },
+  "analytics": {
+    "provider": "none"
+  },
+  "deploy": {
+    "provider": "aws",
+    "outputMode": "static",
+    "environments": [
+      {
+        "name": "preview",
+        "branch": "develop"
+      },
+      {
+        "name": "production",
+        "branch": "main"
+      }
+    ],
+    "notes": "S3 + CloudFront, site estático. Domínio de produção ainda não definido."
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "status": "ready",
+      "figmaNode": "316:194",
+      "figmaVariants": {
+        "desktop-light": "316:194",
+        "desktop-dark": "327:1807",
+        "mobile-light": "327:419",
+        "mobile-dark": "327:2149"
+      },
+      "notes": "Frame \"Hero\" do Figma: apresentação do estúdio e botão de contato. Conteúdo placeholder a cargo do strategist.",
+      "content": {
+        "tag": "Lorem ipsum",
+        "headline": "Lorem ipsum dolor sit amet consectetur",
+        "subheadline": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.",
+        "location": "Cidade, UF",
+        "availability": "Lorem ipsum dolor sit amet",
+        "cta": {
+          "label": "Lorem ipsum",
+          "href": "#contato"
+        },
+        "socials": [
+          {
+            "type": "email",
+            "href": "#"
+          },
+          {
+            "type": "whatsapp",
+            "href": "#"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sobre",
+      "type": "about",
+      "status": "ready",
+      "figmaNode": "316:229",
+      "figmaVariants": {
+        "desktop-light": "316:229",
+        "desktop-dark": "327:1830",
+        "mobile-light": "327:442",
+        "mobile-dark": "327:2172"
+      },
+      "notes": "Frame \"About\" do Figma: quem é a fotógrafa e como é um ensaio. Conteúdo placeholder a cargo do strategist.",
+      "content": {
+        "tag": "Lorem ipsum",
+        "title": "Lorem ipsum dolor sit amet consectetur",
+        "body": [
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+          "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.",
+          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore."
+        ],
+        "highlights": [
+          "Lorem ipsum dolor",
+          "Sit amet consectetur",
+          "Adipiscing elit sed",
+          "Eiusmod tempor",
+          "Incididunt ut labore",
+          "Magna aliqua enim"
+        ]
+      }
+    },
+    {
+      "id": "contato",
+      "type": "contact",
+      "status": "ready",
+      "figmaNode": "316:537",
+      "figmaVariants": {
+        "desktop-light": "316:537",
+        "desktop-dark": "327:2116",
+        "mobile-light": "327:728",
+        "mobile-dark": "327:2463"
+      },
+      "notes": "Frame \"Contact me\" do Figma: e-mail (contato@studioaurora.example) e WhatsApp. Número de WhatsApp não informado: usar placeholder. Conteúdo a cargo do strategist.",
+      "content": {
+        "tag": "Lorem ipsum",
+        "intro": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "channels": [
+          {
+            "type": "email",
+            "value": "contato@studioaurora.example",
+            "href": "mailto:contato@studioaurora.example"
+          },
+          {
+            "type": "whatsapp",
+            "value": "(00) 00000-0000",
+            "href": "#"
+          }
+        ],
+        "socialsText": "Lorem ipsum dolor sit amet consectetur",
+        "socials": [
+          {
+            "type": "email",
+            "href": "#"
+          },
+          {
+            "type": "whatsapp",
+            "href": "#"
+          }
+        ]
+      }
+    }
+  ],
+  "openQuestions": []
+}

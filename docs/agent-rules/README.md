@@ -1,5 +1,7 @@
 # Padrão de organização das regras de agentes
 
+Este padrão vale só para os agentes usados também pelo GitHub Copilot (hoje: commits atômicos e vulnerabilidades; PR e deploy podem entrar aqui). Os agentes do pipeline de sites (`intake`, `designer`, `builder`, `verifier`) são Claude-only e têm o prompt direto em `.claude/agents/`, sem ponte.
+
 Este projeto usa mais de uma ferramenta de IA (GitHub Copilot e Claude Code), e cada uma tem seu próprio formato de arquivo para reconhecer um "agente" — com frontmatter e localização de pasta diferentes. Para não manter o mesmo texto duplicado em dois lugares e desatualizado, este projeto separa **conteúdo** de **acionamento**.
 
 ## Como funciona
@@ -35,6 +37,3 @@ Edite **apenas** o arquivo em `docs/agent-rules/`. Os arquivos-ponte não devem 
 |---|---|---|---|
 | `resolved-vulnerability` | [`resolved-vulnerability.md`](./resolved-vulnerability.md) | `.github/agents/resolved-vulnerability.md` | `.claude/agents/resolved-vulnerability.md` |
 | `atomics-commits` | [`atomics-commits.md`](./atomics-commits.md) | `.github/agents/atomics-commits.md` | `.claude/agents/atomics-commits.md` |
-| `designer` | [`designer.md`](./designer.md) | `.github/agents/designer.md` | `.claude/agents/designer.md` |
-| `angular-scaffold` | [`angular-scaffold.md`](./angular-scaffold.md) | `.github/agents/angular-scaffold.md` | `.claude/agents/angular-scaffold.md` |
-| `angular-components` | [`angular-components.md`](./angular-components.md) | `.github/agents/angular-components.md` | `.claude/agents/angular-components.md` |

@@ -1,0 +1,21 @@
+{
+  "id": "aws-static",
+  "provider": "aws",
+  "outputMode": "static",
+  "status": "untested",
+  "notes": "S3 privado + CloudFront (OAC) + CloudFront Function para idiomas e index.html, via CloudFormation. Validado so estaticamente (cfn-lint, YAML, e a funcao do CloudFront executada localmente contra eventos simulados). Nunca foi implantado numa conta AWS real.",
+  "deployDetect": "aws\\s+s3\\s+sync|configure-aws-credentials",
+  "files": [
+    { "from": "infra/site.yaml.tmpl", "to": "{{projectDir}}/infra/site.yaml" },
+    { "from": "infra/github-oidc-role.yaml.tmpl", "to": "{{projectDir}}/infra/github-oidc-role.yaml" },
+    { "from": "infra/README.md.tmpl", "to": "{{projectDir}}/infra/README.md" },
+    { "from": "workflows/deploy-preview.yaml.tmpl", "to": ".github/workflows/deploy-aws-preview.yaml" },
+    { "from": "workflows/deploy-production.yaml.tmpl", "to": ".github/workflows/deploy-aws-production.yaml" }
+  ],
+  "afterApply": [
+    "Siga {{projectDir}}/infra/README.md: criar a role do GitHub (OIDC) uma vez e uma stack do site por ambiente ({{previewEnvSlug}} e {{productionEnvSlug}}).",
+    "No GitHub: variables AWS_ROLE_ARN e AWS_REGION; Environments {{previewEnv}} e {{productionEnv}} (no de producao, Required reviewers).",
+    "Dominio proprio: certificado ACM em us-east-1 e DNS apontando para o CloudFront (detalhes no README da pasta infra).",
+    "Fluxo de branches: push em {{previewBranch}} publica no ambiente {{previewEnv}}; push em {{productionBranch}} publica em {{productionEnv}}."
+  ]
+}

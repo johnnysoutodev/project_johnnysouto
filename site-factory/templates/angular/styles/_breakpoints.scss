@@ -1,0 +1,43 @@
+// Breakpoints: o UNICO lugar do projeto com largura de tela. Componente nunca escreve @media cru;
+// usa estes mixins (@use 'breakpoints'; @include breakpoints.tablet-up { ... }).
+// Os valores sao convencao de engenharia (padrao de mercado), nao dado do design: ajuste aqui, em um lugar,
+// quando o design pedir. Se o arquivo de design so tem mobile e desktop, tablet interpola.
+$breakpoint-tablet-min: 768px;
+$breakpoint-desktop-min: 1200px;
+
+@mixin mobile-only {
+  @media (max-width: $breakpoint-tablet-min - 1) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $breakpoint-tablet-min) {
+    @content;
+  }
+}
+
+@mixin tablet-only {
+  @media (min-width: $breakpoint-tablet-min) and (max-width: $breakpoint-desktop-min - 1) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: $breakpoint-desktop-min) {
+    @content;
+  }
+}
+
+// Preferencias do usuario (nao sao largura de tela, mas tambem so entram por aqui).
+@mixin prefers-dark {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin prefers-reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

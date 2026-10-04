@@ -1,0 +1,139 @@
+// Descobre em que etapa do pipeline um cliente esta, olhando SO os artefatos (nada de memoria de conversa).
+//   node status.mjs <client-id> [--json]
+// Etapas: brief > intake > designer > strategist > builder > verifier > pronto.
+// Sai com 0 sempre que conseguiu calcular; o proximo passo vem em "next".
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { equivalents, parseManifest } from './figma/lib/assets.mjs';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const repo = resolve(here, '..');
+const id = process.argv[2];
+const asJson = process.argv.includes('--json');
+if (!id || id.startsWith('--')) {
+  console.error('Uso: node status.mjs <client-id> [--json]');
+  process.exit(2);
+}
+
+const dir = join(here, 'clients', id);
+const specFile = join(dir, 'site-spec.json');
+const stages = ['brief', 'intake', 'designer', 'strategist', 'builder', 'verifier'];
+const result = { client: id, stage: null, next: null, blockers: [], done: [], notes: [] };
+const state = Object.fromEntries(stages.map((s) => [s, 'pending']));
+
+function finish(stage, next, blockers = []) {
+  result.stage = stage;
+  result.next = next;
+  result.blockers = blockers;
+  for (const s of stages) {
+    const i = stages.indexOf(s);
+    const cur = stages.indexOf(stage);
+    state[s] = stage === 'pronto' || i < cur ? 'done' : i === cur ? 'current' : 'pending';
+  }
+  result.stages = state;
+  if (asJson) console.log(JSON.stringify(result, null, 2));
+  else {
+    const mark = { done: '[x]', current: '[>]', pending: '[ ]' };
+    console.log(`Cliente: ${id}\n${stages.map((s) => `${mark[state[s]]} ${s}`).join('\n')}\n`);
+    console.log(stage === 'pronto' ? 'Pronto: todas as etapas concluidas.' : `Etapa atual: ${stage}\nProximo passo: ${next}`);
+    blockers.forEach((b) => console.log(`  - ${b}`));
+    result.notes.forEach((n) => console.log(`Nota: ${n}`));
+  }
+  process.exit(0);
+}
+
+// 1. brief
+if (!existsSync(join(dir, 'brief.md'))) {
+  finish('brief', `copiar site-factory/templates/brief.template.md para site-factory/clients/${id}/brief.md e preencher`, ['brief.md nao existe']);
+}
+
+// 2. intake: spec existe, valida contra o schema e nao tem perguntas em aberto
+if (!existsSync(specFile)) finish('intake', `rodar o agente intake (client-id: ${id})`, ['site-spec.json nao existe']);
+const validate = spawnSync('node', [join(here, 'spec', 'validate.mjs'), specFile], { encoding: 'utf8' });
+if (validate.status !== 0) {
+  const lines = (validate.stderr || validate.stdout).split('\n');
+  const reasons = lines.filter((l) => l.startsWith('- ')).map((l) => l.slice(2));
+  if (!reasons.length) reasons.push(`o validador falhou sem listar erros do spec: ${lines.find((l) => /Error|Cannot find|nao encontrado/i.test(l)) ?? lines.find(Boolean) ?? 'sem saida'} (dependencias instaladas? rode node site-factory/bootstrap.mjs)`);
+  finish('intake', `rodar o agente intake para corrigir o spec (client-id: ${id})`, reasons);
+}
+const spec = JSON.parse(readFileSync(specFile, 'utf8'));
+const questions = spec.openQuestions ?? [];
+const questionText = (q) => (typeof q === 'string' ? q : q.text);
+const blockingQuestions = questions.filter((q) => typeof q === 'string' || q.blocking !== false);
+if (blockingQuestions.length) {
+  finish('intake', 'GATE 1: levar as perguntas ao cliente e rodar o intake de novo com as respostas', blockingQuestions.map(questionText));
+}
+questions.filter((q) => typeof q !== 'string' && q.blocking === false).forEach((q) => result.notes.push(`pergunta opcional em aberto: ${questionText(q)}`));
+
+const todo = spec.sections.filter((s) => !['migrated', 'deferred'].includes(s.status));
+spec.sections.filter((s) => s.status === 'deferred').forEach((s) => result.notes.push(`secao adiada pelo dono (fora do build): ${s.id}`));
+const projectDir = spec.build?.projectDir;
+if (spec.project.contentMode === 'placeholder') result.notes.push('conteudo em Lorem Ipsum (contentMode placeholder): nao publicar em producao');
+
+// 3. designer: figmaNode de cada secao a construir + documento de design
+const noNode = todo.filter((s) => !s.figmaNode).map((s) => s.id);
+const docRef = spec.design.docRef;
+if (noNode.length) finish('designer', `rodar o agente designer (client-id: ${id}); precisa do token do Figma`, [`secoes sem figmaNode: ${noNode.join(', ')}`]);
+if (todo.length && (!docRef || !existsSync(join(repo, docRef)))) finish('designer', `rodar o agente designer (client-id: ${id}) para gerar o documento de design`, [docRef ? `${docRef} nao existe` : 'design.docRef ausente no spec']);
+
+// 3b. variantes: o designer registra design.variants (o que o Figma tem no escopo); cada secao a construir precisa de figmaVariants
+// para todas e o documento de design de medidas mobile/dark. Sem isso o builder inventaria os valores dessas variantes.
+if (todo.length) {
+  const variants = spec.design.variants ?? [];
+  if (!variants.length) finish('designer', `rodar o agente designer (client-id: ${id}) para registrar design.variants e mapear figmaVariants`, ['design.variants ausente: nao ha registro de quais variantes (desktop/mobile, light/dark) o design tem']);
+  const missingVariants = todo.flatMap((s) => variants.filter((v) => !s.figmaVariants?.[v] && !(v === 'desktop-light' && s.figmaNode)).map((v) => `${s.id}:${v}`));
+  if (missingVariants.length) finish('designer', `rodar o agente designer (client-id: ${id}) para mapear as variantes que faltam`, [`figmaVariants ausentes: ${missingVariants.join(', ')}`]);
+  const doc = readFileSync(join(repo, docRef), 'utf8');
+  const noMeasures = [variants.some((v) => v.startsWith('mobile')) && !/mobile/i.test(doc) && 'mobile', variants.some((v) => v.endsWith('dark')) && !/dark|escuro/i.test(doc) && 'dark', variants.some((v) => v.startsWith('tablet')) && !/tablet/i.test(doc) && 'tablet'].filter(Boolean);
+  if (noMeasures.length) finish('designer', `rodar o agente designer (client-id: ${id}) para extrair as medidas das variantes`, [`documento de design sem nenhuma mencao a: ${noMeasures.join(', ')} (heuristica: procura a palavra no documento)`]);
+}
+
+// 3c. assets: projeto que ainda nao existe so recebe o builder com os assets do Figma ja exportados (senao ele monta marcadores e o site
+// precisa de outro ciclo de builder, verifier e QA para trocar tudo). `assets.json` com lista vazia declara "este site nao tem imagem do design".
+const projectBuilt = !!projectDir && existsSync(join(repo, projectDir, 'angular.json'));
+if (todo.length && !projectBuilt) {
+  const manifestFile = join(dir, 'assets.json');
+  if (!existsSync(manifestFile)) finish('designer', `rodar o agente designer (client-id: ${id}) para listar e exportar os assets (assets.json)`, ['assets.json ausente: sem os assets exportados o builder monta marcadores; use { "assets": [] } se o design nao tem imagem']);
+  const { assets, errors } = parseManifest(JSON.parse(readFileSync(manifestFile, 'utf8')));
+  if (errors.length) finish('designer', `rodar o agente designer (client-id: ${id}) para corrigir o assets.json`, errors);
+  const assetsDir = join(repo, projectDir ?? '', 'public', 'assets');
+  const absent = assets.filter((a) => !equivalents(a.file).some((f) => existsSync(join(assetsDir, f)))).map((a) => a.file);
+  if (absent.length) finish('designer', `exportar os assets: node site-factory/figma/figma-map.mjs assets --spec site-factory/clients/${id}/site-spec.json`, [`assets do manifesto sem arquivo em ${projectDir}/public/assets: ${absent.slice(0, 8).join(', ')}${absent.length > 8 ? ` (+${absent.length - 8})` : ''}`]);
+}
+
+// 4. strategist: secoes ainda draft (conteudo ou estrutura por definir)
+const drafts = todo.filter((s) => s.status === 'draft').map((s) => s.id);
+if (drafts.length) {
+  const placeholder = spec.project.contentMode === 'placeholder';
+  finish('strategist', placeholder ? `rodar o agente strategist (client-id: ${id}); ele gera Lorem Ipsum de tamanho realista e marca as secoes como ready` : `GATE 2: rodar o strategist para propor os textos e levar ao cliente para aprovar`, [`secoes em draft: ${drafts.join(', ')}`]);
+}
+
+// 5. builder: projeto existe e cada secao ready tem componente
+const folderOf = (s) => join(repo, projectDir ?? '', 'src', 'app', ['header', 'footer'].includes(s.type) ? 'layout' : 'features', s.id);
+const missing = [];
+if (todo.length && (!projectDir || !existsSync(join(repo, projectDir, 'angular.json')))) missing.push('projeto Angular ainda nao criado');
+for (const s of todo) if (!existsSync(folderOf(s))) missing.push(`componente da secao ${s.id}`);
+if (missing.length) finish('builder', `rodar o agente builder (client-id: ${id})`, missing);
+
+// 6. verifier: relatorio do mesmo projeto, sem falhas, sem checks pulados, mais novo que o codigo
+const byClientFile = join(here, 'reports', 'by-client', id, 'report.json');
+const reportFile = existsSync(byClientFile) ? byClientFile : join(here, 'reports', 'latest', 'report.json');
+const reportBlockers = [];
+if (!existsSync(reportFile)) reportBlockers.push('nenhum relatorio do verifier');
+else {
+  const rep = JSON.parse(readFileSync(reportFile, 'utf8'));
+  if (projectDir && resolve(rep.project) !== resolve(repo, projectDir)) reportBlockers.push(`ultimo relatorio e de outro projeto (${rep.project})`);
+  else {
+    const failed = rep.checks.filter((c) => c.status === 'fail').map((c) => c.id);
+    const skipped = rep.checks.filter((c) => c.status === 'skipped').map((c) => c.id);
+    if (failed.length) reportBlockers.push(`checks reprovados: ${failed.join(', ')}`);
+    if (skipped.length) reportBlockers.push(`checks pulados (verificacao incompleta): ${skipped.join(', ')}`);
+    const newest = Math.max(0, ...todo.filter((s) => existsSync(folderOf(s))).map((s) => statSync(folderOf(s)).mtimeMs));
+    if (newest > new Date(rep.at).getTime()) reportBlockers.push('codigo alterado depois do ultimo relatorio');
+  }
+}
+if (reportBlockers.length) finish('verifier', `rodar o agente verifier sem flags (client-id: ${id})`, reportBlockers);
+
+finish('pronto', null);

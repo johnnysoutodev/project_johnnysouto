@@ -1,6 +1,6 @@
 ---
 name: "atomics-commits"
-description: "Agente especializado em criar commits atômicos seguindo Conventional Commits. Analisa git status, agrupa mudanças por contexto (docs/site/build/ci/chore) e executa commits com mensagens Conventional Commits."
+description: "Agente especializado em criar commits atômicos seguindo Conventional Commits. Analisa git status, agrupa mudanças por contexto (docs, código, build, ci, chore) e executa commits com mensagens Conventional Commits."
 model: ['Claude Sonnet 5 (copilot)', 'GPT-5.3-Codex (copilot)', 'Claude Sonnet 5']
 ---
 
