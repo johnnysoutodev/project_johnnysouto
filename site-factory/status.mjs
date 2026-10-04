@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { equivalents, parseManifest } from './figma/lib/assets.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..');
@@ -87,6 +88,19 @@ if (todo.length) {
   const doc = readFileSync(join(repo, docRef), 'utf8');
   const noMeasures = [variants.some((v) => v.startsWith('mobile')) && !/mobile/i.test(doc) && 'mobile', variants.some((v) => v.endsWith('dark')) && !/dark|escuro/i.test(doc) && 'dark', variants.some((v) => v.startsWith('tablet')) && !/tablet/i.test(doc) && 'tablet'].filter(Boolean);
   if (noMeasures.length) finish('designer', `rodar o agente designer (client-id: ${id}) para extrair as medidas das variantes`, [`documento de design sem nenhuma mencao a: ${noMeasures.join(', ')} (heuristica: procura a palavra no documento)`]);
+}
+
+// 3c. assets: projeto que ainda nao existe so recebe o builder com os assets do Figma ja exportados (senao ele monta marcadores e o site
+// precisa de outro ciclo de builder, verifier e QA para trocar tudo). `assets.json` com lista vazia declara "este site nao tem imagem do design".
+const projectBuilt = !!projectDir && existsSync(join(repo, projectDir, 'angular.json'));
+if (todo.length && !projectBuilt) {
+  const manifestFile = join(dir, 'assets.json');
+  if (!existsSync(manifestFile)) finish('designer', `rodar o agente designer (client-id: ${id}) para listar e exportar os assets (assets.json)`, ['assets.json ausente: sem os assets exportados o builder monta marcadores; use { "assets": [] } se o design nao tem imagem']);
+  const { assets, errors } = parseManifest(JSON.parse(readFileSync(manifestFile, 'utf8')));
+  if (errors.length) finish('designer', `rodar o agente designer (client-id: ${id}) para corrigir o assets.json`, errors);
+  const assetsDir = join(repo, projectDir ?? '', 'public', 'assets');
+  const absent = assets.filter((a) => !equivalents(a.file).some((f) => existsSync(join(assetsDir, f)))).map((a) => a.file);
+  if (absent.length) finish('designer', `exportar os assets: node site-factory/figma/figma-map.mjs assets --spec site-factory/clients/${id}/site-spec.json`, [`assets do manifesto sem arquivo em ${projectDir}/public/assets: ${absent.slice(0, 8).join(', ')}${absent.length > 8 ? ` (+${absent.length - 8})` : ''}`]);
 }
 
 // 4. strategist: secoes ainda draft (conteudo ou estrutura por definir)
