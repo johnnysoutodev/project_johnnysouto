@@ -20,10 +20,10 @@ Pipeline: `intake → designer → strategist → builder → verifier` (agentes
 
 ```bash
 cd site-factory/spec && npm install          # primeira vez
-node validate.mjs ../clients/johnnysouto/site-spec.json [--ready]
+node validate.mjs ../clients/<cliente>/site-spec.json [--ready]
 ```
 
-Caso de teste atual: `clients/johnnysouto/` (site já migrado; seções com `status: migrated` e `contentRef`).
+Cliente-exemplo que acompanha o template: `clients/example/` (brief e spec de uma landing de duas seções). Para um site já existente, as seções ficam com `status: migrated` e `contentRef`.
 
 ## Testar a obtenção de dados do Figma
 
@@ -31,7 +31,24 @@ Caso de teste atual: `clients/johnnysouto/` (site já migrado; seções com `sta
 node site-factory/figma/figma-map.mjs check --spec site-factory/clients/<id>/site-spec.json
 ```
 
-Confere se cada `figmaNode` do spec existe no arquivo (nome, tipo e tamanho impressos); código de saída 1 se algum faltar. Caso real: os 9 nós do `johnnysouto` conferem com a seção 1 do `docs/design-system.md`. Arquivos de página única também funcionam: o tipo da página é só uma dica, e o `map` lista os frames com cara de página para o `designer` descer até as seções.
+Confere se cada `figmaNode` do spec existe no arquivo (nome, tipo e tamanho impressos); código de saída 1 se algum faltar. Arquivos de página única também funcionam: o tipo da página é só uma dica, e o `map` lista os frames com cara de página para o `designer` descer até as seções.
+
+## Assets e contraste (designer)
+
+```bash
+node site-factory/figma/figma-map.mjs assets --spec site-factory/clients/<id>/site-spec.json   # exporta o que está em clients/<id>/assets.json
+node site-factory/figma/contrast.mjs '#ffffff' '#ff823d' text '#1d232a' '#ff823d'              # contraste WCAG de pares de cor (text 4,5:1; large e ui 3:1)
+```
+
+`assets.json` lista `{ id, node, category, format }`; os arquivos vão para `<projectDir>/public/assets/<categoria>/`. O `contrast.mjs` é como o designer confere, antes do `builder`, as cores do Figma.
+
+## Build parcial e perguntas opcionais
+
+- Seção `status: deferred`: adiada pelo dono; o `builder`, o `status.mjs` e o `verifier` a ignoram. Serve para o dono aprovar só parte do conteúdo.
+- `openQuestions` aceita texto (bloqueante) ou `{ "text": "...", "blocking": false }` (opcional: não trava o `status.mjs` nem o `--ready`).
+- `validate.mjs --ready` exige nenhuma pergunta bloqueante, nenhuma seção `draft` e ao menos uma `ready`.
+
+Testes do motor: `node --test site-factory/spec/validate.test.mjs site-factory/figma/lib/*.test.mjs`.
 
 ## Token do Figma
 

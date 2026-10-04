@@ -8,6 +8,8 @@
 //   node figma-map.mjs variants --url <url|fileKey> [--out <dir>]            variantes do design (desktop/mobile x light/dark) e as secoes de cada uma
 //   node figma-map.mjs image --spec <site-spec.json> --variant desktop-light [--scale 1] [--out <dir>]
 //                                                                            renderiza em PNG o frame de cada secao (referencia para QA visual)
+//   node figma-map.mjs assets --spec <site-spec.json> [--manifest <assets.json>] [--out <dir>]
+//                                                                            exporta icones, logos e imagens listados em assets.json (SVG/PNG/JPG) para <projectDir>/public/assets/<categoria>/
 //   node figma-map.mjs check --spec <site-spec.json>                         confere se cada figmaNode (e figmaVariants) do spec existe no Figma
 //   (map/node aceitam --from-file <json> para trabalhar offline com uma resposta ja salva)
 // Token: variavel de ambiente FIGMA_TOKEN ou, se ela nao existir, o arquivo
@@ -17,7 +19,8 @@
 import { existsSync, statSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { parseManifest, planCalls } from './lib/assets.mjs';
 
 const [command, ...rest] = process.argv.slice(2);
 const opt = (name, fallback) => {
@@ -309,6 +312,61 @@ async function cmdImage() {
   if (missing) process.exit(1);
 }
 
+// ---------- assets (icones, logos, imagens) ----------
+// O manifesto `assets.json` (ao lado do site-spec, escrito pelo designer) diz o que exportar:
+//   { "assets": [ { "id": "logo-branco", "node": "551:430", "category": "logos", "format": "svg" } ] }
+// Cada arquivo vai para <projectDir>/public/assets/<categoria>/<id>.<formato>. Sai com 1 se algum asset falhar.
+async function cmdAssets() {
+  const specPath = opt('spec');
+  if (!specPath) {
+    console.error('assets: informe --spec <site-spec.json> [--manifest <assets.json>] [--out <dir>]');
+    process.exit(2);
+  }
+  const spec = JSON.parse(await readFile(resolve(specPath), 'utf8'));
+  const manifestPath = resolve(opt('manifest', join(dirname(resolve(specPath)), 'assets.json')));
+  if (!existsSync(manifestPath)) {
+    console.error(`assets: manifesto nao encontrado (${manifestPath}). O designer cria o assets.json ao lado do site-spec.`);
+    process.exit(1);
+  }
+  const { assets, errors } = parseManifest(JSON.parse(await readFile(manifestPath, 'utf8')));
+  if (errors.length) {
+    console.error(`assets: manifesto invalido:\n- ${errors.join('\n- ')}`);
+    process.exit(1);
+  }
+  const projectDir = spec.build?.projectDir;
+  const out = resolve(opt('out', projectDir ? join(projectDir, 'public', 'assets') : ''));
+  if (!opt('out') && !projectDir) {
+    console.error('assets: o spec nao tem build.projectDir; informe --out <dir>.');
+    process.exit(2);
+  }
+  const key = spec.design.figma.fileKey;
+  let failed = 0;
+  for (const call of planCalls(assets)) {
+    const ids = call.assets.map((a) => a.node).join(',');
+    const data = await api(`/images/${key}?ids=${encodeURIComponent(ids)}&format=${call.format}&scale=${call.scale}`);
+    for (const a of call.assets) {
+      const url = data.images?.[a.node];
+      if (!url) {
+        failed++;
+        console.log(`FALTA  ${a.file.padEnd(34)} ${a.node} (o Figma nao renderizou)`);
+        continue;
+      }
+      const res = await fetch(url); // URL pre-assinada de curta duracao: sem o token
+      if (!res.ok) {
+        failed++;
+        console.log(`FALHA  ${a.file.padEnd(34)} ${a.node} (download ${res.status})`);
+        continue;
+      }
+      const file = join(out, a.file);
+      await mkdir(dirname(file), { recursive: true });
+      await writeFile(file, Buffer.from(await res.arrayBuffer()));
+      console.log(`OK     ${a.file.padEnd(34)} ${a.node}`);
+    }
+  }
+  console.log(`${assets.length - failed}/${assets.length} asset(s) exportado(s) em ${out}`);
+  if (failed) process.exit(1);
+}
+
 // Teste de obtencao de dados: cada `figmaNode` do spec precisa existir no arquivo do cliente.
 // Sai com codigo 1 se algum faltar; nos que existem mostra nome e tamanho para conferencia humana.
 async function cmdCheck() {
@@ -341,9 +399,9 @@ async function cmdCheck() {
   if (missing) process.exit(1);
 }
 
-const commands = { map: cmdMap, find: cmdFind, node: cmdNode, layout: cmdLayout, variants: cmdVariants, image: cmdImage, check: cmdCheck };
+const commands = { map: cmdMap, find: cmdFind, node: cmdNode, layout: cmdLayout, variants: cmdVariants, image: cmdImage, assets: cmdAssets, check: cmdCheck };
 if (!commands[command]) {
-  console.error('Uso: node figma-map.mjs <map|find|node|layout|variants|image|check> [opcoes]  (ver cabecalho do arquivo)');
+  console.error('Uso: node figma-map.mjs <map|find|node|layout|variants|image|assets|check> [opcoes]  (ver cabecalho do arquivo)');
   process.exit(2);
 }
 await commands[command]();

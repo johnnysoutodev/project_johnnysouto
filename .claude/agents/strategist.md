@@ -29,6 +29,6 @@ Pode sugerir, **na resposta**, ordem de seções ou seções comuns que fazem fa
 
 ## Validação e saída
 
-- `cd site-factory/spec && node validate.mjs ../clients/<client-id>/site-spec.json` até validar. Com todas as seções `ready`/`migrated`, rode também `--ready`.
+- `cd site-factory/spec && node validate.mjs ../clients/<client-id>/site-spec.json` até validar. Com todas as seções `ready`/`migrated`/`deferred`, rode também `--ready`. O dono pode **adiar** seções duvidosas (`deferred`): elas ficam fora do build e dos portões; não as marque `deferred` por conta própria.
 - Resposta ao orquestrador: seções preenchidas e o novo status de cada uma; no modo `final`, as propostas pendentes de aprovação (portão 2) e as perguntas novas; sugestões de estrutura, se houver; resultado do validador.
 - Não faz `git commit`/`git push`.
