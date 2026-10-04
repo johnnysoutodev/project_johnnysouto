@@ -1,0 +1,38 @@
+name: Deploy preview ({{previewEnv}})
+
+# Push em {{previewBranch}} publica um preview na Vercel. A Vercel roda o build no lado dela
+# (Root Directory = {{projectDir}}, configurado no painel).
+on:
+  push:
+    branches: [{{previewBranch}}]
+
+jobs:
+  deploy:
+    name: Deploy to {{previewEnv}}
+    runs-on: ubuntu-latest
+    environment: {{previewEnv}}
+    defaults:
+      run:
+        working-directory: {{projectDir}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '{{projectDir}}/.nvmrc'
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy to Vercel (preview)
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          URL=$(vercel deploy --token="$VERCEL_TOKEN" --yes)
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Preview URL: $URL"

@@ -141,7 +141,7 @@ Documentado em `docs/agent-rules/README.md`:
 
 Agentes existentes:
 
-- **`resolved-vulnerability`**: processo padronizado para resolver vulnerabilidades de dependências npm via `overrides`, sem quebrar o projeto.
+- **`resolved-vulnerability`**: processo padronizado para resolver vulnerabilidades de dependências npm sem forçar: atualização compatível, faixa de pacote direto e, por último, `overrides` para transitivo sem correção do pai.
 - **`atomics-commits`**: processo para agrupar mudanças e gerar commits atômicos seguindo Conventional Commits. Os exemplos foram adaptados para a realidade deste repositório (site estático) — antes referenciavam conceitos de outro projeto (loterias/predictions), sinal de que o arquivo havia sido copiado sem adaptação completa.
 
 ## 9. Pendências e pontos de atenção

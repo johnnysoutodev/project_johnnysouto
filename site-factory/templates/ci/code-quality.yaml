@@ -1,0 +1,42 @@
+# CI opcional: portao de qualidade de codigo (sem navegador). Copie para `.github/workflows/code-quality.yaml`
+# e ajuste PROJECT_DIR para o `build.projectDir` do site-spec do cliente. Status: nao testado em repositorio real.
+# O portao roda ESLint, Stylelint, testes com 100% de cobertura na logica e os checks de estrutura
+# (ver site-factory/verifier/README.md). Falha reprova o job.
+name: code-quality
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [develop]
+
+env:
+  PROJECT_DIR: site
+
+jobs:
+  code-quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.PROJECT_DIR }}/.nvmrc
+          cache: npm
+          cache-dependency-path: |
+            ${{ env.PROJECT_DIR }}/package-lock.json
+            site-factory/verifier/package-lock.json
+
+      - name: Install verifier dependencies
+        run: npm ci
+        working-directory: site-factory/verifier
+
+      - name: Install project dependencies
+        run: npm ci
+        working-directory: ${{ env.PROJECT_DIR }}
+
+      - name: Code quality gate
+        run: node site-factory/verifier/code-quality.mjs --project "$PROJECT_DIR"

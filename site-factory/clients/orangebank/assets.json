@@ -1,0 +1,297 @@
+{
+  "assets": [
+    {
+      "id": "hero-fundo",
+      "node": "1071:484",
+      "category": "images",
+      "format": "jpg",
+      "scale": 2
+    },
+    {
+      "id": "logo-branco-header",
+      "node": "I551:430;970:661",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "logo-branco-footer",
+      "node": "631:769",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "logotipo-marca-dagua",
+      "node": "551:477",
+      "category": "images",
+      "format": "svg"
+    },
+    {
+      "id": "mockup-iphone",
+      "node": "551:484",
+      "category": "images",
+      "format": "png",
+      "scale": 2
+    },
+    {
+      "id": "foto-moca",
+      "node": "551:561",
+      "category": "images",
+      "format": "jpg",
+      "scale": 2
+    },
+    {
+      "id": "foto-moca-recorte",
+      "node": "1081:471",
+      "category": "images",
+      "format": "png",
+      "scale": 2
+    },
+    {
+      "id": "people-card",
+      "node": "551:567",
+      "category": "images",
+      "format": "png",
+      "scale": 2
+    },
+    {
+      "id": "foto-investimentos",
+      "node": "551:614",
+      "category": "images",
+      "format": "jpg",
+      "scale": 2
+    },
+    {
+      "id": "card-invest",
+      "node": "551:619",
+      "category": "images",
+      "format": "svg"
+    },
+    {
+      "id": "foto-cartao",
+      "node": "551:637",
+      "category": "images",
+      "format": "jpg",
+      "scale": 2
+    },
+    {
+      "id": "fundo-cta",
+      "node": "684:604",
+      "category": "images",
+      "format": "jpg",
+      "scale": 2
+    },
+    {
+      "id": "cta-image-1",
+      "node": "640:816",
+      "category": "images",
+      "format": "png",
+      "scale": 2
+    },
+    {
+      "id": "selo-app-store",
+      "node": "631:535",
+      "category": "images",
+      "format": "png",
+      "scale": 2
+    },
+    {
+      "id": "selo-google-play",
+      "node": "631:536",
+      "category": "images",
+      "format": "svg"
+    },
+    {
+      "id": "selo-app-store-footer",
+      "node": "648:1135",
+      "category": "images",
+      "format": "svg"
+    },
+    {
+      "id": "selo-google-play-footer",
+      "node": "648:1138",
+      "category": "images",
+      "format": "svg"
+    },
+    {
+      "id": "icon-hand",
+      "node": "1021:677",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-hand-two",
+      "node": "846:1072",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-anuidade",
+      "node": "1050:495",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-anuidade-2",
+      "node": "1050:510",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-device",
+      "node": "551:575",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-shield",
+      "node": "993:475",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-automatizado",
+      "node": "993:484",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-cartao-device",
+      "node": "551:645",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-cartao-shield",
+      "node": "551:651",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-servers",
+      "node": "551:667",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-mastercard",
+      "node": "551:678",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-instagram",
+      "node": "631:665",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-facebook",
+      "node": "631:671",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-youtube",
+      "node": "631:674",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-globo",
+      "node": "631:762",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-pin",
+      "node": "631:765",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-assine",
+      "node": "636:796",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "icon-faq-toggle",
+      "node": "551:1381",
+      "category": "icons",
+      "format": "svg"
+    },
+    {
+      "id": "tech-html5",
+      "node": "551:495",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-css3",
+      "node": "551:506",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-javascript",
+      "node": "551:513",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-typescript",
+      "node": "551:516",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-react",
+      "node": "551:519",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-java",
+      "node": "551:523",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-spring",
+      "node": "551:529",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-sql",
+      "node": "551:531",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-mongodb",
+      "node": "551:537",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "tech-aws",
+      "node": "551:554",
+      "category": "logos",
+      "format": "svg"
+    },
+    {
+      "id": "favicon-512",
+      "node": "293:422",
+      "category": "favicon",
+      "format": "png",
+      "scale": 1
+    },
+    {
+      "id": "seta-botao",
+      "node": "I1021:684;462:309",
+      "category": "icons",
+      "format": "svg"
+    }
+  ]
+}

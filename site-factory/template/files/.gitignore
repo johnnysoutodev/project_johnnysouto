@@ -1,0 +1,28 @@
+# Dependencias e saidas de build
+node_modules/
+dist/
+.angular/
+coverage/
+.stylelintcache
+.eslintcache
+
+# Sistema e editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Segredos (o token do Figma mora FORA do repositorio, em ~/.config/site-factory/.env)
+.env
+.env.*
+!.env.example
+
+# Local de cada pessoa
+.claude/settings.local.json
+
+# site-factory: relatorios gerados e projetos de teste/copias de trabalho (descartaveis, nunca vao ao git)
+site-factory/reports/
+site-factory/sandbox/
+
+# Vercel
+.vercel/

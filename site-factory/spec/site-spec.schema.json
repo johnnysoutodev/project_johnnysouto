@@ -1,0 +1,914 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://site-factory.local/site-spec.schema.json",
+  "title": "site-spec",
+  "description": "Contrato entre intake, designer, builder e verifier. Uma landing page = um site-spec. Texto visivel fica no idioma-fonte (locales.source); traducoes seguem o fluxo de i18n nativo do Angular, nao moram aqui.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "specVersion",
+    "client",
+    "project",
+    "locales",
+    "design",
+    "deploy",
+    "sections"
+  ],
+  "properties": {
+    "specVersion": {
+      "const": "1"
+    },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "slug; mesmo nome da pasta em site-factory/clients/"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "goal",
+        "audience"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "landing-page"
+          ],
+          "description": "Outros formatos (institucional, blog...) entram aqui quando avaliados."
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A unica acao/resultado que o site existe para provocar."
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tone": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ex.: profissional, direto, acolhedor."
+        },
+        "domain": {
+          "type": "string",
+          "format": "uri"
+        },
+        "contentMode": {
+          "enum": [
+            "final",
+            "placeholder"
+          ],
+          "default": "final",
+          "description": "final = os textos do spec/codigo sao os do cliente. placeholder = textos em Lorem Ipsum de tamanho realista, para o cliente editar depois nos arquivos de dados das secoes. Placeholder nunca deve ir para producao: o verifier avisa."
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "framework": {
+          "const": "angular"
+        },
+        "projectDir": {
+          "type": "string",
+          "description": "Pasta do projeto Angular gerado, relativa a raiz do repositorio."
+        }
+      }
+    },
+    "locales": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/locale"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/locale"
+          },
+          "uniqueItems": true
+        },
+        "fallback": {
+          "$ref": "#/$defs/locale",
+          "description": "Idioma para quem nao tem cookie nem Accept-Language conhecido (redirect da raiz). Padrao: o idioma-fonte."
+        }
+      }
+    },
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "figma",
+        "themes"
+      ],
+      "properties": {
+        "figma": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "fileKey"
+          ],
+          "properties": {
+            "url": {
+              "type": "string",
+              "pattern": "^https://www\\.figma\\.com/(design|file)/"
+            },
+            "fileKey": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9]+$",
+              "description": "Extraido da URL pelo intake."
+            }
+          }
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "light",
+              "dark"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "tokensRef": {
+          "type": "string",
+          "description": "Caminho do artefato de tokens gerado pelo designer."
+        },
+        "docRef": {
+          "type": "string",
+          "description": "Documento de design-system gerado/mantido pelo designer (ex.: site-factory/clients/<id>/design-system.md)."
+        },
+        "variants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(desktop|tablet|mobile)-(light|dark)$"
+          },
+          "description": "Variantes do design do Figma dentro do escopo, registradas pelo designer (sem overlays -menu nem frames inferidos). Cada secao a construir precisa de figmaVariants para todas elas, e o documento de design de medidas dessas variantes, antes do builder rodar."
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "ogImage": {
+          "type": "string"
+        }
+      }
+    },
+    "analytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "enum": [
+            "none",
+            "ga4"
+          ]
+        },
+        "consentBanner": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blocking": {
+                "type": "boolean",
+                "description": "false = pergunta opcional: nao trava o intake nem o --ready. Omitido ou true = bloqueante."
+              }
+            }
+          }
+        ]
+      },
+      "description": "Lacunas que o intake nao conseguiu resolver. Texto simples ou {text, blocking:false} para pergunta opcional. As bloqueantes devem estar vazias antes do builder rodar."
+    },
+    "deploy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "outputMode"
+      ],
+      "description": "Onde o site sera publicado. Define o formato do build (estatico em CDN ou servidor Node), nao o pipeline de deploy em si.",
+      "properties": {
+        "provider": {
+          "enum": [
+            "vercel",
+            "netlify",
+            "cloudflare-pages",
+            "github-pages",
+            "aws",
+            "azure",
+            "gcp",
+            "other"
+          ]
+        },
+        "outputMode": {
+          "enum": [
+            "static",
+            "server"
+          ],
+          "description": "static = prerender completo servido por CDN/bucket (Vercel, Netlify, S3+CloudFront, Azure Static Web Apps...). server = SSR em runtime Node (App Runner/ECS/Lambda, App Service, Cloud Run...)."
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Detalhes que o brief trouxe: servico especifico (ex.: S3+CloudFront), conta, regiao, restricoes."
+        }
+      },
+      "if": {
+        "properties": {
+          "provider": {
+            "const": "other"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "notes"
+        ]
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "enforce",
+            "report"
+          ],
+          "default": "enforce",
+          "description": "enforce = o code-quality barra (falha reprova o verifier). report = projeto legado em adocao gradual: as falhas viram aviso."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2}-[A-Z]{2}$",
+      "description": "BCP 47 com regiao, ex.: pt-BR"
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Vira a ancora (#id) e o nome do componente."
+        },
+        "type": {
+          "enum": [
+            "header",
+            "hero",
+            "about",
+            "skills",
+            "timeline",
+            "projects",
+            "testimonials",
+            "features",
+            "pricing",
+            "faq",
+            "cta",
+            "logos",
+            "stats",
+            "gallery",
+            "contact",
+            "footer"
+          ]
+        },
+        "nav": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "string"
+            }
+          }
+        },
+        "figmaNode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d+:\\d+$",
+          "description": "null ate o designer mapear a secao."
+        },
+        "variant": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "ready",
+            "migrated",
+            "deferred"
+          ],
+          "description": "draft = so estrutura (sem conteudo exigido; bloqueia o builder), ready = aprovada e com conteudo (o builder gera), migrated = ja existe, nao e regenerada, deferred = adiada pelo dono (build parcial): o builder, o status e o verifier a ignoram."
+        },
+        "content": {
+          "type": "object",
+          "description": "Conteudo no idioma-fonte; forma depende do type (ver allOf)."
+        },
+        "contentRef": {
+          "type": "string",
+          "description": "Alternativa a content: caminho onde o conteudo ja vive (ex.: arquivo .ts de dados)."
+        },
+        "notes": {
+          "type": "string"
+        },
+        "figmaVariants": {
+          "type": "object",
+          "description": "Node do frame desta secao em cada variante do design do Figma. Chaves: <dispositivo>-<tema> (desktop-light, desktop-dark, mobile-light, mobile-dark, tablet-light...), com sufixo -menu para overlays. figmaNode continua sendo a variante principal (desktop-light).",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^I?\\d+:\\d+(;\\d+:\\d+)*$"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": [
+                  "content"
+                ]
+              },
+              {
+                "required": [
+                  "contentRef"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "hero"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "headline"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "about"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "body"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "skills"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "timeline"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "projects"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "testimonials"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "features"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "pricing"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "plans"
+                ],
+                "properties": {
+                  "plans": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "faq"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "cta"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "headline",
+                  "action"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "logos"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "stats"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "gallery"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "items"
+                ],
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "contact"
+              },
+              "status": {
+                "enum": [
+                  "ready",
+                  "migrated"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "content": {
+                "type": "object",
+                "required": [
+                  "channels"
+                ],
+                "properties": {
+                  "channels": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

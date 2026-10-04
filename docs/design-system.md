@@ -111,7 +111,7 @@ Valores de `gap`/`padding` do Auto Layout encontrados nas 9 seções (amostra or
 
 ### Artefato de tokens CSS
 
-Os valores de cor (seção 3), tipografia (seção 4), sombra (seção 5) e a escala de espaçamento observada (acima) foram traduzidos mecanicamente para CSS custom properties em **[`docs/design-tokens.css`](./design-tokens.css)** — artefato agnóstico de framework, sem valor novo (só formato). Fica em `docs/` (fora de `src/`/`public/`) porque o projeto Angular ainda não existe; quando `angular-scaffold`/`angular-components` rodarem, esse conteúdo migra para dentro do projeto Angular. Convenções adotadas (tema via `[data-theme="dark"]`, espaçamento nomeado pelo próprio valor em px) estão documentadas no cabeçalho do próprio arquivo.
+Os valores de cor (seção 3), tipografia (seção 4), sombra (seção 5) e a escala de espaçamento observada (acima) foram traduzidos mecanicamente para CSS custom properties em **`angular-app/src/styles/_tokens.scss`** (arquivo único de tokens do projeto; sem valor novo, só formato). O artefato intermediário `docs/design-tokens.css` foi removido em out/2026 por estar duplicado e desatualizado; o histórico dele está no git.
 
 ## 3. Cores (variáveis do Figma)
 

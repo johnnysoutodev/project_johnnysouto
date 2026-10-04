@@ -1,0 +1,49 @@
+// CloudFront Function (viewer-request, runtime cloudfront-js-2.0).
+// 1) Raiz "/": redireciona por cookie `lang`, depois Accept-Language, depois idioma de fallback.
+// 2) Arquivos de raiz (robots.txt, sitemap.xml, favicon.ico) vao para a pasta do idioma-fonte.
+// 3) URLs limpas: "/x/" e "/x" viram "/x/index.html" (S3 nao serve index automatico).
+var LOCALES = {{localeFoldersJson}};
+var LANGS = {{localeLangMapJson}};
+var FALLBACK = '{{fallbackFolder}}';
+var SOURCE = '{{sourceFolder}}';
+var MULTI = {{multiLocale}};
+var ROOT_FILES = ['/robots.txt', '/sitemap.xml', '/favicon.ico'];
+
+function redirect(location) {
+  return {
+    statusCode: 302,
+    statusDescription: 'Found',
+    headers: { location: { value: location }, 'cache-control': { value: 'no-store' } }
+  };
+}
+
+function handler(event) {
+  var request = event.request;
+  var uri = request.uri;
+
+  if (MULTI) {
+    if (uri === '/') {
+      var cookie = request.cookies && request.cookies.lang ? request.cookies.lang.value.toLowerCase() : '';
+      if (LOCALES.indexOf(cookie) !== -1) {
+        return redirect('/' + cookie + '/');
+      }
+      var header = request.headers['accept-language'] ? request.headers['accept-language'].value.toLowerCase() : '';
+      var primary = header.split(',')[0].split(';')[0].trim().split('-')[0];
+      if (LANGS[primary]) {
+        return redirect('/' + LANGS[primary] + '/');
+      }
+      return redirect('/' + FALLBACK + '/');
+    }
+    if (ROOT_FILES.indexOf(uri) !== -1) {
+      request.uri = '/' + SOURCE + uri;
+      return request;
+    }
+  }
+
+  if (uri.charAt(uri.length - 1) === '/') {
+    request.uri = uri + 'index.html';
+  } else if (uri.lastIndexOf('.') < uri.lastIndexOf('/')) {
+    request.uri = uri + '/index.html';
+  }
+  return request;
+}

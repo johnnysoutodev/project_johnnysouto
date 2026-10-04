@@ -1,0 +1,19 @@
+{
+  "id": "vercel-static",
+  "provider": "vercel",
+  "outputMode": "static",
+  "status": "untested",
+  "notes": "vercel.json gerado equivale ao de um site Angular multilingue em producao (comparado por script, sem redirects legados de caminhos curtos). Os workflows derivam dos de um projeto real, simplificados, e ainda nao rodaram num repositorio real.",
+  "deployDetect": "vercel\\s+deploy",
+  "files": [
+    { "from": "vercel.json.tmpl", "to": "{{projectDir}}/vercel.json" },
+    { "from": "workflows/deploy-preview.yaml.tmpl", "to": ".github/workflows/deploy-vercel-preview.yaml" },
+    { "from": "workflows/deploy-production.yaml.tmpl", "to": ".github/workflows/deploy-vercel-production.yaml" }
+  ],
+  "afterApply": [
+    "No painel da Vercel: crie o projeto e defina o Root Directory como {{projectDir}}.",
+    "No GitHub: crie os Environments {{previewEnv}} e {{productionEnv}} (no de producao, marque Required reviewers para aprovacao manual).",
+    "No GitHub (Settings > Secrets and variables > Actions): secrets VERCEL_TOKEN, VERCEL_ORG_ID e VERCEL_PROJECT_ID (os dois ultimos ficam em .vercel/project.json depois de `vercel link`).",
+    "Fluxo de branches: push em {{previewBranch}} publica o preview; push em {{productionBranch}} publica a producao."
+  ]
+}

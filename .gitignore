@@ -172,3 +172,8 @@ yarn-error.log*
 # que é intencionalmente versionado (tasks/launch/extensions/mcp.json
 # gerados pelo `ng new` como parte da config de IA do Angular CLI).
 /.vscode
+# site-factory: relatorios e screenshots gerados pelo verifier
+site-factory/reports/
+
+# site-factory: projetos gerados para clientes de teste/ficticios (descartaveis)
+site-factory/sandbox/

@@ -1,0 +1,17 @@
+{
+  "name": "site-factory-verifier",
+  "private": true,
+  "type": "module",
+  "description": "Verificador executável de sites Angular gerados (build/SSR, testes, lint, guardas de plataforma, a11y, SEO básico, layout, teclado).",
+  "scripts": {
+    "verify": "node verify.mjs"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "axe-core": "^4.13.0",
+    "playwright-core": "^1.63.0"
+  }
+}
