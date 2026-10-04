@@ -43,3 +43,19 @@ export function planCalls(assets) {
     return batches;
   });
 }
+
+// Imagem raster entregue pode ter sido convertida (jpg/png -> webp/avif) pelo builder; para o comando a versao otimizada conta como "ja existe".
+const RASTER = ['png', 'jpg', 'jpeg', 'webp', 'avif'];
+export function equivalents(file) {
+  const m = /^(.*)\.([a-z0-9]+)$/.exec(file);
+  if (!m || !RASTER.includes(m[2])) return [file];
+  return RASTER.map((ext) => `${m[1]}.${ext}`);
+}
+
+// Separa o que precisa ser exportado do que ja existe no destino (nao sobrescreve imagem ja otimizada/editada).
+// exists: funcao (arquivo relativo) => boolean. force: exporta tudo.
+export function splitPending(assets, exists, force = false) {
+  if (force) return { pending: assets, skipped: [] };
+  const has = (a) => equivalents(a.file).some(exists);
+  return { pending: assets.filter((a) => !has(a)), skipped: assets.filter(has) };
+}

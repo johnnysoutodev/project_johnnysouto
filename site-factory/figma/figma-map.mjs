@@ -8,8 +8,10 @@
 //   node figma-map.mjs variants --url <url|fileKey> [--out <dir>]            variantes do design (desktop/mobile x light/dark) e as secoes de cada uma
 //   node figma-map.mjs image --spec <site-spec.json> --variant desktop-light [--scale 1] [--out <dir>]
 //                                                                            renderiza em PNG o frame de cada secao (referencia para QA visual)
-//   node figma-map.mjs assets --spec <site-spec.json> [--manifest <assets.json>] [--out <dir>]
+//   node figma-map.mjs assets --spec <site-spec.json> [--manifest <assets.json>] [--out <dir>] [--force]
 //                                                                            exporta icones, logos e imagens listados em assets.json (SVG/PNG/JPG) para <projectDir>/public/assets/<categoria>/
+//   node figma-map.mjs fx --url <url|fileKey> --ids 846:1072,1044:500 [--depth 4] [--json]
+//                                                                            rotacao, blend, opacidade, filtros (saturacao), efeitos (blur, sombra) e trechos de texto com cor/peso/tamanho proprios
 //   node figma-map.mjs check --spec <site-spec.json>                         confere se cada figmaNode (e figmaVariants) do spec existe no Figma
 //   (map/node aceitam --from-file <json> para trabalhar offline com uma resposta ja salva)
 // Token: variavel de ambiente FIGMA_TOKEN ou, se ela nao existir, o arquivo
@@ -20,8 +22,12 @@ import { existsSync, statSync } from 'node:fs';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { parseManifest, planCalls } from './lib/assets.mjs';
+import { parseManifest, planCalls, splitPending } from './lib/assets.mjs';
+import { collectFx } from './lib/fx.mjs';
+import { fileURLToPath } from 'node:url';
 
+// Raiz do repositorio (este arquivo fica em site-factory/figma/): as saidas padrao nao dependem do diretorio de onde o comando roda.
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const [command, ...rest] = process.argv.slice(2);
 const opt = (name, fallback) => {
   const i = rest.indexOf(`--${name}`);
@@ -131,7 +137,7 @@ async function cmdMap() {
   const src = await load('map');
   const file = src.fetch ? await api(`/files/${src.key}?depth=${depth}`) : src;
   const key = src.key ?? fileKeyOf(opt('url')) ?? 'offline';
-  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', key)));
+  const out = resolve(REPO_ROOT, opt('out', join('site-factory', 'reports', 'figma', key)));
   await mkdir(out, { recursive: true });
   await writeFile(join(out, 'file.json'), JSON.stringify(file));
 
@@ -182,7 +188,7 @@ async function cmdNode() {
     process.exit(2);
   }
   const data = src.fetch ? await api(`/files/${src.key}/nodes?ids=${encodeURIComponent(ids.join(','))}&depth=${depth}`) : { nodes: Object.fromEntries(ids.map((id) => [id, { document: [...walk(src.document ?? src)].find((w) => w.node.id === id)?.node }])) };
-  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', src.key ?? 'offline')));
+  const out = resolve(REPO_ROOT, opt('out', join('site-factory', 'reports', 'figma', src.key ?? 'offline')));
   await mkdir(out, { recursive: true });
   for (const id of ids) {
     const doc = data.nodes?.[id]?.document;
@@ -249,7 +255,7 @@ async function cmdVariants() {
   const src = await load('variants');
   const file = src.fetch ? await api(`/files/${src.key}?depth=3`) : src;
   const key = src.key ?? fileKeyOf(opt('url')) ?? 'offline';
-  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', key)));
+  const out = resolve(REPO_ROOT, opt('out', join('site-factory', 'reports', 'figma', key)));
   await mkdir(out, { recursive: true });
   const frames = file.document.children.flatMap((p) => pageLikeFrames(p).map((f) => ({ page: p.name, frame: f })));
   const ids = frames.map((x) => x.frame.id);
@@ -276,6 +282,30 @@ async function cmdVariants() {
   console.log(`\nJSON: ${join(out, 'variants.json')}`);
 }
 
+// ---------- efeitos (rotacao, blend, filtros, trechos de texto com estilo) ----------
+// O que o `layout` e o `node` nao mostram e o builder nao deve adivinhar. Lista so os nos notaveis da subarvore.
+async function cmdFx() {
+  const ids = opt('ids')?.split(',').map(normalizeId);
+  const depth = Number(opt('depth', 4));
+  if (!ids?.length) {
+    console.error('fx: informe --url <url|fileKey> --ids 846:1072,1044:500 [--depth 4] [--json]');
+    process.exit(2);
+  }
+  const src = await load('fx');
+  const data = await api(`/files/${src.key}/nodes?ids=${encodeURIComponent(ids.join(','))}&depth=${depth}`);
+  for (const id of ids) {
+    const doc = data.nodes?.[id]?.document;
+    if (!doc) {
+      console.log(`${id}: nao encontrado`);
+      continue;
+    }
+    const found = collectFx(doc, depth);
+    if (rest.includes('--json')) console.log(JSON.stringify({ id, found }, null, 2));
+    else if (!found.length) console.log(`${id} ${doc.name}: nada notavel (sem rotacao, blend, filtro, efeito nem trecho de texto com estilo proprio)`);
+    else found.forEach((n) => console.log(`${n.id}  ${n.type}  ${n.path}\n    ${JSON.stringify(n.fx)}`));
+  }
+}
+
 // ---------- imagem de referencia (render do Figma) ----------
 async function cmdImage() {
   const specPath = opt('spec');
@@ -292,7 +322,7 @@ async function cmdImage() {
     console.error(`image: nenhuma secao do spec tem node para a variante "${variant}" (figmaVariants).`);
     process.exit(1);
   }
-  const out = resolve(opt('out', join('site-factory', 'reports', 'figma', key, 'ref', variant)));
+  const out = resolve(REPO_ROOT, opt('out', join('site-factory', 'reports', 'figma', key, 'ref', variant)));
   await rm(out, { recursive: true, force: true });
   await mkdir(out, { recursive: true });
   const scale = opt('scale', '1');
@@ -315,7 +345,7 @@ async function cmdImage() {
 // ---------- assets (icones, logos, imagens) ----------
 // O manifesto `assets.json` (ao lado do site-spec, escrito pelo designer) diz o que exportar:
 //   { "assets": [ { "id": "logo-branco", "node": "551:430", "category": "logos", "format": "svg" } ] }
-// Cada arquivo vai para <projectDir>/public/assets/<categoria>/<id>.<formato>. Sai com 1 se algum asset falhar.
+// Cada arquivo vai para <projectDir>/public/assets/<categoria>/<id>.<formato>. Nao sobrescreve arquivo que ja existe (use --force). Sai com 1 se algum asset falhar.
 async function cmdAssets() {
   const specPath = opt('spec');
   if (!specPath) {
@@ -340,8 +370,10 @@ async function cmdAssets() {
     process.exit(2);
   }
   const key = spec.design.figma.fileKey;
+  const { pending, skipped } = splitPending(assets, (file) => existsSync(join(out, file)), rest.includes('--force'));
+  skipped.forEach((a) => console.log(`PULOU  ${a.file.padEnd(34)} ${a.node} (ja existe; --force para sobrescrever)`));
   let failed = 0;
-  for (const call of planCalls(assets)) {
+  for (const call of planCalls(pending)) {
     const ids = call.assets.map((a) => a.node).join(',');
     const data = await api(`/images/${key}?ids=${encodeURIComponent(ids)}&format=${call.format}&scale=${call.scale}`);
     for (const a of call.assets) {
@@ -363,7 +395,7 @@ async function cmdAssets() {
       console.log(`OK     ${a.file.padEnd(34)} ${a.node}`);
     }
   }
-  console.log(`${assets.length - failed}/${assets.length} asset(s) exportado(s) em ${out}`);
+  console.log(`${pending.length - failed}/${pending.length} asset(s) exportado(s), ${skipped.length} ja existia(m), em ${out}`);
   if (failed) process.exit(1);
 }
 
@@ -399,9 +431,9 @@ async function cmdCheck() {
   if (missing) process.exit(1);
 }
 
-const commands = { map: cmdMap, find: cmdFind, node: cmdNode, layout: cmdLayout, variants: cmdVariants, image: cmdImage, assets: cmdAssets, check: cmdCheck };
+const commands = { map: cmdMap, find: cmdFind, node: cmdNode, layout: cmdLayout, variants: cmdVariants, image: cmdImage, assets: cmdAssets, fx: cmdFx, check: cmdCheck };
 if (!commands[command]) {
-  console.error('Uso: node figma-map.mjs <map|find|node|layout|variants|image|assets|check> [opcoes]  (ver cabecalho do arquivo)');
+  console.error('Uso: node figma-map.mjs <map|find|node|layout|variants|image|assets|fx|check> [opcoes]  (ver cabecalho do arquivo)');
   process.exit(2);
 }
 await commands[command]();

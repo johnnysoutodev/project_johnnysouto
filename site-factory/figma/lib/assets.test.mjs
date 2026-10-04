@@ -1,7 +1,7 @@
 // Rodar: node --test site-factory/figma/lib/assets.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseManifest, planCalls } from './assets.mjs';
+import { equivalents, parseManifest, planCalls, splitPending } from './assets.mjs';
 
 const ok = (over = {}) => ({ id: 'logo-branco', node: '551:430', category: 'logos', ...over });
 
@@ -46,4 +46,21 @@ test('pedidos agrupam por formato e escala', () => {
 test('lotes de no maximo 40 ids por chamada', () => {
   const many = Array.from({ length: 85 }, (_, i) => ok({ id: `i${i}`, node: `1:${i + 1}` }));
   assert.deepEqual(planCalls(parseManifest({ assets: many }).assets).map((c) => c.assets.length), [40, 40, 5]);
+});
+
+test('splitPending pula o que ja existe, a menos que force', () => {
+  const { assets } = parseManifest({ assets: [ok({ id: 'a' }), ok({ id: 'b', node: '1:2' })] });
+  const exists = (f) => f === 'logos/a.svg';
+  assert.deepEqual(splitPending(assets, exists).pending.map((a) => a.id), ['b']);
+  assert.deepEqual(splitPending(assets, exists).skipped.map((a) => a.id), ['a']);
+  assert.equal(splitPending(assets, exists, true).pending.length, 2);
+});
+
+test('versao otimizada (jpg -> webp) conta como ja existente; svg nao tem equivalente', () => {
+  assert.deepEqual(equivalents('logos/a.svg'), ['logos/a.svg']);
+  assert.ok(equivalents('images/foto.jpg').includes('images/foto.webp'));
+  const { assets } = parseManifest({ assets: [ok({ id: 'foto', category: 'images', format: 'jpg', node: '1:2' }), ok({ id: 'logo', node: '1:3' })] });
+  const exists = (f) => f === 'images/foto.webp';
+  assert.deepEqual(splitPending(assets, exists).skipped.map((a) => a.id), ['foto']);
+  assert.deepEqual(splitPending(assets, exists).pending.map((a) => a.id), ['logo']);
 });
