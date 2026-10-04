@@ -254,3 +254,9 @@ Pedido do dono: capturas do `verifier` sem imagens, `assets-extra.json` como rem
 | `status.mjs` escondia a causa quando o validador não rodava | só lia linhas `- ` do erro | mostra a causa e manda rodar o `bootstrap` |
 
 Lacunas abertas: a página de decisões com formulário (artifact + `db`) é montada à mão a cada rodada (falta uma ferramenta/modelo); `qa-capture` das variantes mobile/tablet não é refeito nas rodadas de desktop (a skill manda apagar ou marcar como antigo).
+
+## Sincronismo fonte → template (04/10/2026)
+
+`site-factory/template/sync.mjs` substitui o passo manual (exportar, `rsync`, `--verify`, testes). Provado: com o destino deformado de propósito (arquivo alterado à mão e pasta sobrando), o `sync` restaurou e removeu tudo, e o `--verify` e os 31 testes do motor passaram dentro do template. O commit inicial do template (nunca enviado) foi substituído por um único commit do estado final.
+
+Lacuna aberta: o fluxo inverso para quem consome o template (`git checkout template/main -- <caminhos>`) ainda é manual e sem teste num repositório real; é o que a fase seguinte (um cliente criado do template e atualizado depois) deve provar.

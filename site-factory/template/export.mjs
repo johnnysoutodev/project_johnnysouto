@@ -1,5 +1,5 @@
-// Gera o repositorio-template limpo a partir deste repositorio (uso unico, para criar o repositorio do template;
-// depois dele o template e a fonte do motor):
+// Gera o repositorio-template limpo a partir deste repositorio. Para ATUALIZAR um template que ja existe use sync.mjs (que chama este
+// script, compara e sincroniza); este aqui gera numa pasta vazia e verifica:
 //   node site-factory/template/export.mjs --out <diretorio-vazio>
 //   node site-factory/template/export.mjs --verify <diretorio>      (so verifica um template ja gerado, ex.: o repositorio novo)
 // Copia o motor (manifest.json), instala os arquivos proprios do template (template/files) e VERIFICA o resultado:
