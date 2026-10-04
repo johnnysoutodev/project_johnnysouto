@@ -28,6 +28,8 @@ Variante padrão: `desktop-light` (economia de tokens). `dark`, `mobile` e `tabl
 
 ## Regras
 
+- **Site oficial é somente leitura:** as correções do QA num projeto oficial de produção são feitas numa cópia escondida do git (`site-factory/sandbox/`) e entregues como patch; o oficial só muda com pedido explícito do dono.
+
 - A correção automática vale **só** para o que a regra do `qa-visual` permite (fonte da verdade escrita, local, reversível, sem contradizer decisão registrada). Tudo o mais espera o usuário. Como nada é commitado, o usuário pode desfazer qualquer correção automática pelo git.
 - O `builder` é o único que edita código; o `qa-visual` só lê e reporta; ninguém faz `git commit`/`git push`.
 - Não altere o motor (`.claude/`, `site-factory/{spec,verifier,figma,deploy-templates}`) para fazer um site passar. Se o motor não der conta, registre no `site-factory/ROADMAP.md`.

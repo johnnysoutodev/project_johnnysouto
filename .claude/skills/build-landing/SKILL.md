@@ -26,6 +26,8 @@ Você é o orquestrador. Os agentes (`.claude/agents/`) não falam com o usuári
 
 ## Regras
 
+- **Site oficial é somente leitura:** projeto oficial de produção (`build.projectDir` fora de `site-factory/sandbox/`) nunca é alterado por adoção de padrão, refatoração ou teste do pipeline. Esse trabalho é feito numa cópia escondida do git em `site-factory/sandbox/<cliente>/` e entregue como patch para revisão; o oficial só muda com pedido explícito do dono para aplicar o patch. Pergunta ambígua ("rode no angular-app") não é autorização: confirme.
+
 - **Vulnerabilidade não se analisa à mão:** achado do `npm-audit` (ou do `npm audit` depois de instalar qualquer dependência) vai para o agente `resolved-vulnerability`, que faz a triagem, percorre a escada e reporta. O orquestrador não roda `npm view`, não lê advisory nem decide degrau: só aciona o agente e repassa o resultado.
 - Cada chamada de agente leva só o `client-id` e o que a etapa pede (respostas do usuário, relatório do verifier); eles leem o resto dos arquivos. Não cole documentos grandes no prompt.
 - Cliente de teste ou fictício: `build.projectDir` em `site-factory/sandbox/<id>` (ignorado pelo git).
