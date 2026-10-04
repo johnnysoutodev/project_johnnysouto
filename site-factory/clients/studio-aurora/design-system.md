@@ -164,5 +164,6 @@ Origem dos arquivos: URLs de assets do get_design_context (SVG limpo do ícone, 
 - 2026-10-03 — QA-7: hover (fundo Gray/200) e `:focus-visible` (outline) dos Icon Buttons não existem no Figma; definidos pelo builder e aprovados como intencionais.
 - 2026-10-03 — QA-3, QA-4, QA-5: alturas e quebras de linha de hero, contato e sobre diferem do Figma por causa do conteúdo placeholder (Lorem Ipsum); ignorado de propósito, reavaliar com conteúdo real.
 - 2026-10-03 — QA-9: ícone de copiar ao lado do e-mail e do telefone do contato mantido como está (decisão: não alterar).
+- 2026-10-03 — QA-21: valores de contato podem quebrar de linha somente antes do `@` no mobile (ex.: "contato" / "@studioaurora.example"); último recurso, só se um trecho não couber sozinho, quebra em qualquer ponto; telefone não quebra; decisão do usuário (opção A), fonte 18/28 mantida.
 - 2026-10-03 — QA-6: refutado pela medição; a Tag está na especificação e confere com o Figma.
 - 2026-10-03: seção 10 (decisões e divergências intencionais, QA rodada 1).

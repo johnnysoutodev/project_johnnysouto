@@ -265,3 +265,9 @@ Método: referências Figma (`figma-map.mjs image`) e capturas (`qa-capture.mjs`
 - **Desktop-dark e mobile-dark (Rodada 5):** 0 itens. Geometria idêntica à light; fundos, textos, Tag e ícones batem com as cores dark do documento.
 - **Aberto: QA-21 (e-mail do contato quebra no mobile, light e dark).** Depende do usuário: `contato@studioaurora.example` precisa de ~265px e há 251px disponíveis; o Figma usa 25 caracteres, o e-mail do cliente tem 28.
 - `verifier` completo APROVADO (13 checks, 1 aviso esperado: placeholder). `npm audit` 0.
+
+## Rodada 7 (QA-21 resolvido)
+
+- **QA-21 resolvido por decisão do usuário (opção A).** Valores de contato quebram de linha somente antes do `@`; o telefone nunca quebra; `overflow-wrap: anywhere` só como último recurso para um trecho mais largo que a linha. Medido no navegador: 375px claro e escuro `["contato","@studioaurora.example"]`; 390px e 430px em 1 linha; desktop em 1 linha.
+- Uma primeira implementação quebrava também depois dos pontos (`contato@studioaurora.` / `example`), contra o que o usuário escolheu; corrigida após medição. A causa foi minha redação ambígua da opção.
+- `verifier` completo APROVADO (13 checks, 1 aviso esperado). Nenhum item aberto nas 4 variantes analisadas.

@@ -69,3 +69,10 @@ Fonte: qa-report.md Rodada 4 e design-system.md 6.1. Só abaixo de 768px; deskto
 - QA-19: `Icon` passou a dimensionar por `--icon-size` (fallback 24; `size` numérico segue funcionando; `null` delega ao CSS). `icon-button` large: 44/32 no desktop, 36/24 no mobile; ícone do canal 32 desktop, 24 mobile; `.channels` gap 0, `li` gap 16 e min-height 36; `.value` 18/28. Medido: linhas 36px (e-mail 56 por quebra), ícone 24, botão 36.
 - QA-20: telefone resolvido (152px, 1 linha; Figma 149). E-mail AINDA quebra: `span.value` 251x56 (2 linhas); não tratado (QA-21, decisão do usuário).
 - Desktop conferido por captura (ícone 32, botão 44; sem achados). Lint, test (9) e `ng build` sem warnings/erros.
+
+## 2026-10-03 correção QA-21, opção A (e-mail do contato no mobile)
+
+- Causa: `.value` usava `overflow-wrap: anywhere`; o e-mail (~265px) não cabia em 251px e quebrava no meio da palavra ("exampl"/"e").
+- Correção genérica: `shared/contact-break.ts` (`contactBreakParts`, divide só antes de `@`; spec com 5 testes, incluindo `joao.silva@empresa.com.br`) e template do contato com `<wbr>` entre os trechos; texto e `href` originais intactos. Um primeiro ajuste também quebrava depois de pontos, mas o resultado era "contato@studioaurora." / "example"; removido. `.value` mantém `overflow-wrap: anywhere` só como último recurso (age apenas se um trecho sozinho não couber); canais que não são e-mail (telefone) recebem `.nowrap` (`white-space: nowrap`, `overflow-wrap: normal`). Arquivos: `contato.ts`, `contato.html`, `contato.scss`.
+- Medido no navegador (linhas reais): 375 claro e escuro ["contato","@studioaurora.example"] (251x56); 390 e 430 1 linha (264x28); desktop 1440 1 linha (529x40, ícone 32, gap 20). `brokenWords` sumiu em mobile-light, mobile-dark; desktop-light sem achados. Sem rolagem horizontal.
+- Lint, test (14 passed) e `npx ng build` sem warnings/erros.

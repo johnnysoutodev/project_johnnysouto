@@ -34,6 +34,7 @@ A forma mínima de `content` por tipo é validada por `site-factory/spec/site-sp
 - Cores, tipografia e sombras só por token (CSS custom property) do documento de design; nunca valor copiado do Figma. Pronto para os temas de `design.themes`.
 - Assets só de `<projectDir>/public/assets/<categoria>/`. Ausente: reportar, não gerar nem baixar.
 - Status: `draft` (conteúdo incompleto, bloqueia o builder), `ready` (aprovada, o builder gera), `migrated` (já existe, não é regenerada).
+- **Valores de contato nunca quebram no meio da palavra:** telefone com `white-space: nowrap`; e-mail com ponto de quebra (`<wbr>`) **só antes do `@`** ("contato" / "@dominio.com"; quebra depois de ponto faz a linha cair em "contato@dominio." / "com", pior). `overflow-wrap: anywhere` só como último recurso, para um trecho sozinho mais largo que a linha. Implemente como utilitário genérico (função ou pipe), não como remendo para um e-mail.
 - Lógica não trivial leva teste Vitest. Regras de SSR, `effect()` e CSS: skill `angular-conventions`.
 
 ## Modo placeholder (`project.contentMode: "placeholder"`)
